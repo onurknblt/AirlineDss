@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Favicon ve Apple Icon -->
+  <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
+  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+
+  <title>Türk Hava Yolları Karar Destek Sistemi</title>
+
+  <!-- Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+  <!-- Icons -->
+  <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
+  <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
+
+  <!-- Font Awesome (tek sefer) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+
+  <!-- CSS Files -->
+  <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+
+</head>
+
+<body class="g-sidenav-show  bg-gray-100">
+  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
+    <div class="sidenav-header">
+      <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
+      <a class="navbar-brand px-4 py-3 m-0"> 
+        <img src="../assets/img/logo-ct-dark.png" class="navbar-brand-img" width="26" height="26" alt="main_logo">
+        <span class="ms-1 text-sm text-dark">Turkish-KDS</span>
+      </a>
+    </div>
+    <hr class="horizontal dark mt-0 mb-2">
+    <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="../pages/dashboard.html">
+            <i class="material-symbols-rounded opacity-5">dashboard</i>
+            <span class="nav-link-text ms-1">Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="../pages/tables.html">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Talep</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="../pages/billing.html">
+            <i class="material-symbols-rounded opacity-5">receipt_long</i>
+            <span class="nav-link-text ms-1">Maliye</span>
+          </a>
+        </li>
+        
+        
+        <li class="nav-item">
+          <a class="nav-link active bg-gradient-dark text-white" href="../pages/notifications.html">
+            <i class="material-symbols-rounded opacity-5">notifications</i>
+            <span class="nav-link-text ms-1">What-If</span>
+          </a>
+        </li>
+        
+        
+        
+        
+      </ul>
+    </div>
+    
+  </aside>
+  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+    <!-- Navbar -->
+    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-3 shadow-none border-radius-xl" id="navbarBlur" data-scroll="true">
+      <div class="container-fluid py-1 px-3">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Pages</a></li>
+            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">What-If</li>
+          </ol>
+        </nav>
+        <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+          <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+            
+          </div>
+          <ul class="navbar-nav d-flex align-items-center  justify-content-end">
+            
+            
+            <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
+              <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
+                <div class="sidenav-toggler-inner">
+                  <i class="sidenav-toggler-line"></i>
+                  <i class="sidenav-toggler-line"></i>
+                  <i class="sidenav-toggler-line"></i>
+                </div>
+              </a>
+            </li>
+            <li class="nav-item px-3 d-flex align-items-center">
+              <a href="javascript:;" class="nav-link text-body p-0">
+                <i class="material-symbols-rounded fixed-plugin-button-nav">settings</i>
+              </a>
+            </li>
+            <li class="nav-item dropdown pe-3 d-flex align-items-center">
+              <a href="javascript:;" class="nav-link text-body p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="material-symbols-rounded">notifications</i>
+              </a>
+              <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
+                <li class="mb-2">
+                  <a class="dropdown-item border-radius-md" href="javascript:;">
+                    <div class="d-flex py-1">
+                      <div class="my-auto">
+                        <img src="../assets/img/team-2.jpg" class="avatar avatar-sm  me-3 ">
+                      </div>
+                      <div class="d-flex flex-column justify-content-center">
+                        <h6 class="text-sm font-weight-normal mb-1">
+                          <span class="font-weight-bold">Yeni mesaj</span> Onur'dan
+                        </h6>
+                        <p class="text-xs text-secondary mb-0">
+                          <i class="fa fa-clock me-1"></i>
+                          13 dakika önce
+                        </p>
+                      </div>
+                    </div>
+                  </a>
+                </li>
+                
+                
+              </ul>
+            </li>
+            <li class="nav-item d-flex align-items-center">
+  <a href="../pages/sign-in.html" class="nav-link text-body font-weight-bold px-0">
+    <i class="material-symbols-rounded">logout</i>
+  </a>
+</li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- End Navbar -->
+
+
+<!-- Step Form Module -->
+<section class="py-5">
+  <div class="container">
+    <div class="row justify-content-center text-center mb-4">
+      <div class="col-lg-8 col-xxl-7">
+        <h2 class="display-5 fw-bold" style="color:#000;">What-If: Uçak Yatırımı Modülü</h2>
+<p class="lead" style="color:#333;">Başla butonuna basarak adım adım uçak yatırımı senaryosunu hesaplayın.</p>
+
+      </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="mb-4">
+      <div class="progress" style="height: 20px; background-color:#fff;">
+        <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%;"></div>
+      </div>
+    </div>
+
+    <!-- Başla Butonu -->
+    <div class="text-center mb-4">
+      <button id="startBtn" class="btn btn-gradient-dark btn-lg">Başla</button>
+    </div>
+
+    <!-- Step Form Card -->
+    <div id="stepForm" class="card p-4 shadow d-none">
+      <div id="stepContent" class="position-relative">
+        <label for="input1" class="form-label">Yatırım Tutarı</label>
+        <input type="number" id="input1" class="form-control mb-3" placeholder="Ör: 100000">
+      </div>
+      <div class="d-flex justify-content-between mt-3">
+        <button id="prevBtn" class="btn btn-secondary d-none">Geri</button>
+        <button id="nextBtn" class="btn btn-gradient-dark">İleri</button>
+      </div>
+    </div>
+
+    <!-- Sonuç Kartları -->
+    <div id="results" class="row mt-4 d-none">
+      <div class="col-md-4 mb-3">
+        <div class="card bg-gradient-dark move-on-hover p-3">
+          <h5>Kar</h5>
+          <h2>₺500.000</h2>
+          <p class="text-sm">1 yıl sonunda</p>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <div class="card bg-gradient-dark move-on-hover p-3">
+          <h5>Risk</h5>
+          <h2>%12</h2>
+          <p class="text-sm">Tahmini</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tekrar Dene -->
+    <div class="text-center mt-3 d-none" id="retryDiv">
+      <button id="retryBtn" class="btn btn-gradient-dark btn-lg">Tekrar Dene</button>
+    </div>
+  </div>
+</section>
+
+<style>
+/* -------------------------
+   Scoped for Step Form Module
+---------------------------*/
+
+/* Step Form Card Gradient Dark */
+#stepForm.card {
+  border-radius: 1rem !important;
+  background: linear-gradient(135deg, #ffffff, #ffffff) !important;
+  padding: 2rem !important;
+  color: #fff;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+/* Progress Bar - Beyaz Arka, Gradient Dolgu */
+#progressBar {
+  background: linear-gradient(90deg, #1a73e8, #4dabf7) !important;
+  height: 20px !important;
+  border-radius: 10px !important;
+}
+
+/* Buttons Gradient Dark + Move on Hover */
+#startBtn,
+#nextBtn,
+#prevBtn,
+#retryBtn {
+  font-weight: 600 !important;
+  border-radius: 0.5rem !important;
+  color: #fff !important;
+  background: linear-gradient(90deg, #1a73e8, #4dabf7) !important;
+  border: none !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+#startBtn:hover,
+#nextBtn:hover,
+#prevBtn:hover,
+#retryBtn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgb(255, 255, 255);
+}
+
+/* Form Inputs */
+
+/* Dropdown menü hover yazı rengi beyaz */
+body .dropdown-menu.show .dropdown-item:hover,
+body .dropdown-menu.show .dropdown-item:focus,
+body .dropdown-menu .dropdown-item.active,
+body .dropdown-menu .dropdown-item:active {
+    background-color: #ffffff !important;
+    color: #1a73e8 !important;
+}
+
+
+
+#stepForm input.form-control,
+#stepForm select.form-select {
+  border-radius: 0.5rem !important;
+  border: 1px solid #4dabf7 !important;
+  padding: 0.5rem 0.75rem !important;
+  background-color: #ffffff !important;
+  color: #4dabf7 !important;
+}
+#stepForm input.form-control::placeholder,
+#stepForm select.form-select::placeholder {
+  color: #ccc !important;
+}
+#stepForm input.form-control:focus,
+#stepForm select.form-select:focus {
+  border-color: #1a73e8 !important;
+  box-shadow: 0 0 0 0.2rem rgba(26,115,232,0.25) !important;
+  outline: none !important;
+}
+
+/* Sonuç Kartları Move-on-Hover + Gradient */
+
+#results .card,
+#results .card h1,
+#results .card h2,
+#results .card h3,
+#results .card h4,
+#results .card h5,
+#results .card h6,
+#results .card p,
+#results .card span,
+#results .card small,
+#results .card a {
+  color: #fff !important;
+}
+
+#results .card.move-on-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+#results .card.move-on-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgb(97, 186, 246);
+}
+#results .card.bg-gradient-dark {
+  background: linear-gradient(90deg, #1a73e8, #4dabf7) !important;
+  color: #fff !important;
+}
+
+/* Text Centering */
+#stepForm,
+#results,
+#retryDiv {
+  text-align: center;
+}
+
+/* Başlık ve lead renkleri */
+#stepForm h2,
+#stepForm h5,
+#stepForm p,
+#stepForm label,
+#stepForm .lead {
+  color: #4dabf7 !important;
+}
+</style>
+
+
+<div class="row">
+  <div class="col-12">
+    <div class="card my-4">
+      <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+        <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
+          <h6 class="text-white text-capitalize ps-3">Bilgilendirme</h6>
+        </div>
+      </div>
+      <div class="card-body px-3 pb-3">
+        <div class="info-box p-3">
+          <p class="text-sm text-secondary mb-0">
+            Bu modül, yatırım kararlarını desteklemek amacıyla uçak alımı ve işletme maliyetlerini farklı parametreler üzerinden simüle etmenizi sağlar. Girdiğiniz değerler (uçak modeli, yatırım tipi, maliyetler, tahmini doluluk oranı, yakıt ve bakım maliyetleri, gelir projeksiyonları) ışığında aşağıdaki finansal göstergeler hesaplanır:
+
+ROI (Return on Investment / Yatırım Getirisi): Yatırıma harcanan sermayeye karşı elde edilen net kazancı gösterir. Bu değer, yatırımın karlılığını hızlıca değerlendirmek için kullanılır.
+
+NPV (Net Present Value / Net Bugünkü Değer): Gelecek nakit akımlarının bugünkü değerini gösterir. Pozitif bir NPV, yatırımın zaman değerine göre kazançlı olduğunu işaret eder.
+
+Break-even Noktası: Yatırımın maliyetlerini karşılamaya başladığı satış veya doluluk seviyesini gösterir. Bu noktaya ulaşıldığında, yatırımın maliyetleri karşılanmış olur ve kâr üretimi başlar.
+
+Tahmini Kar: Seçilen parametreler doğrultusunda belirli bir dönemde beklenen net kârı gösterir. Bu gösterge, yatırımın finansal başarısını ölçmek için temel kriterdir.
+
+Bu kart, kullanıcıya hızlı bir özet sunar ve farklı senaryoların finansal etkilerini görselleştirerek, yatırım kararlarını veri odaklı bir şekilde destekler.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+    
+    
+  </main>
+  <div class="fixed-plugin">
+    
+    
+  </div>
+  <!--   Core JS Files   -->
+  <script src="../assets/js/core/popper.min.js"></script>
+  <script src="../assets/js/core/bootstrap.min.js"></script>
+  <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
+  <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
+  <script>
+
+    const steps = [
+  { label: 'Uçak Modeli', type: 'select', id: 'aircraftModel', options: [] },
+  { label: 'Yatırım Tipi', type: 'select', id: 'investmentType', options: ['Satın Alma', 'Leasing'] },
+  { label: 'Maliyet / Leasing Ücreti ($)', type: 'number', id: 'cost', value: 120000 },
+  { label: 'Tahmini Doluluk (%)', type: 'number', id: 'occupancy', value: 85 },
+  { label: 'Yakıt Maliyeti ($)', type: 'number', id: 'fuelCost', value: 50000 },
+  { label: 'Bakım & Personel Maliyeti ($)', type: 'number', id: 'otherCosts', value: 30000 },
+  { label: 'Bilet / Cargo Geliri ($)', type: 'number', id: 'revenue', value: 250000 },
+];
+
+let currentStep = 0;
+const formData = {};
+
+const startBtn = document.getElementById('startBtn');
+const stepForm = document.getElementById('stepForm');
+const stepContent = document.getElementById('stepContent');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const resultsDiv = document.getElementById('results');
+const retryDiv = document.getElementById('retryDiv');
+const retryBtn = document.getElementById('retryBtn');
+const progressBar = document.getElementById('progressBar');
+
+// Dinamik uçak modellerini API'den çek
+async function loadAircraftModels() {
+  try {
+    const res = await fetch('http://localhost:3000/aircraft/');
+    const models = await res.json();
+    steps[0].options = models;
+  } catch(err) {
+    console.error('Uçak modelleri yüklenemedi', err);
+  }
+}
+
+// Adımı render et
+function renderStep() {
+  const step = steps[currentStep];
+  stepContent.innerHTML = '';
+  let html = `<h5>${step.label}</h5>`;
+  if(step.type === 'select') {
+    html += `<select id="${step.id}" class="form-select mt-2 mb-2">` +
+      step.options.map(o => `<option>${o}</option>`).join('') +
+      `</select>`;
+  } else if(step.type === 'number') {
+    html += `<input type="number" id="${step.id}" class="form-control mt-2 mb-2" value="${step.value || ''}">`;
+  }
+  stepContent.innerHTML = html;
+
+  prevBtn.classList.toggle('d-none', currentStep === 0);
+  nextBtn.textContent = currentStep === steps.length - 1 ? 'Hesapla' : 'İleri';
+
+  // Progress bar güncelle
+  const progress = ((currentStep) / steps.length) * 100;
+  progressBar.style.width = `${progress}%`;
+}
+
+// Başla butonu
+startBtn.addEventListener('click', async () => {
+  await loadAircraftModels();
+  startBtn.classList.add('d-none');
+  stepForm.classList.remove('d-none');
+  renderStep();
+});
+
+// İleri butonu
+nextBtn.addEventListener('click', async () => {
+  const step = steps[currentStep];
+  const value = document.getElementById(step.id).value;
+  if(!value) return alert('Lütfen bir değer girin.');
+  formData[step.id] = value;
+
+  if(currentStep < steps.length - 1) {
+    currentStep++;
+    renderStep();
+  } else {
+    // Hesaplamayı yap
+    try {
+      const res = await fetch('http://localhost:3000/what-if', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          aircraft_model: formData.aircraftModel,
+          investment_type: formData.investmentType,
+          cost: parseFloat(formData.cost),
+          occupancy: parseFloat(formData.occupancy),
+          fuel_cost: parseFloat(formData.fuelCost),
+          other_costs: parseFloat(formData.otherCosts),
+          revenue: parseFloat(formData.revenue),
+        })
+      });
+      const result = await res.json();
+      displayResults(result);
+      // progress bar tamamlandı
+      progressBar.style.width = `100%`;
+    } catch(err) {
+      console.error('Hesaplama hatası', err);
+      alert('Bir hata oluştu.');
+    }
+  }
+});
+
+// Geri butonu
+prevBtn.addEventListener('click', () => {
+  if(currentStep > 0) {
+    currentStep--;
+    renderStep();
+  }
+});
+
+// Sonuçları göster
+function displayResults(result) {
+  stepForm.classList.add('d-none');
+  resultsDiv.classList.remove('d-none');
+  retryDiv.classList.remove('d-none');
+
+  // Değer durumuna göre alt metin
+  const getStatusText = (type, value) => {
+    switch(type) {
+      case 'net_profit':
+        return value >= 0 ? 'Mükemmel' : 'Kötü';
+      case 'roi':
+        if(value >= 50) return 'Mükemmel';
+        if(value >= 20) return 'İyi';
+        return 'Kötü';
+      case 'npv':
+        return value >= 0 ? 'Mükemmel' : 'Kötü';
+      case 'break_even':
+        return value ? 'İyi' : 'Kötü';
+      default:
+        return '';
+    }
+  };
+
+  resultsDiv.innerHTML = `
+    <div class="col-lg-3 col-md-6 mt-4">
+      <div class="card bg-gradient-dark move-on-hover text-white">
+        <div class="card-body">
+          <div class="d-flex">
+            <h5 class="mb-0">Net Kâr</h5>
+            <div class="ms-auto text-end">
+              <h2 class="mb-0">$${parseFloat(result.net_profit).toLocaleString()}</h2>
+              <p class="text-sm mb-0">${getStatusText('net_profit', result.net_profit)}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 mt-4">
+      <div class="card bg-gradient-dark move-on-hover text-white">
+        <div class="card-body">
+          <div class="d-flex">
+            <h5 class="mb-0">ROI</h5>
+            <div class="ms-auto text-end">
+              <h2 class="mb-0">${parseFloat(result.roi).toFixed(1)}%</h2>
+              <p class="text-sm mb-0">${getStatusText('roi', result.roi)}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 mt-4">
+      <div class="card bg-gradient-dark move-on-hover text-white">
+        <div class="card-body">
+          <div class="d-flex">
+            <h5 class="mb-0">Tahmini NPV</h5>
+            <div class="ms-auto text-end">
+              <h2 class="mb-0">$${parseInt(result.npv).toLocaleString()}</h2>
+              <p class="text-sm mb-0">${getStatusText('npv', result.npv)}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 mt-4">
+      <div class="card bg-gradient-dark move-on-hover text-white">
+        <div class="card-body">
+          <div class="d-flex">
+            <h5 class="mb-0">Break-even</h5>
+            <div class="ms-auto text-end">
+              <h2 class="mb-0">${result.break_even_years ? result.break_even_years + ' yıl' : 'Hiçbir zaman'}</h2>
+              <p class="text-sm mb-0">${getStatusText('break_even', result.break_even_years)}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+
+
+// Tekrar Dene butonu
+retryBtn.addEventListener('click', () => {
+  currentStep = 0;
+  Object.keys(formData).forEach(k => delete formData[k]);
+  resultsDiv.classList.add('d-none');
+  retryDiv.classList.add('d-none');
+  stepForm.classList.remove('d-none');
+  progressBar.style.width = `0%`;
+  renderStep();
+});
+
+    
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+  </script>
+  <!-- Github buttons -->
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+  <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+  <script src="../assets/js/material-dashboard.min.js?v=3.2.0"></script>
+</body>
+
+
+
+</html>

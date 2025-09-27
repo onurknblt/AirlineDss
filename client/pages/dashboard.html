@@ -1,0 +1,1510 @@
+<!--
+=========================================================
+* Material Dashboard 3 - v3.2.0
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/material-dashboard
+* Copyright 2024 Creative Tim (https://www.creative-tim.com)
+* Licensed under MIT (https://www.creative-tim.com/license)
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
+  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+  <title>
+    Türk Hava Yolları Karar Destek Sistemi
+  </title>
+  <!--     Fonts and icons     -->
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" />
+  <!-- Nucleo Icons -->
+  <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
+  <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
+  <!-- Font Awesome Icons -->
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  <!-- Material Icons -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <!-- CSS Files -->
+  <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
+</head>
+
+<body class="g-sidenav-show  bg-gray-100">
+  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
+    <div class="sidenav-header">
+      <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
+      <a class="navbar-brand px-4 py-3 m-0" href=" https://www.turkishairlines.com/tr-tr/bilgi-edin/bize-ulasin/ " target="_blank">
+        <img src="../assets/img/logo-ct-dark.png" class="navbar-brand-img" width="26" height="26" alt="main_logo">
+        <span class="ms-1 text-sm text-dark">Turkish-KDS</span>
+      </a>
+    </div>
+    <hr class="horizontal dark mt-0 mb-2">
+    <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active bg-gradient-dark text-white" href="../pages/dashboard.html">
+            <i class="material-symbols-rounded opacity-5">dashboard</i>
+            <span class="nav-link-text ms-1">Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="../pages/tables.html">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Talep</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="../pages/billing.html">
+            <i class="material-symbols-rounded opacity-5">receipt_long</i>
+            <span class="nav-link-text ms-1">Maliye</span>
+          </a>
+        </li>
+        
+        
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="../pages/notifications.html">
+            <i class="material-symbols-rounded opacity-5">notifications</i>
+            <span class="nav-link-text ms-1">What-If</span>
+          </a>
+        </li>
+        
+        
+        
+        
+      </ul>
+    </div>
+    <div class="sidenav-footer position-absolute w-100 bottom-0 ">
+      
+    </div>
+  </aside>
+  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+    <!-- Navbar -->
+    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-3 shadow-none border-radius-xl" id="navbarBlur" data-scroll="true">
+      <div class="container-fluid py-1 px-3">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Pages</a></li>
+            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Dashboard</li>
+          </ol>
+        </nav>
+        
+          <ul class="navbar-nav d-flex align-items-center  justify-content-end">
+            
+            
+            <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
+              <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
+                <div class="sidenav-toggler-inner">
+                  <i class="sidenav-toggler-line"></i>
+                  <i class="sidenav-toggler-line"></i>
+                  <i class="sidenav-toggler-line"></i>
+                </div>
+              </a>
+            </li>
+            <li class="nav-item px-3 d-flex align-items-center">
+              <a href="javascript:;" class="nav-link text-body p-0">
+                <i class="material-symbols-rounded fixed-plugin-button-nav">settings</i>
+              </a>
+            </li>
+            <li class="nav-item pe-3 d-flex align-items-center">
+  <a href="https://mail.google.com" target="_blank" class="nav-link text-body p-0">
+    <i class="material-symbols-rounded">mail</i>
+  </a>
+</li>
+              </a>
+              <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
+                <li class="mb-2">
+                  <a class="dropdown-item border-radius-md" href="javascript:;">
+                    <div class="d-flex py-1">
+                      <div class="my-auto">
+                        <img src="../assets/img/team-2.jpg" class="avatar avatar-sm  me-3 ">
+                      </div>
+                      <div class="d-flex flex-column justify-content-center">
+                        <h6 class="text-sm font-weight-normal mb-1">
+                          <span class="font-weight-bold">New message</span> from Laur
+                        </h6>
+                        <p class="text-xs text-secondary mb-0">
+                          <i class="fa fa-clock me-1"></i>
+                          13 minutes ago
+                        </p>
+                      </div>
+                    </div>
+                  </a>
+                </li>
+                <li class="mb-2">
+                  <a class="dropdown-item border-radius-md" href="javascript:;">
+                    <div class="d-flex py-1">
+                      <div class="my-auto">
+                        <img src="../assets/img/small-logos/logo-spotify.svg" class="avatar avatar-sm bg-gradient-dark  me-3 ">
+                      </div>
+                      <div class="d-flex flex-column justify-content-center">
+                        <h6 class="text-sm font-weight-normal mb-1">
+                          <span class="font-weight-bold">New album</span> by Travis Scott
+                        </h6>
+                        <p class="text-xs text-secondary mb-0">
+                          <i class="fa fa-clock me-1"></i>
+                          1 day
+                        </p>
+                      </div>
+                    </div>
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item border-radius-md" href="javascript:;">
+                    <div class="d-flex py-1">
+                      <div class="avatar avatar-sm bg-gradient-secondary  me-3  my-auto">
+                        <svg width="12px" height="12px" viewBox="0 0 43 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                          <title>credit-card</title>
+                          <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <g transform="translate(-2169.000000, -745.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                              <g transform="translate(1716.000000, 291.000000)">
+                                <g transform="translate(453.000000, 454.000000)">
+                                  <path class="color-background" d="M43,10.7482083 L43,3.58333333 C43,1.60354167 41.3964583,0 39.4166667,0 L3.58333333,0 C1.60354167,0 0,1.60354167 0,3.58333333 L0,10.7482083 L43,10.7482083 Z" opacity="0.593633743"></path>
+                                  <path class="color-background" d="M0,16.125 L0,32.25 C0,34.2297917 1.60354167,35.8333333 3.58333333,35.8333333 L39.4166667,35.8333333 C41.3964583,35.8333333 43,34.2297917 43,32.25 L43,16.125 L0,16.125 Z M19.7083333,26.875 L7.16666667,26.875 L7.16666667,23.2916667 L19.7083333,23.2916667 L19.7083333,26.875 Z M35.8333333,26.875 L28.6666667,26.875 L28.6666667,23.2916667 L35.8333333,23.2916667 L35.8333333,26.875 Z"></path>
+                                </g>
+                              </g>
+                            </g>
+                          </g>
+                        </svg>
+                      </div>
+                      <div class="d-flex flex-column justify-content-center">
+                        <h6 class="text-sm font-weight-normal mb-1">
+                          Payment successfully completed
+                        </h6>
+                        <p class="text-xs text-secondary mb-0">
+                          <i class="fa fa-clock me-1"></i>
+                          2 days
+                        </p>
+                      </div>
+                    </div>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item d-flex align-items-center">
+  <a href="../pages/sign-in.html" class="nav-link text-body font-weight-bold px-0">
+    <i class="material-symbols-rounded">logout</i>
+  </a>
+</li>
+
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- End Navbar -->
+    <div class="container-fluid py-2">
+      <div class="row">
+        <div class="ms-3">
+          <h3 class="mb-0 h4 font-weight-bolder">Dashboard</h3>
+          <p class="mb-4">
+            Turkish-KDS, operasyonel ve finansal performansı gerçek zamanlı olarak izlemek ve stratejik kararları desteklemek amacıyla tasarlanmıştır.
+          </p>
+        </div>
+        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+  <div class="card">
+    <div class="card-header p-2 ps-3">
+      <div class="d-flex justify-content-between">
+        <div>
+          <p class="text-sm mb-0 text-capitalize">Güncel Brent Kuru</p>
+          <h4 class="mb-0" id="fuel-price">0</h4>
+        </div>
+        <div class="icon icon-md icon-shape bg-gradient-dark shadow-dark shadow text-center border-radius-lg">
+          <i class="material-symbols-rounded opacity-10">local_gas_station</i>
+        </div>
+      </div>
+    </div>
+    <hr class="dark horizontal my-0">
+    <div class="card-footer p-2 ps-3">
+      <p class="mb-0 text-sm">
+        <span id="fuel-price-change" class="font-weight-bolder">0%</span> değişim
+      </p>
+    </div>
+  </div>
+</div>
+        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+  <div class="card">
+    <div class="card-header p-2 ps-3">
+      <div class="d-flex justify-content-between">
+        <div>
+          <p class="text-sm mb-0 text-capitalize">USD / TRY</p>
+          <h4 class="mb-0" id="exchange-rate">0</h4>
+        </div>
+        <div class="icon icon-md icon-shape bg-gradient-dark shadow-dark shadow text-center border-radius-lg">
+          <i class="material-symbols-rounded opacity-10">currency_exchange</i>
+        </div>
+      </div>
+    </div>
+    <hr class="dark horizontal my-0">
+    <div class="card-footer p-2 ps-3">
+      <p class="mb-0 text-sm">
+        <span id="exchange-rate-change" class="font-weight-bolder">0%</span> değişim
+      </p>
+    </div>
+  </div>
+</div>
+        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+  <div class="card">
+    <div class="card-header p-2 ps-3">
+      <div class="d-flex justify-content-between">
+        <div>
+          <p class="text-sm mb-0 text-capitalize">Zamanında Kalkış Oranı</p>
+          <h4 class="mb-0" id="otp-value">--%</h4>
+        </div>
+        <div class="icon icon-md icon-shape bg-gradient-dark shadow-dark shadow text-center border-radius-lg">
+          <i class="material-symbols-rounded opacity-10">schedule</i>
+        </div>
+      </div>
+    </div>
+    <hr class="dark horizontal my-0">
+    <div class="card-footer p-2 ps-3">
+      <p class="mb-0 text-sm" id="otp-status">Durum yükleniyor...</p>
+    </div>
+  </div>
+</div>
+        <div class="col-xl-3 col-sm-6">
+  <div class="card">
+    <div class="card-header p-2 ps-3">
+      <div class="d-flex justify-content-between">
+        <div>
+          <p class="text-sm mb-0 text-capitalize">Brüt Hasılat</p>
+          <h4 class="mb-0" id="annual-revenue">$0</h4>
+        </div>
+        <div class="icon icon-md icon-shape bg-gradient-dark shadow-dark shadow text-center border-radius-lg">
+          <i class="material-symbols-rounded opacity-10">paid</i>
+        </div>
+      </div>
+    </div>
+    <hr class="dark horizontal my-0">
+    <div class="card-footer p-2 ps-3">
+      <p class="mb-0 text-sm" id="annual-revenue-delta">Yükleniyor...</p>
+    </div>
+  </div>
+</div>
+      <div class="row mt-4">
+        <div class="col-lg-4 col-md-6 mb-4">
+    <div class="card h-100">
+      <div class="card-body">
+              <h6 class="mb-0 ">Müşteri Memnuniyeti</h6>
+              <p class="text-sm ">Sınıflara Göre Dağılım</p>
+              <div class="pe-2">
+                <div class="chart">
+                  <canvas id="chart-bars" class="chart-canvas" height="170"></canvas>
+                </div>
+              </div>
+              <hr class="dark horizontal">
+              <div class="d-flex ">
+                <i class="material-symbols-rounded text-sm my-auto me-1">schedule</i>
+                <p class="mb-0 text-sm"> az önce güncellendi </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <style>
+  /* Dropdown'u küçük kutucuk haline getir ve hover/focus ekle */
+  #occupancySelect {
+    width: 200px;            /* Kompakt genişlik */
+    border-radius: 8px;      /* Hafif yuvarlatılmış köşeler */
+    border: 1px solid #ccc;  /* İnce gri kenarlık */
+    padding: 6px 12px;       /* İç boşluk */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Hafif gölge */
+    transition: all 0.2s ease-in-out;      /* Hover geçişleri */
+    background-color: #fff;
+    color: #333;
+    appearance: none;         /* Default tarayıcı stilini gizle (Chrome/Edge) */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+  }
+
+  /* Hover ve focus durumları */
+  #occupancySelect:hover,
+  #occupancySelect:focus {
+    background-color: #f5f5f5;  /* Soft gri arka plan */
+    border-color: #999;          /* Hafif koyu kenarlık */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15); /* Hover gölgesi */
+    outline: none;               /* Mavi outline kaldırıldı */
+  }
+
+  /* Eğer dilersen bir aşağı ok ikonu ekleyebilirsin */
+  #occupancySelect::after {
+    content: "▼";
+    position: absolute;
+    right: 12px;
+    pointer-events: none;
+  }
+</style>
+
+
+
+
+
+
+        <div class="col-lg-4 col-md-6 mb-4">
+    <div class="card h-100">
+      <div class="card-body">
+      <h6 class="mb-0">Uçuş Doluluk Oranı</h6>
+      <p class="text-sm">En yüksek veya en düşük doluluk oranlı uçuşları görüntülemek için seçin.</p>
+
+      <!-- Dropdown -->
+      <select id="occupancySelect" class="form-select mb-3">
+        <option value="highest" selected>En Yüksek</option>
+        <option value="lowest">En Düşük</option>
+      </select>
+
+      <div class="pe-2">
+        <div class="chart">
+          <canvas id="chart-flights" class="chart-canvas" height="170"></canvas>
+        </div>
+      </div>
+      <hr class="dark horizontal">
+      <div class="d-flex">
+        <i class="material-symbols-rounded text-sm my-auto me-1">schedule</i>
+        <p class="mb-0 text-sm">az önce güncellendi</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="col-lg-4 col-md-6 mb-4">
+  <div class="card h-100 shadow-sm">
+    <div class="card-body d-flex flex-column">
+
+      <!-- Başlık ve dropdown -->
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="mb-0">Gelir Dağılımı</h6>
+        <select id="months-select" class="form-select w-auto">
+          <option value="1">1 Ay</option>
+          <option value="6" selected>6 Ay</option>
+          <option value="12">12 Ay</option>
+        </select>
+      </div>
+
+      <!-- Grafik -->
+      <div class="flex-grow-1 d-flex align-items-center justify-content-center mt-3">
+        <div id="revenueChart" style="width:100%; height:280px;"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<style>
+  /* Compact, soft-grey dropdown (wrapper ile ok ikonu) */
+  .select-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+  .select-wrapper select {
+    width: 200px;
+    border-radius: 8px;
+    border: 1px solid #d0d7de;
+    padding: 6px 36px 6px 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    transition: all 0.15s ease;
+    background-color: #fff;
+    color: #222;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+  }
+  .select-wrapper select:focus,
+  .select-wrapper select:hover {
+    background-color: #f5f6f7;
+    border-color: #bfc7cf;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+    outline: none;
+  }
+  .select-wrapper::after {
+    content: "▾";
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+    pointer-events: none;
+    font-size: 12px;
+  }
+
+  /* Vurgulu başlıklar */
+  .highlight-headers th {
+    font-weight: 700;
+    color: #2c3e50;
+    background-color: #f6f7f9;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.6px;
+  }
+
+  /* Chart container */
+  .chart-wrap {
+    height: 260px;
+    width: 100%;
+    margin-bottom: 0.75rem;
+  }
+
+  /* Küçük responsive tweak */
+  @media (max-width: 768px) {
+    .select-wrapper select { width: 140px; }
+    .chart-wrap { height: 200px; }
+  }
+
+  .table-responsive {
+  display: none !important;
+}
+
+</style>
+
+<div class="col-lg-8 col-md-12 mb-4">
+  <div class="card h-100">
+    <div class="card-header pb-0">
+      <div class="row align-items-center">
+        <!-- Başlık ve sonuç -->
+        <div class="col-lg-4 col-6">
+          <h6>Rakip Tarifeler</h6>
+          <p class="text-sm mb-0">
+            <i class="fa fa-check text-info"></i>
+            <span class="font-weight-bold" id="done-count">0 sonuç</span> bulundu
+          </p>
+        </div>
+
+        <!-- Önerilen tarife ortada -->
+        <div class="col-lg-4 col-12 d-flex justify-content-center">
+          <p class="text-sm mb-0">
+            Önerilen Tarife: <span class="font-weight-bold" id="suggested-price">-</span>
+          </p>
+        </div>
+
+        <!-- Dropdown sağ üstte -->
+        <div class="col-lg-4 col-6 d-flex justify-content-end pe-6">
+          <div class="select-wrapper">
+            <select id="route-select" class="form-select form-select-sm w-auto">
+              <option value="">Rota seçiniz...</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-body px-0 pb-2">
+      <div class="px-3">
+        <!-- Chart -->
+        <div class="chart-wrap">
+          <canvas id="competitorBarChart"></canvas>
+        </div>
+      </div>
+
+      <hr class="dark horizontal">
+
+      <div class="table-responsive px-3">
+        <table class="table align-items-center mb-0">
+          <thead>
+            <tr class="highlight-headers">
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Havayolu</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Rota</th>
+              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tarife</th>
+            </tr>
+          </thead>
+          <tbody id="competitor-table-body">
+            <!-- JS buraya satır ekleyecek -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="col-lg-4 col-md-6 mb-4">
+  <div class="card h-100 shadow-sm">
+    <div class="card-body d-flex flex-column">
+
+      <!-- Başlık ve dropdown -->
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="mb-0">Maliyet Dağılımı</h6>
+        <select id="months-select-cost" class="form-select w-auto">
+          <option value="1">1 Ay</option>
+          <option value="6" selected>6 Ay</option>
+          <option value="12">12 Ay</option>
+        </select>
+      </div>
+
+      <!-- Grafik -->
+      <div class="flex-grow-1 d-flex align-items-center justify-content-center mt-3">
+        <div id="costChart" style="width:100%; height:280px;"></div>
+      </div>
+
+      <!-- Legend -->
+      <div id="cost-legend" class="mt-3 d-flex justify-content-around"></div>
+
+    </div>
+  </div>
+</div>
+
+<style>
+  .card-body { padding: 1.5rem; }
+  .legend-item { display: flex; align-items: center; font-weight: bold; transition: transform 0.2s; }
+  .legend-item:hover { transform: scale(1.1); }
+  .legend-color { width: 16px; height: 16px; margin-right: 6px; border-radius: 4px; }
+</style>
+
+
+
+
+
+
+      <footer class="footer py-4  ">
+        <div class="container-fluid">
+          <div class="row align-items-center justify-content-lg-between">
+            <div class="col-lg-6 mb-lg-0 mb-4">
+              <div class="copyright text-center text-sm text-muted text-lg-start">
+                © <script>
+                  document.write(new Date().getFullYear())
+                </script>,
+                made with <i class="fa fa-heart"></i> by
+                <a class="font-weight-bold" target="_blank">KanbolatSoftware</a>
+                for a better decision.
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <ul class="nav nav-footer justify-content-center justify-content-lg-end">
+                <li class="nav-item">
+                  <a href="https://www.turkishairlines.com/tr-tr/bilgi-edin/bize-ulasin/" class="nav-link text-muted" target="_blank">Turkish Airlines</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link text-muted" target="_blank">About Us</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link text-muted" target="_blank">Blog</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link pe-0 text-muted" target="_blank">License</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </main>
+  <div class="fixed-plugin">
+    <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
+      <i class="material-symbols-rounded py-2">settings</i>
+    </a>
+    <div class="card shadow-lg">
+      <div class="card-header pb-0 pt-3">
+        <div class="float-start">
+          <h5 class="mt-3 mb-0">Arayüz Yapılandırıcısı</h5>
+          <p>Gösterge Paneli Seçenekleri</p>
+        </div>
+        <div class="float-end mt-4">
+          <button class="btn btn-link text-dark p-0 fixed-plugin-close-button">
+            <i class="material-symbols-rounded">clear</i>
+          </button>
+        </div>
+        <!-- End Toggle Button -->
+      </div>
+      <hr class="horizontal dark my-1">
+      <div class="card-body pt-sm-3 pt-0">
+        <!-- Sidebar Backgrounds -->
+        <div>
+          <h6 class="mb-0">Panel Rengi</h6>
+        </div>
+        <a href="javascript:void(0)" class="switch-trigger background-color">
+          <div class="badge-colors my-2 text-start">
+            <span class="badge filter bg-gradient-primary" data-color="primary" onclick="sidebarColor(this)"></span>
+            <span class="badge filter bg-gradient-dark active" data-color="dark" onclick="sidebarColor(this)"></span>
+            <span class="badge filter bg-gradient-info" data-color="info" onclick="sidebarColor(this)"></span>
+            <span class="badge filter bg-gradient-success" data-color="success" onclick="sidebarColor(this)"></span>
+            <span class="badge filter bg-gradient-warning" data-color="warning" onclick="sidebarColor(this)"></span>
+            <span class="badge filter bg-gradient-danger" data-color="danger" onclick="sidebarColor(this)"></span>
+          </div>
+        </a>
+        <!-- Sidenav Type -->
+        <div class="mt-3">
+          <h6 class="mb-0">Tema</h6>
+          
+        </div>
+        <div class="d-flex">
+          <button class="btn bg-gradient-dark px-3 mb-2" data-class="bg-gradient-dark" onclick="sidebarType(this)">Dark</button>
+          <button class="btn bg-gradient-dark px-3 mb-2 ms-2" data-class="bg-transparent" onclick="sidebarType(this)">Transparent</button>
+          <button class="btn bg-gradient-dark px-3 mb-2  active ms-2" data-class="bg-white" onclick="sidebarType(this)">White</button>
+        </div>
+        <p class="text-sm d-xl-none d-block mt-2">You can change the sidenav type just on desktop view.</p>
+        
+        
+        <hr class="horizontal dark my-3">
+        <div class="mt-2 d-flex">
+          <h6 class="mb-0">Light / Dark</h6>
+          <div class="form-check form-switch ps-0 ms-auto my-auto">
+            <input class="form-check-input mt-1 ms-auto" type="checkbox" id="dark-version" onclick="darkMode(this)">
+          </div>
+        </div>
+        <hr class="horizontal dark my-sm-4">
+
+        <style>
+  #cost-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 14px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .legend-color {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+  .legend-label {
+    font-weight: 500;
+    flex: 1;
+  }
+  .legend-percent {
+    color: #555;
+  }
+</style>
+        
+        
+        
+      </div>
+    </div>
+  </div>
+  <!--   Core JS Files   -->
+  <script src="../assets/js/core/popper.min.js"></script>
+  <script src="../assets/js/core/bootstrap.min.js"></script>
+  <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
+  <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
+  <script src="../assets/js/plugins/chartjs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  
+  <script>
+
+    let chartInstance = null;
+
+function fetchAndRenderFlights(typeParam) {
+  fetch(`http://localhost:3000/dashboard/flights-by-occupancy/${typeParam}`)
+    .then(res => res.json())
+    .then(data => {
+      const labels = data.flights.map(f => f.flight_number);
+      const occupancyData = data.flights.map(f => parseFloat(f.occupancy_rate));
+      const routes = data.flights.map(f => `${f.departure_city} → ${f.arrival_city}`);
+
+      const ctx = document.getElementById("chart-flights").getContext("2d");
+
+      // Eğer chart zaten varsa destroy et
+      if (chartInstance) {
+        chartInstance.destroy();
+      }
+
+      chartInstance = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: labels,
+          datasets: [{
+            label: "Doluluk Oranı (%)",
+            data: occupancyData,
+            tension: 0.4,
+            borderWidth: 2,
+            pointRadius: 4,
+            pointBackgroundColor: "#FF7043",
+            pointBorderColor: "transparent",
+            borderColor: "#FF7043",
+            backgroundColor: "rgba(255,112,67,0.2)",
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  const flightIdx = context.dataIndex;
+                  const occupancy = occupancyData[flightIdx];
+                  const route = routes[flightIdx];
+                  return `${route}: ${occupancy}%`;
+                }
+              }
+            }
+          },
+          interaction: {
+            intersect: false,
+            mode: 'index'
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 100,
+              title: { display: true, text: "Doluluk Oranı (%)" },
+              ticks: { color: '#737373', stepSize: 10 }
+            },
+            x: { ticks: { color: '#737373' } }
+          }
+        }
+      });
+    })
+    .catch(err => console.error(err));
+}
+
+// Dropdown değiştiğinde grafiği güncelle
+document.getElementById("occupancySelect").addEventListener("change", (e) => {
+  fetchAndRenderFlights(e.target.value);
+});
+
+// Sayfa yüklenince default highest ile grafik
+fetchAndRenderFlights('highest');
+
+
+async function loadFuelPrice() {
+  try {
+    const res = await fetch('http://localhost:3000/dashboard/fuel-exchange-trends/2');
+    const data = await res.json();
+
+    if(data.fuel_prices && data.fuel_prices.length > 0) {
+      const prices = data.fuel_prices;
+      const latest = prices[prices.length - 1];
+      const previous = prices.length > 1 ? prices[prices.length - 2] : null;
+
+      document.getElementById('fuel-price').textContent = latest.price.toFixed(2) + ' $';
+
+      if(previous) {
+        const change = ((latest.price - previous.price) / previous.price) * 100;
+        const changeFormatted = change.toFixed(2) + '%';
+        const changeElement = document.getElementById('fuel-price-change');
+        changeElement.textContent = change > 0 ? `+${changeFormatted}` : `${changeFormatted}`;
+        changeElement.className = change > 0 ? 'font-weight-bolder text-success' : 'font-weight-bolder text-danger';
+      }
+    }
+
+  } catch(err) {
+    console.error('Fuel price yüklenirken hata:', err);
+  }
+}
+
+loadFuelPrice();
+
+
+
+
+(function(){
+  const monthsSelect = document.getElementById('months-select-cost');
+  const legendDiv = document.getElementById('cost-legend');
+  let chart = null;
+
+  // Tüm paleti aynı kaynaktan kullan -> chart + legend
+  const baseColors = ["#1E88E5","#43A047","#FB8C00","#8E24AA"];
+
+  async function loadCostChart(months) {
+    try {
+      const res = await fetch(`http://localhost:3000/dashboard/cost-by-months?months=${months}`);
+      const data = await res.json();
+
+      const costData = [
+        data.fuel_cost ? parseFloat(data.fuel_cost) : 0,
+        data.staff_cost ? parseFloat(data.staff_cost) : 0,
+        data.maintenance_cost ? parseFloat(data.maintenance_cost) : 0,
+        data.other_costs ? parseFloat(data.other_costs) : 0
+      ];
+
+      const labels = ["Yakıt Maliyeti","Personel Maliyeti","Bakım Maliyeti","Diğer Maliyetler"];
+
+      if(chart) chart.destroy();
+
+      chart = new ApexCharts(document.querySelector("#costChart"), {
+        series: costData,
+        chart: {
+          type: 'donut',
+          height: 280
+        },
+        labels: labels,
+        colors: baseColors,
+        plotOptions: {
+          pie: {
+            startAngle: -90,
+            endAngle: 270
+          }
+        },
+        fill: {
+          type: 'gradient',
+          gradient: {
+            shade: 'light',
+            type: "vertical",
+            shadeIntensity: 0.5,
+            opacityFrom: 0.9,
+            opacityTo: 0.8,
+          }
+        },
+        tooltip: {
+          y: {
+            formatter: function(val, opts) {
+              const sum = opts.w.globals.seriesTotals.reduce((a,b)=>a+b,0);
+              const percent = sum ? (val/sum*100).toFixed(1) : 0;
+              return `₺${val.toLocaleString('tr-TR')} (${percent}%)`;
+            }
+          }
+        },
+        legend: {
+          show: false
+        },
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            chart: { width: 200 }
+          }
+        }]
+      });
+
+      chart.render();
+
+      // Custom legend
+      legendDiv.innerHTML = '';
+      const sum = costData.reduce((a,b)=>a+b,0) || 1;
+      costData.forEach((val, idx) => {
+        const percent = ((val/sum)*100).toFixed(1) + '%';
+        const item = document.createElement('div');
+        item.classList.add('legend-item');
+        item.innerHTML = `
+          <span class="legend-color" style="background:${baseColors[idx]}"></span>
+          <span class="legend-label">${labels[idx]}</span>
+          <span class="legend-percent">${percent}</span>
+        `;
+        legendDiv.appendChild(item);
+      });
+
+    } catch(err){ 
+      console.error('Maliyet grafiği yüklenemedi:', err); 
+    }
+  }
+
+  loadCostChart(monthsSelect.value);
+  monthsSelect.addEventListener('change', () => loadCostChart(monthsSelect.value));
+})();
+
+
+const routeSelect = document.getElementById('route-select');
+  const tableBody = document.getElementById('competitor-table-body');
+  const doneCount = document.getElementById('done-count');
+  const suggestedPriceElem = document.getElementById('suggested-price');
+  const ctxChart = document.getElementById('competitorBarChart').getContext('2d');
+  let competitorChart = null;
+
+  // Helper: para formatı
+  function formatTL(v) {
+    return Number(v).toLocaleString('tr-TR') + ' ₺';
+  }
+
+  // 1. Rotaları yükle
+  async function loadRoutes() {
+    try {
+      const res = await fetch('http://localhost:3000/dashboard/routes');
+      const routes = await res.json();
+
+      // temizle (vars. içinde başlangıç option'ı zaten var)
+      routeSelect.querySelectorAll('option:not(:first-child)').forEach(o => o.remove());
+
+      routes.forEach((route) => {
+        const option = document.createElement('option');
+        option.value = route.id;
+        option.textContent = route.route;
+        routeSelect.appendChild(option);
+      });
+
+      // Varsayılan rota (eğer varsa id:2)
+      const defaultRoute = routes.find(r => r.id === 2) || routes[0];
+      if(defaultRoute) {
+        routeSelect.value = defaultRoute.id;
+        await loadRouteData(defaultRoute.id);
+      }
+
+    } catch (err) {
+      console.error('Rota yüklenirken hata:', err);
+    }
+  }
+
+  // 2. Bir rota seçildiğinde hem rakipleri hem önerilen fiyatı tek seferde çek ve güncelle
+  async function loadRouteData(flightId) {
+    tableBody.innerHTML = '';
+    if(!flightId) return;
+
+    try {
+      // eş zamanlı fetch'ler
+      const [pricesRes, suggestedRes] = await Promise.all([
+        fetch(`http://localhost:3000/dashboard/competitor-prices/${flightId}`),
+        fetch(`http://localhost:3000/dashboard/suggested-price/${flightId}`)
+      ]);
+      const prices = await pricesRes.json();
+      const suggestedData = await suggestedRes.json();
+
+      // tablo güncelle
+      doneCount.textContent = `${prices.length} sonuç`;
+      tableBody.innerHTML = '';
+      prices.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>
+            <div class="d-flex px-2 py-1">
+              <div>
+                <i class="material-symbols-rounded text-primary me-3">flight</i>
+              </div>
+              <div class="d-flex flex-column justify-content-center">
+                <h6 class="mb-0 text-sm">${item.competitor_name}</h6>
+              </div>
+            </div>
+          </td>
+          <td>
+            <span class="text-xs font-weight-bold">${item.route}</span>
+          </td>
+          <td class="align-middle text-center text-sm">
+            <span class="text-xs font-weight-bold">${formatTL(item.price)}</span>
+          </td>
+        `;
+        tableBody.appendChild(tr);
+      });
+
+      // önerilen fiyat göster
+      const suggestedPrice = suggestedData?.suggested_price ?? null;
+      suggestedPriceElem.textContent = suggestedPrice ? formatTL(suggestedPrice) : '-';
+
+      // grafiği güncelle (rakipler + bizim önerilen fiyat)
+      updateCompetitorChart(prices, suggestedPrice);
+
+    } catch (err) {
+      console.error('Route data yüklenirken hata:', err);
+      doneCount.textContent = '0 sonuç';
+      suggestedPriceElem.textContent = '-';
+      updateCompetitorChart([], null); // boş chart
+    }
+  }
+
+  // 3. Grafik güncelleme
+  function updateCompetitorChart(prices, ourPrice) {
+    // Eğer rakip yoksa boş göster
+    if(!prices || prices.length === 0) {
+      if(competitorChart) { competitorChart.destroy(); competitorChart = null; }
+      // basit placeholder chart
+      competitorChart = new Chart(ctxChart, {
+        type: 'bar',
+        data: { labels: ['Veri yok'], datasets: [{ data: [1], backgroundColor: ['#e9ecef'] }] },
+        options: { indexAxis: 'y', maintainAspectRatio: false, plugins: { legend: { display: false } } }
+      });
+      return;
+    }
+
+    // items: rakipler
+    const items = prices.map(p => ({
+      name: p.competitor_name,
+      price: Number(p.price),
+      isUs: false
+    }));
+
+    // bizim fiyatı ekle (label "Biz (Önerilen)")
+    if(ourPrice !== null && !isNaN(Number(ourPrice))) {
+      items.push({
+        name: 'Önerilen Tarife',
+        price: Number(ourPrice),
+        isUs: true
+      });
+    }
+
+    // Sort: büyükten küçüğe (görsel tercih) — istersen küçükten büyüğe değiştir
+    items.sort((a,b) => b.price - a.price);
+
+    const labels = items.map(i => i.name);
+    const data = items.map(i => i.price);
+    const colors = items.map(i => i.isUs ? 'rgba(0,200,83,0.95)' : 'rgba(108,117,125,0.95)'); // yeşil vs gri
+
+    // destroy önceki chart
+    if(competitorChart) competitorChart.destroy();
+
+    competitorChart = new Chart(ctxChart, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Fiyat',
+          data,
+          backgroundColor: colors,
+          borderRadius: 6,
+          barThickness: 16
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            ticks: {
+              callback: function(value) { return value + ' ₺'; }
+            },
+            grid: { color: 'rgba(0,0,0,0.05)' }
+          },
+          y: {
+            grid: { display: false },
+            ticks: { autoSkip: false }
+          }
+        },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: function(ctx) {
+                return formatTL(ctx.parsed.x);
+              }
+            }
+          }
+        },
+        animation: {
+          duration: 600,
+          easing: 'easeOutCubic'
+        }
+      }
+    });
+  }
+
+  // Event: rota değiştiğinde
+  routeSelect.addEventListener('change', () => {
+    const flightId = routeSelect.value;
+    loadRouteData(flightId);
+  });
+
+  // İlk yükleme
+  loadRoutes();
+
+async function loadExchangeRate() {
+  try {
+    const res = await fetch('http://localhost:3000/dashboard/fuel-exchange-trends/2');
+    const data = await res.json();
+
+    if(data.exchange_rate && data.exchange_rate.length > 0) {
+      const rates = data.exchange_rate;
+      const latest = rates[rates.length - 1];
+      const previous = rates.length > 1 ? rates[rates.length - 2] : null;
+
+      document.getElementById('exchange-rate').textContent = latest.rate.toFixed(2);
+
+      if(previous) {
+        const change = ((latest.rate - previous.rate) / previous.rate) * 100;
+        const changeFormatted = change.toFixed(2) + '%';
+        const changeElement = document.getElementById('exchange-rate-change');
+        changeElement.textContent = change > 0 ? `+${changeFormatted}` : `${changeFormatted}`;
+        changeElement.className = change > 0 ? 'font-weight-bolder text-success' : 'font-weight-bolder text-danger';
+      }
+    }
+
+  } catch(err) {
+    console.error('Exchange rate yüklenirken hata:', err);
+  }
+}
+
+loadExchangeRate();
+
+async function loadOtpCard() {
+    try {
+      const res = await fetch("http://localhost:3000/dashboard/otp");
+      const data = await res.json();
+
+      // OTP değeri
+      const otp = data.otp;
+      document.getElementById("otp-value").innerText = otp + "%";
+
+      // Durum değerlendirmesi
+      const statusElem = document.getElementById("otp-status");
+      if (otp >= 85) {
+        statusElem.innerHTML = `<span class="text-success font-weight-bolder">Excellent</span> - Mükemmel Zamanında Kalkış`;
+      } else if (otp >= 70) {
+        statusElem.innerHTML = `<span class="text-warning font-weight-bolder">Moderate</span> - Orta Performans`;
+      } else if (otp > 30) {
+        statusElem.innerHTML = `<span class="text-danger font-weight-bolder">Poor</span> - Düşük Performans`;
+      } else {
+        statusElem.innerHTML = `<span class="text-danger font-weight-bolder">Critical</span> - Kritik Düzey`;
+      }
+
+    } catch (err) {
+      console.error("OTP verisi alınamadı:", err);
+      document.getElementById("otp-status").innerText = "Veri alınamadı";
+    }
+  }
+
+  // Sayfa açıldığında yükle
+loadOtpCard();
+
+const monthsSelect = document.getElementById('months-select');
+let revenueChart = null;
+
+async function loadRevenueChart(months) {
+  try {
+    const res = await fetch(`http://localhost:3000/dashboard/revenue-by-months?months=${months}`);
+    const data = await res.json();
+
+    const revenueData = [
+      data.ticket_sales ? parseFloat(data.ticket_sales) : 0,
+      data.cargo_revenue ? parseFloat(data.cargo_revenue) : 0,
+      data.other_revenue ? parseFloat(data.other_revenue) : 0
+    ];
+
+    const labels = ["Bilet Geliri", "Kargo Geliri", "Diğer Gelirler"];
+
+    // Önce varsa eski grafiği temizle
+    if (revenueChart) {
+      revenueChart.destroy();
+    }
+
+    const options = {
+  series: revenueData,
+  chart: {
+    type: 'polarArea',
+    height: 280
+  },
+  labels: labels,
+  stroke: {
+    colors: ['#fff']
+  },
+  fill: {
+    opacity: 0.9
+  },
+  legend: {
+    position: 'bottom'
+  },
+  tooltip: {
+  formatter: function({ series, seriesIndex, w }) {
+    const val = series[seriesIndex];
+    const sum = w.globals.seriesTotals.reduce((a, b) => a + b, 0);
+    const percent = sum ? (val / sum * 100).toFixed(1) : 0;
+    return `₺${val.toLocaleString('tr-TR')} (${percent}%)`;
+  }
+}
+};
+
+
+    revenueChart = new ApexCharts(document.querySelector("#revenueChart"), options);
+    revenueChart.render();
+
+  } catch (err) {
+    console.error('Gelir grafiği yüklenemedi:', err);
+  }
+}
+
+// İlk yükleme
+loadRevenueChart(monthsSelect.value);
+monthsSelect.addEventListener('change', ()=>loadRevenueChart(monthsSelect.value));
+
+
+
+
+
+    async function loadSatisfactionScores() {
+  try {
+    const res = await fetch('http://localhost:3000/dashboard/satisfaction-score');
+    const data = await res.json();
+
+    const labels = data.satisfactionScores.map(item => item.membership_type);
+    const scores = data.satisfactionScores.map(item => parseFloat(item.avg_loyalty_score));
+
+    const ctx = document.getElementById("chart-bars").getContext("2d");
+
+    // Var olan chart varsa destroy et (sayfa reload vb durumları için)
+    if(window.satisfactionChart) window.satisfactionChart.destroy();
+
+    window.satisfactionChart = new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: labels,
+        datasets: [{
+          label: "Avg Loyalty Score",
+          tension: 0.4,
+          borderWidth: 0,
+          borderRadius: 4,
+          borderSkipped: false,
+          backgroundColor: "#43A047",
+          data: scores,
+          barThickness: 'flex'
+        }],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false,
+          }
+        },
+        interaction: {
+          intersect: false,
+          mode: 'index',
+        },
+        scales: {
+          y: {
+            grid: {
+              drawBorder: false,
+              display: true,
+              drawOnChartArea: true,
+              drawTicks: false,
+              borderDash: [5, 5],
+              color: '#e5e5e5'
+            },
+            ticks: {
+              suggestedMin: 0,
+              suggestedMax: 100,
+              beginAtZero: true,
+              padding: 10,
+              font: {
+                size: 14,
+                lineHeight: 2
+              },
+              color: "#737373"
+            },
+          },
+          x: {
+            grid: {
+              drawBorder: false,
+              display: false,
+              drawOnChartArea: false,
+              drawTicks: false,
+              borderDash: [5, 5]
+            },
+            ticks: {
+              display: true,
+              color: '#737373',
+              padding: 10,
+              font: {
+                size: 14,
+                lineHeight: 2
+              },
+            }
+          },
+        },
+      },
+    });
+
+  } catch (err) {
+    console.error('Satisfaction Scores yüklenirken hata:', err);
+  }
+}
+
+// Sayfa yüklenince çalıştır
+loadSatisfactionScores();
+
+async function loadAnnualRevenue() {
+    try {
+      const res = await fetch("http://localhost:3000/dashboard/annual-revenue");
+      const data = await res.json();
+
+      // geliri ekrana bas
+      document.getElementById("annual-revenue").innerText = 
+        "$" + Number(data.this_year_revenue).toLocaleString();
+
+      // değişim oranı
+      const deltaElem = document.getElementById("annual-revenue-delta");
+      if (data.delta >= 0) {
+        deltaElem.innerHTML = `<span class="text-success font-weight-bolder">+${data.delta}% </span>yıllık değişim`;
+      } else {
+        deltaElem.innerHTML = `<span class="text-danger font-weight-bolder">${data.delta}% </span>yıllık değişim`;
+      }
+
+    } catch (err) {
+      console.error("Yıllık hasılat alınamadı:", err);
+      document.getElementById("annual-revenue-delta").innerText = "Veri alınamadı";
+    }
+  }
+
+  loadAnnualRevenue();
+
+
+
+    var ctx2 = document.getElementById("chart-line").getContext("2d");
+
+    new Chart(ctx2, {
+      type: "line",
+      data: {
+        labels: ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"],
+        datasets: [{
+          label: "Sales",
+          tension: 0,
+          borderWidth: 2,
+          pointRadius: 3,
+          pointBackgroundColor: "#43A047",
+          pointBorderColor: "transparent",
+          borderColor: "#43A047",
+          backgroundColor: "transparent",
+          fill: true,
+          data: [120, 230, 130, 440, 250, 360, 270, 180, 90, 300, 310, 220],
+          maxBarThickness: 6
+
+        }],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false,
+          },
+          tooltip: {
+            callbacks: {
+              title: function(context) {
+                const fullMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                return fullMonths[context[0].dataIndex];
+              }
+            }
+          }
+        },
+        interaction: {
+          intersect: false,
+          mode: 'index',
+        },
+        scales: {
+          y: {
+            grid: {
+              drawBorder: false,
+              display: true,
+              drawOnChartArea: true,
+              drawTicks: false,
+              borderDash: [4, 4],
+              color: '#e5e5e5'
+            },
+            ticks: {
+              display: true,
+              color: '#737373',
+              padding: 10,
+              font: {
+                size: 12,
+                lineHeight: 2
+              },
+            }
+          },
+          x: {
+            grid: {
+              drawBorder: false,
+              display: false,
+              drawOnChartArea: false,
+              drawTicks: false,
+              borderDash: [5, 5]
+            },
+            ticks: {
+              display: true,
+              color: '#737373',
+              padding: 10,
+              font: {
+                size: 12,
+                lineHeight: 2
+              },
+            }
+          },
+        },
+      },
+    });
+
+    var ctx3 = document.getElementById("chart-line-tasks").getContext("2d");
+
+    new Chart(ctx3, {
+      type: "line",
+      data: {
+        labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+        datasets: [{
+          label: "Tasks",
+          tension: 0,
+          borderWidth: 2,
+          pointRadius: 3,
+          pointBackgroundColor: "#43A047",
+          pointBorderColor: "transparent",
+          borderColor: "#43A047",
+          backgroundColor: "transparent",
+          fill: true,
+          data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
+          maxBarThickness: 6
+
+        }],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false,
+          }
+        },
+        interaction: {
+          intersect: false,
+          mode: 'index',
+        },
+        scales: {
+          y: {
+            grid: {
+              drawBorder: false,
+              display: true,
+              drawOnChartArea: true,
+              drawTicks: false,
+              borderDash: [4, 4],
+              color: '#e5e5e5'
+            },
+            ticks: {
+              display: true,
+              padding: 10,
+              color: '#737373',
+              font: {
+                size: 14,
+                lineHeight: 2
+              },
+            }
+          },
+          x: {
+            grid: {
+              drawBorder: false,
+              display: false,
+              drawOnChartArea: false,
+              drawTicks: false,
+              borderDash: [4, 4]
+            },
+            ticks: {
+              display: true,
+              color: '#737373',
+              padding: 10,
+              font: {
+                size: 14,
+                lineHeight: 2
+              },
+            }
+          },
+        },
+      },
+    });
+  </script>
+  <script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+  </script>
+  <!-- Github buttons -->
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+  <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+  <script src="../assets/js/material-dashboard.min.js?v=3.2.0"></script>
+</body>
+
+</html>
