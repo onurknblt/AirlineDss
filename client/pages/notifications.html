@@ -1,44 +1,665 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <!-- Favicon ve Apple Icon -->
   <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
   <link rel="icon" type="image/png" href="../assets/img/favicon.png">
 
-  <title>Türk Hava Yolları Karar Destek Sistemi</title>
+  <title>Türk Hava Yolları - What-If Analiz Modülü</title>
 
-  <!-- Fonts -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
-
-  <!-- Icons -->
   <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
   <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
-
-  <!-- Font Awesome (tek sefer) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
-
-  <!-- CSS Files -->
   <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
 
+  <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #1a73e8 0%, #4dabf7 100%);
+      --secondary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      --danger-gradient: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+      --warning-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      --glass-bg: rgba(255, 255, 255, 0.1);
+      --glass-border: rgba(255, 255, 255, 0.2);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Hero Section */
+    .hero-section {
+      background: var(--primary-gradient);
+      padding: 4rem 0 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,154.7C960,171,1056,181,1152,165.3C1248,149,1344,107,1392,85.3L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+      background-size: cover;
+      opacity: 0.3;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-title {
+      font-size: 3rem;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 1rem;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      animation: fadeInUp 0.8s ease;
+    }
+
+    .hero-subtitle {
+      font-size: 1.25rem;
+      color: rgba(255,255,255,0.95);
+      margin-bottom: 2rem;
+      animation: fadeInUp 0.8s ease 0.2s backwards;
+    }
+
+    /* Progress Stepper */
+    .stepper-wrapper {
+      display: flex;
+      justify-content: space-between;
+      margin: 3rem 0;
+      padding: 0 2rem;
+      position: relative;
+    }
+
+    .stepper-wrapper::before {
+      content: '';
+      position: absolute;
+      top: 30px;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: #e0e0e0;
+      z-index: 0;
+    }
+
+    .stepper-progress {
+      position: absolute;
+      top: 30px;
+      left: 0;
+      height: 4px;
+      background: var(--primary-gradient);
+      transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 1;
+    }
+
+    .stepper-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+      flex: 1;
+    }
+
+    .stepper-circle {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: white;
+      border: 4px solid #e0e0e0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .stepper-circle.active {
+      border-color: #1a73e8;
+      background: var(--primary-gradient);
+      color: white;
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(26,115,232,0.4);
+    }
+
+    .stepper-circle.completed {
+      border-color: #11998e;
+      background: var(--success-gradient);
+      color: white;
+    }
+
+    .stepper-label {
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #666;
+      text-align: center;
+      max-width: 100px;
+    }
+
+    .stepper-item.active .stepper-label {
+      color: #1a73e8;
+    }
+
+    /* Start Button */
+    .start-button {
+      background: white;
+      color: #1a73e8;
+      border: none;
+      padding: 1.5rem 4rem;
+      font-size: 1.25rem;
+      font-weight: 700;
+      border-radius: 50px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      transition: all 0.3s ease;
+      animation: pulse 2s infinite;
+    }
+
+    .start-button:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.2);
+      background: linear-gradient(135deg, #ffffff 0%, #f0f8ff 100%);
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    /* Form Card */
+    .form-card {
+      background: white;
+      border-radius: 24px;
+      padding: 3rem;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(26,115,232,0.1);
+      animation: slideInUp 0.6s ease;
+    }
+
+    .form-step {
+      opacity: 0;
+      transform: translateX(50px);
+      animation: slideInRight 0.5s ease forwards;
+    }
+
+    @keyframes slideInRight {
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .form-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 20px;
+      background: var(--primary-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      color: white;
+      font-size: 2.5rem;
+      box-shadow: 0 8px 16px rgba(26,115,232,0.3);
+    }
+
+    .form-label {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1a73e8;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .form-description {
+      color: #666;
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 1rem;
+    }
+
+    .form-control, .form-select {
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      background: #f8f9fa;
+    }
+
+    .form-control:focus, .form-select:focus {
+      border-color: #1a73e8;
+      box-shadow: 0 0 0 4px rgba(26,115,232,0.1);
+      background: white;
+      outline: none;
+    }
+
+    .form-control.is-valid {
+      border-color: #11998e;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2311998e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      background-size: 24px;
+    }
+
+    .input-hint {
+      font-size: 0.875rem;
+      color: #999;
+      margin-top: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Buttons */
+    .btn-gradient {
+      background: var(--primary-gradient);
+      border: none;
+      color: white;
+      padding: 1rem 2.5rem;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(26,115,232,0.3);
+    }
+
+    .btn-gradient:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(26,115,232,0.4);
+      color: white;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid #1a73e8;
+      color: #1a73e8;
+      padding: 1rem 2.5rem;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+    }
+
+    .btn-outline:hover {
+      background: #1a73e8;
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    /* Loading Spinner */
+    .loading-spinner {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-right: 0.5rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Results Section */
+    .results-section {
+      animation: fadeIn 0.8s ease;
+    }
+
+    .metric-card {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 2px solid transparent;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .metric-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--primary-gradient);
+      transform: scaleX(0);
+      transition: transform 0.4s ease;
+    }
+
+    .metric-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .metric-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.12);
+      border-color: #1a73e8;
+    }
+
+    .metric-card.positive {
+      background: linear-gradient(135deg, #ffffff 0%, #e8f5e9 100%);
+    }
+
+    .metric-card.negative {
+      background: linear-gradient(135deg, #ffffff 0%, #ffebee 100%);
+    }
+
+    .metric-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .metric-icon.positive {
+      background: var(--success-gradient);
+      color: white;
+    }
+
+    .metric-icon.negative {
+      background: var(--danger-gradient);
+      color: white;
+    }
+
+    .metric-icon.neutral {
+      background: var(--primary-gradient);
+      color: white;
+    }
+
+    .metric-label {
+      font-size: 0.875rem;
+      color: #666;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.5rem;
+    }
+
+    .metric-value {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #1a73e8;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .metric-trend {
+      font-size: 1.5rem;
+    }
+
+    .metric-status {
+      font-size: 0.875rem;
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      display: inline-block;
+    }
+
+    .metric-status.excellent {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .metric-status.good {
+      background: #e3f2fd;
+      color: #1565c0;
+    }
+
+    .metric-status.poor {
+      background: #ffebee;
+      color: #c62828;
+    }
+
+    /* Chart Cards */
+    .chart-card {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      margin-bottom: 2rem;
+    }
+
+    .chart-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Info Section */
+    .info-section {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 20px;
+      padding: 2.5rem;
+      color: white;
+      margin-top: 3rem;
+    }
+
+    .info-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .info-content {
+      font-size: 1rem;
+      line-height: 1.8;
+      opacity: 0.95;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .info-item {
+      background: rgba(255,255,255,0.15);
+      padding: 1.5rem;
+      border-radius: 16px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .info-item-title {
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    .info-item-text {
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .action-btn {
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .action-btn-primary {
+      background: var(--primary-gradient);
+      color: white;
+      border: none;
+      box-shadow: 0 4px 12px rgba(26,115,232,0.3);
+    }
+
+    .action-btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(26,115,232,0.4);
+    }
+
+    .action-btn-secondary {
+      background: white;
+      color: #1a73e8;
+      border: 2px solid #1a73e8;
+    }
+
+    .action-btn-secondary:hover {
+      background: #f0f8ff;
+      transform: translateY(-2px);
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Toast Notifications */
+    .toast-container {
+      position: fixed;
+      top: 2rem;
+      right: 2rem;
+      z-index: 9999;
+    }
+
+    .toast-notification {
+      background: white;
+      padding: 1.25rem 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      min-width: 300px;
+      animation: slideInRight 0.4s ease;
+      border-left: 4px solid #1a73e8;
+    }
+
+    .toast-notification.success {
+      border-left-color: #11998e;
+    }
+
+    .toast-notification.error {
+      border-left-color: #eb3349;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 2rem;
+      }
+
+      .hero-subtitle {
+        font-size: 1rem;
+      }
+
+      .stepper-wrapper {
+        padding: 0;
+        overflow-x: auto;
+      }
+
+      .stepper-circle {
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+      }
+
+      .stepper-label {
+        font-size: 0.75rem;
+        max-width: 80px;
+      }
+
+      .form-card {
+        padding: 2rem 1.5rem;
+      }
+
+      .metric-value {
+        font-size: 2rem;
+      }
+    }
+
+    /* Utility Classes */
+    .fade-in { animation: fadeIn 0.8s ease; }
+    .fade-in-up { animation: fadeInUp 0.8s ease; }
+    .slide-in-up { animation: slideInUp 0.6s ease; }
+  </style>
 </head>
 
-<body class="g-sidenav-show  bg-gray-100">
-  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
+<body class="g-sidenav-show bg-gray-100">
+
+  <!-- Sidebar -->
+  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2 bg-white my-2" id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
-      <a class="navbar-brand px-4 py-3 m-0"> 
+      <a class="navbar-brand px-4 py-3 m-0">
         <img src="../assets/img/logo-ct-dark.png" class="navbar-brand-img" width="26" height="26" alt="main_logo">
         <span class="ms-1 text-sm text-dark">Turkish-KDS</span>
       </a>
     </div>
     <hr class="horizontal dark mt-0 mb-2">
-    <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
+    <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/dashboard.html">
@@ -58,39 +679,31 @@
             <span class="nav-link-text ms-1">Maliye</span>
           </a>
         </li>
-        
-        
         <li class="nav-item">
           <a class="nav-link active bg-gradient-dark text-white" href="../pages/notifications.html">
             <i class="material-symbols-rounded opacity-5">notifications</i>
             <span class="nav-link-text ms-1">What-If</span>
           </a>
         </li>
-        
-        
-        
-        
       </ul>
     </div>
-    
   </aside>
-  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+
+  <!-- Main Content -->
+  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+
     <!-- Navbar -->
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-3 shadow-none border-radius-xl" id="navbarBlur" data-scroll="true">
       <div class="container-fluid py-1 px-3">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Pages</a></li>
-            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">What-If</li>
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Sayfalar</a></li>
+            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">What-If Analiz</li>
           </ol>
         </nav>
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
-          <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-            
-          </div>
-          <ul class="navbar-nav d-flex align-items-center  justify-content-end">
-            
-            
+          <div class="ms-md-auto pe-md-3 d-flex align-items-center"></div>
+          <ul class="navbar-nav d-flex align-items-center justify-content-end">
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
                 <div class="sidenav-toggler-inner">
@@ -102,493 +715,897 @@
             </li>
             <li class="nav-item px-3 d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body p-0">
-                <i class="material-symbols-rounded fixed-plugin-button-nav">settings</i>
+                <i class="material-symbols-rounded">settings</i>
               </a>
-            </li>
-            <li class="nav-item dropdown pe-3 d-flex align-items-center">
-              <a href="javascript:;" class="nav-link text-body p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="material-symbols-rounded">notifications</i>
-              </a>
-              <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
-                <li class="mb-2">
-                  <a class="dropdown-item border-radius-md" href="javascript:;">
-                    <div class="d-flex py-1">
-                      <div class="my-auto">
-                        <img src="../assets/img/team-2.jpg" class="avatar avatar-sm  me-3 ">
-                      </div>
-                      <div class="d-flex flex-column justify-content-center">
-                        <h6 class="text-sm font-weight-normal mb-1">
-                          <span class="font-weight-bold">Yeni mesaj</span> Onur'dan
-                        </h6>
-                        <p class="text-xs text-secondary mb-0">
-                          <i class="fa fa-clock me-1"></i>
-                          13 dakika önce
-                        </p>
-                      </div>
-                    </div>
-                  </a>
-                </li>
-                
-                
-              </ul>
             </li>
             <li class="nav-item d-flex align-items-center">
-  <a href="../pages/sign-in.html" class="nav-link text-body font-weight-bold px-0">
-    <i class="material-symbols-rounded">logout</i>
-  </a>
-</li>
+              <a href="../pages/sign-in.html" class="nav-link text-body font-weight-bold px-0">
+                <i class="material-symbols-rounded">logout</i>
+              </a>
+            </li>
           </ul>
         </div>
       </div>
     </nav>
-    <!-- End Navbar -->
 
-
-<!-- Step Form Module -->
-<section class="py-5">
-  <div class="container">
-    <div class="row justify-content-center text-center mb-4">
-      <div class="col-lg-8 col-xxl-7">
-        <h2 class="display-5 fw-bold" style="color:#000;">What-If: Uçak Yatırımı Modülü</h2>
-<p class="lead" style="color:#333;">Başla butonuna basarak adım adım uçak yatırımı senaryosunu hesaplayın.</p>
-
-      </div>
-    </div>
-
-    <!-- Progress Bar -->
-    <div class="mb-4">
-      <div class="progress" style="height: 20px; background-color:#fff;">
-        <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%;"></div>
-      </div>
-    </div>
-
-    <!-- Başla Butonu -->
-    <div class="text-center mb-4">
-      <button id="startBtn" class="btn btn-gradient-dark btn-lg">Başla</button>
-    </div>
-
-    <!-- Step Form Card -->
-    <div id="stepForm" class="card p-4 shadow d-none">
-      <div id="stepContent" class="position-relative">
-        <label for="input1" class="form-label">Yatırım Tutarı</label>
-        <input type="number" id="input1" class="form-control mb-3" placeholder="Ör: 100000">
-      </div>
-      <div class="d-flex justify-content-between mt-3">
-        <button id="prevBtn" class="btn btn-secondary d-none">Geri</button>
-        <button id="nextBtn" class="btn btn-gradient-dark">İleri</button>
-      </div>
-    </div>
-
-    <!-- Sonuç Kartları -->
-    <div id="results" class="row mt-4 d-none">
-      <div class="col-md-4 mb-3">
-        <div class="card bg-gradient-dark move-on-hover p-3">
-          <h5>Kar</h5>
-          <h2>₺500.000</h2>
-          <p class="text-sm">1 yıl sonunda</p>
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="container hero-content">
+        <div class="text-center">
+          <h1 class="hero-title">What-If: Uçak Yatırımı Analizi</h1>
+          <p class="hero-subtitle">Gelişmiş finansal modelleme ile yatırım kararlarınızı optimize edin</p>
+          <button id="startBtn" class="start-button">
+            <i class="fas fa-rocket me-2"></i>
+            Analizi Başlat
+          </button>
         </div>
       </div>
-      <div class="col-md-4 mb-3">
-        <div class="card bg-gradient-dark move-on-hover p-3">
-          <h5>Risk</h5>
-          <h2>%12</h2>
-          <p class="text-sm">Tahmini</p>
+    </section>
+
+    <!-- Main Container -->
+    <div class="container-fluid py-4">
+
+      <!-- Progress Stepper -->
+      <div id="stepperSection" class="stepper-wrapper d-none">
+        <div class="stepper-progress" id="stepperProgress"></div>
+        <div class="stepper-item" data-step="0">
+          <div class="stepper-circle">
+            <i class="fas fa-plane"></i>
+          </div>
+          <div class="stepper-label">Uçak Modeli</div>
+        </div>
+        <div class="stepper-item" data-step="1">
+          <div class="stepper-circle">
+            <i class="fas fa-handshake"></i>
+          </div>
+          <div class="stepper-label">Yatırım Tipi</div>
+        </div>
+        <div class="stepper-item" data-step="2">
+          <div class="stepper-circle">
+            <i class="fas fa-dollar-sign"></i>
+          </div>
+          <div class="stepper-label">Maliyet</div>
+        </div>
+        <div class="stepper-item" data-step="3">
+          <div class="stepper-circle">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="stepper-label">Doluluk</div>
+        </div>
+        <div class="stepper-item" data-step="4">
+          <div class="stepper-circle">
+            <i class="fas fa-gas-pump"></i>
+          </div>
+          <div class="stepper-label">Yakıt</div>
+        </div>
+        <div class="stepper-item" data-step="5">
+          <div class="stepper-circle">
+            <i class="fas fa-tools"></i>
+          </div>
+          <div class="stepper-label">Bakım</div>
+        </div>
+        <div class="stepper-item" data-step="6">
+          <div class="stepper-circle">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <div class="stepper-label">Gelir</div>
         </div>
       </div>
-    </div>
 
-    <!-- Tekrar Dene -->
-    <div class="text-center mt-3 d-none" id="retryDiv">
-      <button id="retryBtn" class="btn btn-gradient-dark btn-lg">Tekrar Dene</button>
-    </div>
-  </div>
-</section>
-
-<style>
-/* -------------------------
-   Scoped for Step Form Module
----------------------------*/
-
-/* Step Form Card Gradient Dark */
-#stepForm.card {
-  border-radius: 1rem !important;
-  background: linear-gradient(135deg, #ffffff, #ffffff) !important;
-  padding: 2rem !important;
-  color: #fff;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-}
-
-/* Progress Bar - Beyaz Arka, Gradient Dolgu */
-#progressBar {
-  background: linear-gradient(90deg, #1a73e8, #4dabf7) !important;
-  height: 20px !important;
-  border-radius: 10px !important;
-}
-
-/* Buttons Gradient Dark + Move on Hover */
-#startBtn,
-#nextBtn,
-#prevBtn,
-#retryBtn {
-  font-weight: 600 !important;
-  border-radius: 0.5rem !important;
-  color: #fff !important;
-  background: linear-gradient(90deg, #1a73e8, #4dabf7) !important;
-  border: none !important;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-#startBtn:hover,
-#nextBtn:hover,
-#prevBtn:hover,
-#retryBtn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 20px rgb(255, 255, 255);
-}
-
-/* Form Inputs */
-
-/* Dropdown menü hover yazı rengi beyaz */
-body .dropdown-menu.show .dropdown-item:hover,
-body .dropdown-menu.show .dropdown-item:focus,
-body .dropdown-menu .dropdown-item.active,
-body .dropdown-menu .dropdown-item:active {
-    background-color: #ffffff !important;
-    color: #1a73e8 !important;
-}
-
-
-
-#stepForm input.form-control,
-#stepForm select.form-select {
-  border-radius: 0.5rem !important;
-  border: 1px solid #4dabf7 !important;
-  padding: 0.5rem 0.75rem !important;
-  background-color: #ffffff !important;
-  color: #4dabf7 !important;
-}
-#stepForm input.form-control::placeholder,
-#stepForm select.form-select::placeholder {
-  color: #ccc !important;
-}
-#stepForm input.form-control:focus,
-#stepForm select.form-select:focus {
-  border-color: #1a73e8 !important;
-  box-shadow: 0 0 0 0.2rem rgba(26,115,232,0.25) !important;
-  outline: none !important;
-}
-
-/* Sonuç Kartları Move-on-Hover + Gradient */
-
-#results .card,
-#results .card h1,
-#results .card h2,
-#results .card h3,
-#results .card h4,
-#results .card h5,
-#results .card h6,
-#results .card p,
-#results .card span,
-#results .card small,
-#results .card a {
-  color: #fff !important;
-}
-
-#results .card.move-on-hover {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
-}
-#results .card.move-on-hover:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgb(97, 186, 246);
-}
-#results .card.bg-gradient-dark {
-  background: linear-gradient(90deg, #1a73e8, #4dabf7) !important;
-  color: #fff !important;
-}
-
-/* Text Centering */
-#stepForm,
-#results,
-#retryDiv {
-  text-align: center;
-}
-
-/* Başlık ve lead renkleri */
-#stepForm h2,
-#stepForm h5,
-#stepForm p,
-#stepForm label,
-#stepForm .lead {
-  color: #4dabf7 !important;
-}
-</style>
-
-
-<div class="row">
-  <div class="col-12">
-    <div class="card my-4">
-      <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-        <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
-          <h6 class="text-white text-capitalize ps-3">Bilgilendirme</h6>
+      <!-- Form Section -->
+      <div id="formSection" class="d-none">
+        <div class="row justify-content-center">
+          <div class="col-lg-8 col-xl-6">
+            <div class="form-card">
+              <div id="formContent"></div>
+              <div class="d-flex justify-content-between mt-4">
+                <button id="prevBtn" class="btn-outline d-none">
+                  <i class="fas fa-arrow-left me-2"></i>
+                  Geri
+                </button>
+                <button id="nextBtn" class="btn-gradient ms-auto">
+                  İleri
+                  <i class="fas fa-arrow-right ms-2"></i>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="card-body px-3 pb-3">
-        <div class="info-box p-3">
-          <p class="text-sm text-secondary mb-0">
-            Bu modül, yatırım kararlarını desteklemek amacıyla uçak alımı ve işletme maliyetlerini farklı parametreler üzerinden simüle etmenizi sağlar. Girdiğiniz değerler (uçak modeli, yatırım tipi, maliyetler, tahmini doluluk oranı, yakıt ve bakım maliyetleri, gelir projeksiyonları) ışığında aşağıdaki finansal göstergeler hesaplanır:
 
-ROI (Return on Investment / Yatırım Getirisi): Yatırıma harcanan sermayeye karşı elde edilen net kazancı gösterir. Bu değer, yatırımın karlılığını hızlıca değerlendirmek için kullanılır.
+      <!-- Results Section -->
+      <div id="resultsSection" class="results-section d-none">
 
-NPV (Net Present Value / Net Bugünkü Değer): Gelecek nakit akımlarının bugünkü değerini gösterir. Pozitif bir NPV, yatırımın zaman değerine göre kazançlı olduğunu işaret eder.
+        <!-- Metrics Cards -->
+        <div class="row mb-4">
+          <div class="col-lg-3 col-md-6 mb-4">
+            <div class="metric-card" id="profitCard">
+              <div class="metric-icon neutral">
+                <i class="fas fa-coins"></i>
+              </div>
+              <div class="metric-label">Net Kâr</div>
+              <div class="metric-value" id="profitValue">
+                <span class="metric-trend" id="profitTrend"></span>
+                <span id="profitAmount">$0</span>
+              </div>
+              <span class="metric-status" id="profitStatus">Hesaplanıyor...</span>
+            </div>
+          </div>
 
-Break-even Noktası: Yatırımın maliyetlerini karşılamaya başladığı satış veya doluluk seviyesini gösterir. Bu noktaya ulaşıldığında, yatırımın maliyetleri karşılanmış olur ve kâr üretimi başlar.
+          <div class="col-lg-3 col-md-6 mb-4">
+            <div class="metric-card" id="roiCard">
+              <div class="metric-icon neutral">
+                <i class="fas fa-percentage"></i>
+              </div>
+              <div class="metric-label">ROI (Yatırım Getirisi)</div>
+              <div class="metric-value" id="roiValue">
+                <span class="metric-trend" id="roiTrend"></span>
+                <span id="roiAmount">0%</span>
+              </div>
+              <span class="metric-status" id="roiStatus">Hesaplanıyor...</span>
+            </div>
+          </div>
 
-Tahmini Kar: Seçilen parametreler doğrultusunda belirli bir dönemde beklenen net kârı gösterir. Bu gösterge, yatırımın finansal başarısını ölçmek için temel kriterdir.
+          <div class="col-lg-3 col-md-6 mb-4">
+            <div class="metric-card" id="npvCard">
+              <div class="metric-icon neutral">
+                <i class="fas fa-chart-pie"></i>
+              </div>
+              <div class="metric-label">NPV (Net Bugünkü Değer)</div>
+              <div class="metric-value" id="npvValue">
+                <span class="metric-trend" id="npvTrend"></span>
+                <span id="npvAmount">$0</span>
+              </div>
+              <span class="metric-status" id="npvStatus">Hesaplanıyor...</span>
+            </div>
+          </div>
 
-Bu kart, kullanıcıya hızlı bir özet sunar ve farklı senaryoların finansal etkilerini görselleştirerek, yatırım kararlarını veri odaklı bir şekilde destekler.
-          </p>
+          <div class="col-lg-3 col-md-6 mb-4">
+            <div class="metric-card" id="breakEvenCard">
+              <div class="metric-icon neutral">
+                <i class="fas fa-balance-scale"></i>
+              </div>
+              <div class="metric-label">Break-even Noktası</div>
+              <div class="metric-value" id="breakEvenValue">
+                <span class="metric-trend" id="breakEvenTrend"></span>
+                <span id="breakEvenAmount">-</span>
+              </div>
+              <span class="metric-status" id="breakEvenStatus">Hesaplanıyor...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts -->
+        
+
+        
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button id="downloadPdfBtn" class="action-btn action-btn-secondary">
+            <i class="fas fa-file-pdf"></i>
+            PDF İndir
+          </button>
+          <button id="retryBtn" class="action-btn action-btn-primary">
+            <i class="fas fa-redo"></i>
+            Yeni Analiz
+          </button>
         </div>
       </div>
+
+      <!-- Info Section -->
+      <div class="info-section">
+        <h3 class="info-title">
+          <i class="fas fa-info-circle"></i>
+          What-If Analiz Modülü Hakkında
+        </h3>
+        <p class="info-content">
+          Bu modül, uçak yatırım kararlarınızı veri odaklı bir yaklaşımla değerlendirmenizi sağlar. Gelişmiş finansal modelleme teknikleri kullanarak, farklı senaryoların etkilerini görselleştirir ve optimal yatırım stratejilerini belirlemenize yardımcı olur.
+        </p>
+
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-item-title">
+              <i class="fas fa-percentage me-2"></i>
+              ROI (Yatırım Getirisi)
+            </div>
+            <div class="info-item-text">
+              Yatırıma harcanan sermayeye karşı elde edilen net kazancı gösterir. Yüksek ROI, yatırımın karlılığını işaret eder.
+            </div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-item-title">
+              <i class="fas fa-chart-pie me-2"></i>
+              NPV (Net Bugünkü Değer)
+            </div>
+            <div class="info-item-text">
+              Gelecek nakit akımlarının bugünkü değerini gösterir. Pozitif NPV, yatırımın zaman değerine göre kazançlı olduğunu gösterir.
+            </div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-item-title">
+              <i class="fas fa-balance-scale me-2"></i>
+              Break-even Noktası
+            </div>
+            <div class="info-item-text">
+              Yatırımın maliyetlerini karşılamaya başladığı noktayı gösterir. Bu noktadan sonra kâr üretimi başlar.
+            </div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-item-title">
+              <i class="fas fa-coins me-2"></i>
+              Tahmini Kar
+            </div>
+            <div class="info-item-text">
+              Seçilen parametreler doğrultusunda belirli bir dönemde beklenen net kârı gösterir.
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
-  </div>
-</div>
-
-
-
-    
-    
   </main>
-  <div class="fixed-plugin">
-    
-    
-  </div>
-  <!--   Core JS Files   -->
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
   <script src="../assets/js/core/popper.min.js"></script>
   <script src="../assets/js/core/bootstrap.min.js"></script>
+  <script src="../assets/js/core/bootstrap.bundle.min.js"></script>
   <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
   <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chart.js/4.4.0/chart.umd.min.js"></script>
+
   <script>
+    // Configuration
+    const API_BASE = 'http://localhost:3000';
 
     const steps = [
-  { label: 'Uçak Modeli', type: 'select', id: 'aircraftModel', options: [] },
-  { label: 'Yatırım Tipi', type: 'select', id: 'investmentType', options: ['Satın Alma', 'Leasing'] },
-  { label: 'Maliyet / Leasing Ücreti ($)', type: 'number', id: 'cost', value: 120000 },
-  { label: 'Tahmini Doluluk (%)', type: 'number', id: 'occupancy', value: 85 },
-  { label: 'Yakıt Maliyeti ($)', type: 'number', id: 'fuelCost', value: 50000 },
-  { label: 'Bakım & Personel Maliyeti ($)', type: 'number', id: 'otherCosts', value: 30000 },
-  { label: 'Bilet / Cargo Geliri ($)', type: 'number', id: 'revenue', value: 250000 },
-];
+      {
+        label: 'Uçak Modeli',
+        description: 'Yatırım yapmak istediğiniz uçak modelini seçin',
+        icon: 'fa-plane',
+        type: 'select',
+        id: 'aircraftModel',
+        options: [],
+        placeholder: 'Bir uçak modeli seçin'
+      },
+      {
+        label: 'Yatırım Tipi',
+        description: 'Satın alma veya leasing seçeneklerinden birini belirleyin',
+        icon: 'fa-handshake',
+        type: 'select',
+        id: 'investmentType',
+        options: ['Satın Alma', 'Leasing'],
+        placeholder: 'Yatırım tipini seçin'
+      },
+      {
+        label: 'Maliyet / Leasing Ücreti',
+        description: 'Toplam yatırım maliyetini veya yıllık leasing ücretini girin',
+        icon: 'fa-dollar-sign',
+        type: 'number',
+        id: 'cost',
+        value: 120000,
+        min: 10000,
+        hint: 'Tavsiye edilen: $100,000 - $500,000'
+      },
+      {
+        label: 'Tahmini Doluluk Oranı',
+        description: 'Uçuşlarda beklediğiniz ortalama doluluk oranını belirleyin',
+        icon: 'fa-users',
+        type: 'number',
+        id: 'occupancy',
+        value: 85,
+        min: 0,
+        max: 100,
+        hint: 'Sektör ortalaması: %75-85'
+      },
+      {
+        label: 'Yakıt Maliyeti',
+        description: 'Yıllık tahmini yakıt maliyetini girin',
+        icon: 'fa-gas-pump',
+        type: 'number',
+        id: 'fuelCost',
+        value: 50000,
+        min: 0,
+        hint: 'Güncel piyasa fiyatlarını dikkate alın'
+      },
+      {
+        label: 'Bakım & Personel Maliyeti',
+        description: 'Yıllık bakım ve personel maliyetlerinin toplamını girin',
+        icon: 'fa-tools',
+        type: 'number',
+        id: 'otherCosts',
+        value: 30000,
+        min: 0,
+        hint: 'Rutin bakım ve personel giderleri'
+      },
+      {
+        label: 'Bilet / Cargo Geliri',
+        description: 'Yıllık tahmini toplam gelir miktarını belirleyin',
+        icon: 'fa-chart-line',
+        type: 'number',
+        id: 'revenue',
+        value: 250000,
+        min: 0,
+        hint: 'Tüm gelir kaynaklarını dahil edin'
+      }
+    ];
 
-let currentStep = 0;
-const formData = {};
+    let currentStep = 0;
+    const formData = {};
+    let charts = {};
 
-const startBtn = document.getElementById('startBtn');
-const stepForm = document.getElementById('stepForm');
-const stepContent = document.getElementById('stepContent');
-const prevBtn = document.getElementById('prevBtn');
-const nextBtn = document.getElementById('nextBtn');
-const resultsDiv = document.getElementById('results');
-const retryDiv = document.getElementById('retryDiv');
-const retryBtn = document.getElementById('retryBtn');
-const progressBar = document.getElementById('progressBar');
+    // DOM Elements
+    const startBtn = document.getElementById('startBtn');
+    const stepperSection = document.getElementById('stepperSection');
+    const formSection = document.getElementById('formSection');
+    const formContent = document.getElementById('formContent');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const resultsSection = document.getElementById('resultsSection');
+    const retryBtn = document.getElementById('retryBtn');
+    const downloadPdfBtn = document.getElementById('downloadPdfBtn');
+    const stepperProgress = document.getElementById('stepperProgress');
+    const toastContainer = document.getElementById('toastContainer');
 
-// Dinamik uçak modellerini API'den çek
-async function loadAircraftModels() {
-  try {
-    const res = await fetch('http://localhost:3000/aircraft/');
-    const models = await res.json();
-    steps[0].options = models;
-  } catch(err) {
-    console.error('Uçak modelleri yüklenemedi', err);
-  }
-}
+    // Toast Notification
+    function showToast(message, type = 'success') {
+      const toast = document.createElement('div');
+      toast.className = `toast-notification ${type}`;
+      toast.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} fa-lg"></i>
+        <span>${message}</span>
+      `;
+      toastContainer.appendChild(toast);
 
-// Adımı render et
-function renderStep() {
-  const step = steps[currentStep];
-  stepContent.innerHTML = '';
-  let html = `<h5>${step.label}</h5>`;
-  if(step.type === 'select') {
-    html += `<select id="${step.id}" class="form-select mt-2 mb-2">` +
-      step.options.map(o => `<option>${o}</option>`).join('') +
-      `</select>`;
-  } else if(step.type === 'number') {
-    html += `<input type="number" id="${step.id}" class="form-control mt-2 mb-2" value="${step.value || ''}">`;
-  }
-  stepContent.innerHTML = html;
+      setTimeout(() => {
+        toast.style.animation = 'slideOutRight 0.4s ease';
+        setTimeout(() => toast.remove(), 400);
+      }, 3000);
+    }
 
-  prevBtn.classList.toggle('d-none', currentStep === 0);
-  nextBtn.textContent = currentStep === steps.length - 1 ? 'Hesapla' : 'İleri';
+    // Load Aircraft Models
+    async function loadAircraftModels() {
+      try {
+        const response = await fetch(`${API_BASE}/aircraft/`);
+        const models = await response.json();
+        steps[0].options = models;
+      } catch (error) {
+        console.error('Uçak modelleri yüklenemedi:', error);
+        showToast('Uçak modelleri yüklenirken bir hata oluştu', 'error');
+        steps[0].options = ['Boeing 737', 'Airbus A320', 'Boeing 777'];
+      }
+    }
 
-  // Progress bar güncelle
-  const progress = ((currentStep) / steps.length) * 100;
-  progressBar.style.width = `${progress}%`;
-}
+    // Update Stepper
+    function updateStepper() {
+      const stepperItems = document.querySelectorAll('.stepper-item');
+      const progressPercentage = (currentStep / (steps.length - 1)) * 100;
+      stepperProgress.style.width = `${progressPercentage}%`;
 
-// Başla butonu
-startBtn.addEventListener('click', async () => {
-  await loadAircraftModels();
-  startBtn.classList.add('d-none');
-  stepForm.classList.remove('d-none');
-  renderStep();
-});
+      stepperItems.forEach((item, index) => {
+        const circle = item.querySelector('.stepper-circle');
+        circle.classList.remove('active', 'completed');
 
-// İleri butonu
-nextBtn.addEventListener('click', async () => {
-  const step = steps[currentStep];
-  const value = document.getElementById(step.id).value;
-  if(!value) return alert('Lütfen bir değer girin.');
-  formData[step.id] = value;
+        if (index < currentStep) {
+          circle.classList.add('completed');
+          circle.innerHTML = '<i class="fas fa-check"></i>';
+        } else if (index === currentStep) {
+          circle.classList.add('active');
+          item.classList.add('active');
+        } else {
+          const step = steps[index];
+          circle.innerHTML = `<i class="fas ${step.icon}"></i>`;
+        }
+      });
+    }
 
-  if(currentStep < steps.length - 1) {
-    currentStep++;
-    renderStep();
-  } else {
-    // Hesaplamayı yap
-    try {
-      const res = await fetch('http://localhost:3000/what-if', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
+    // Validate Input
+    function validateInput(step, value) {
+      if (!value || value.trim() === '') return false;
+
+      if (step.type === 'number') {
+        const numValue = parseFloat(value);
+        if (isNaN(numValue)) return false;
+        if (step.min !== undefined && numValue < step.min) return false;
+        if (step.max !== undefined && numValue > step.max) return false;
+      }
+
+      return true;
+    }
+
+    // Render Step
+    function renderStep() {
+      const step = steps[currentStep];
+
+      let inputHtml = '';
+      if (step.type === 'select') {
+        inputHtml = `
+          <select id="${step.id}" class="form-select">
+            <option value="">${step.placeholder}</option>
+            ${step.options.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+          </select>
+        `;
+      } else if (step.type === 'number') {
+        inputHtml = `
+          <input
+            type="number"
+            id="${step.id}"
+            class="form-control"
+            value="${step.value || ''}"
+            min="${step.min || 0}"
+            ${step.max ? `max="${step.max}"` : ''}
+            placeholder="Değer girin"
+          >
+          <div class="input-hint">
+            <i class="fas fa-lightbulb"></i>
+            ${step.hint}
+          </div>
+        `;
+      }
+
+      formContent.innerHTML = `
+        <div class="form-step">
+          <div class="form-icon">
+            <i class="fas ${step.icon}"></i>
+          </div>
+          <h3 class="form-label">${step.label}</h3>
+          <p class="form-description">${step.description}</p>
+          ${inputHtml}
+        </div>
+      `;
+
+      // Restore saved value
+      if (formData[step.id]) {
+        document.getElementById(step.id).value = formData[step.id];
+      }
+
+      // Add real-time validation
+      const input = document.getElementById(step.id);
+      input.addEventListener('input', () => {
+        if (validateInput(step, input.value)) {
+          input.classList.add('is-valid');
+          input.classList.remove('is-invalid');
+        } else {
+          input.classList.remove('is-valid');
+          input.classList.add('is-invalid');
+        }
+      });
+
+      prevBtn.classList.toggle('d-none', currentStep === 0);
+
+      if (currentStep === steps.length - 1) {
+        nextBtn.innerHTML = '<i class="fas fa-calculator me-2"></i> Hesapla';
+      } else {
+        nextBtn.innerHTML = 'İleri <i class="fas fa-arrow-right ms-2"></i>';
+      }
+
+      updateStepper();
+    }
+
+    // Animate Number
+    function animateNumber(element, start, end, duration, prefix = '', suffix = '') {
+      const range = end - start;
+      const increment = range / (duration / 16);
+      let current = start;
+
+      const timer = setInterval(() => {
+        current += increment;
+        if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
+          current = end;
+          clearInterval(timer);
+        }
+
+        if (prefix === '$') {
+          element.textContent = prefix + Math.round(current).toLocaleString();
+        } else if (suffix === '%') {
+          element.textContent = current.toFixed(1) + suffix;
+        } else {
+          element.textContent = current.toFixed(0);
+        }
+      }, 16);
+    }
+
+    // Calculate Results
+    async function calculateResults() {
+      nextBtn.disabled = true;
+      nextBtn.innerHTML = '<span class="loading-spinner"></span> Hesaplanıyor...';
+
+      try {
+        const payload = {
           aircraft_model: formData.aircraftModel,
           investment_type: formData.investmentType,
           cost: parseFloat(formData.cost),
           occupancy: parseFloat(formData.occupancy),
           fuel_cost: parseFloat(formData.fuelCost),
           other_costs: parseFloat(formData.otherCosts),
-          revenue: parseFloat(formData.revenue),
-        })
+          revenue: parseFloat(formData.revenue)
+        };
+
+        console.log('API Request:', payload);
+
+        const response = await fetch(`${API_BASE}/what-if`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          throw new Error(`API Hatası: ${response.status} ${response.statusText}`);
+        }
+
+        const result = await response.json();
+        console.log('API Response:', result);
+
+        // Validate result
+        if (!result || typeof result.net_profit === 'undefined') {
+          throw new Error('Geçersiz API yanıtı');
+        }
+
+        displayResults(result);
+        showToast('Analiz başarıyla tamamlandı!', 'success');
+      } catch (error) {
+        console.error('Hesaplama hatası:', error);
+
+        // Fallback: Manuel hesaplama
+        const manualResult = calculateManually();
+        console.log('Manuel Hesaplama:', manualResult);
+
+        displayResults(manualResult);
+        showToast('Analiz tamamlandı (Yerel hesaplama)', 'success');
+      } finally {
+        nextBtn.disabled = false;
+        nextBtn.innerHTML = '<i class="fas fa-calculator me-2"></i> Hesapla';
+      }
+    }
+
+    // Manual Calculation Fallback
+    function calculateManually() {
+      const cost = parseFloat(formData.cost);
+      const fuelCost = parseFloat(formData.fuelCost);
+      const otherCosts = parseFloat(formData.otherCosts);
+      const revenue = parseFloat(formData.revenue);
+      const occupancy = parseFloat(formData.occupancy);
+
+      // Net Profit
+      const totalCosts = cost + fuelCost + otherCosts;
+      const adjustedRevenue = revenue * (occupancy / 100);
+      const netProfit = adjustedRevenue - totalCosts;
+
+      // ROI
+      const roi = (netProfit / cost) * 100;
+
+      // NPV (simplified with 10% discount rate over 5 years)
+      const discountRate = 0.10;
+      let npv = -cost;
+      for (let year = 1; year <= 5; year++) {
+        npv += netProfit / Math.pow(1 + discountRate, year);
+      }
+
+      // Break-even
+      let breakEvenYears = null;
+      if (netProfit > 0) {
+        breakEvenYears = Math.ceil(cost / netProfit);
+        if (breakEvenYears > 20) breakEvenYears = null;
+      }
+
+      return {
+        net_profit: netProfit,
+        roi: roi,
+        npv: npv,
+        break_even_years: breakEvenYears
+      };
+    }
+
+    // Display Results
+    function displayResults(result) {
+      formSection.classList.add('d-none');
+      stepperSection.classList.add('d-none');
+      resultsSection.classList.remove('d-none');
+
+      // Safe number parsing
+      const safeParseFloat = (value, defaultValue = 0) => {
+        const parsed = parseFloat(value);
+        return isNaN(parsed) ? defaultValue : parsed;
+      };
+
+      // Animate Profit
+      const profitCard = document.getElementById('profitCard');
+      const profitAmount = document.getElementById('profitAmount');
+      const profitTrend = document.getElementById('profitTrend');
+      const profitStatus = document.getElementById('profitStatus');
+
+      const profit = safeParseFloat(result.net_profit, 0);
+      animateNumber(profitAmount, 0, profit, 2000, '$');
+
+      if (profit >= 0) {
+        profitCard.classList.add('positive');
+        profitTrend.innerHTML = '<i class="fas fa-arrow-up" style="color: #11998e;"></i>';
+        profitStatus.textContent = 'Mükemmel';
+        profitStatus.className = 'metric-status excellent';
+        document.querySelector('#profitCard .metric-icon').classList.add('positive');
+      } else {
+        profitCard.classList.add('negative');
+        profitTrend.innerHTML = '<i class="fas fa-arrow-down" style="color: #eb3349;"></i>';
+        profitStatus.textContent = 'Kötü';
+        profitStatus.className = 'metric-status poor';
+        document.querySelector('#profitCard .metric-icon').classList.add('negative');
+      }
+
+      // Animate ROI
+      const roiCard = document.getElementById('roiCard');
+      const roiAmount = document.getElementById('roiAmount');
+      const roiTrend = document.getElementById('roiTrend');
+      const roiStatus = document.getElementById('roiStatus');
+
+      const roi = safeParseFloat(result.roi, 0);
+      animateNumber(roiAmount, 0, roi, 2000, '', '%');
+
+      if (roi >= 50) {
+        roiCard.classList.add('positive');
+        roiTrend.innerHTML = '<i class="fas fa-arrow-up" style="color: #11998e;"></i>';
+        roiStatus.textContent = 'Mükemmel';
+        roiStatus.className = 'metric-status excellent';
+        document.querySelector('#roiCard .metric-icon').classList.add('positive');
+      } else if (roi >= 20) {
+        roiTrend.innerHTML = '<i class="fas fa-arrow-up" style="color: #1565c0;"></i>';
+        roiStatus.textContent = 'İyi';
+        roiStatus.className = 'metric-status good';
+      } else {
+        roiCard.classList.add('negative');
+        roiTrend.innerHTML = '<i class="fas fa-arrow-down" style="color: #eb3349;"></i>';
+        roiStatus.textContent = 'Kötü';
+        roiStatus.className = 'metric-status poor';
+        document.querySelector('#roiCard .metric-icon').classList.add('negative');
+      }
+
+      // Animate NPV
+      const npvCard = document.getElementById('npvCard');
+      const npvAmount = document.getElementById('npvAmount');
+      const npvTrend = document.getElementById('npvTrend');
+      const npvStatus = document.getElementById('npvStatus');
+
+      const npv = safeParseFloat(result.npv, 0);
+      animateNumber(npvAmount, 0, npv, 2000, '$');
+
+      if (npv >= 0) {
+        npvCard.classList.add('positive');
+        npvTrend.innerHTML = '<i class="fas fa-arrow-up" style="color: #11998e;"></i>';
+        npvStatus.textContent = 'Mükemmel';
+        npvStatus.className = 'metric-status excellent';
+        document.querySelector('#npvCard .metric-icon').classList.add('positive');
+      } else {
+        npvCard.classList.add('negative');
+        npvTrend.innerHTML = '<i class="fas fa-arrow-down" style="color: #eb3349;"></i>';
+        npvStatus.textContent = 'Kötü';
+        npvStatus.className = 'metric-status poor';
+        document.querySelector('#npvCard .metric-icon').classList.add('negative');
+      }
+
+      // Break-even
+      const breakEvenCard = document.getElementById('breakEvenCard');
+      const breakEvenAmount = document.getElementById('breakEvenAmount');
+      const breakEvenStatus = document.getElementById('breakEvenStatus');
+
+      if (result.break_even_years) {
+        breakEvenAmount.textContent = result.break_even_years + ' yıl';
+        breakEvenStatus.textContent = 'İyi';
+        breakEvenStatus.className = 'metric-status good';
+        breakEvenCard.classList.add('positive');
+        document.querySelector('#breakEvenCard .metric-icon').classList.add('positive');
+      } else {
+        breakEvenAmount.textContent = 'Hiçbir zaman';
+        breakEvenStatus.textContent = 'Kötü';
+        breakEvenStatus.className = 'metric-status poor';
+        breakEvenCard.classList.add('negative');
+        document.querySelector('#breakEvenCard .metric-icon').classList.add('negative');
+      }
+
+      // Create Charts
+      createCharts(result);
+    }
+
+    // Create Charts
+    function createCharts(result) {
+      // Safe number parsing
+      const safeParseFloat = (value, defaultValue = 0) => {
+        const parsed = parseFloat(value);
+        return isNaN(parsed) ? defaultValue : parsed;
+      };
+
+      const netProfit = safeParseFloat(result.net_profit, 0);
+      const roi = safeParseFloat(result.roi, 0);
+
+      // Projection Chart
+      const projectionCtx = document.getElementById('projectionChart').getContext('2d');
+      const years = [1, 2, 3, 4, 5];
+      const projectionData = years.map(year => netProfit * year * 0.9);
+
+      charts.projection = new Chart(projectionCtx, {
+        type: 'line',
+        data: {
+          labels: years.map(y => `Yıl ${y}`),
+          datasets: [{
+            label: 'Tahmini Kar',
+            data: projectionData,
+            borderColor: '#1a73e8',
+            backgroundColor: 'rgba(26, 115, 232, 0.1)',
+            tension: 0.4,
+            fill: true,
+            pointRadius: 6,
+            pointHoverRadius: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (context) => '$' + context.parsed.y.toLocaleString()
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: (value) => '$' + value.toLocaleString()
+              }
+            }
+          }
+        }
       });
-      const result = await res.json();
-      displayResults(result);
-      // progress bar tamamlandı
-      progressBar.style.width = `100%`;
-    } catch(err) {
-      console.error('Hesaplama hatası', err);
-      alert('Bir hata oluştu.');
+
+      // Cost Breakdown Chart
+      const costCtx = document.getElementById('costBreakdownChart').getContext('2d');
+      charts.costBreakdown = new Chart(costCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Yakıt', 'Bakım & Personel', 'Diğer'],
+          datasets: [{
+            data: [
+              parseFloat(formData.fuelCost),
+              parseFloat(formData.otherCosts),
+              parseFloat(formData.cost) * 0.1
+            ],
+            backgroundColor: [
+              'rgba(26, 115, 232, 0.8)',
+              'rgba(77, 171, 247, 0.8)',
+              'rgba(102, 126, 234, 0.8)'
+            ],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            },
+            tooltip: {
+              callbacks: {
+                label: (context) => context.label + ': $' + context.parsed.toLocaleString()
+              }
+            }
+          }
+        }
+      });
+
+      // ROI Comparison Chart
+      const roiCtx = document.getElementById('roiComparisonChart').getContext('2d');
+      const industryAverage = 35;
+      charts.roiComparison = new Chart(roiCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Sizin ROI', 'Sektör Ortalaması', 'Hedef ROI'],
+          datasets: [{
+            label: 'ROI (%)',
+            data: [roi, industryAverage, 50],
+            backgroundColor: [
+              roi > industryAverage ? 'rgba(17, 153, 142, 0.8)' : 'rgba(235, 51, 73, 0.8)',
+              'rgba(26, 115, 232, 0.8)',
+              'rgba(77, 171, 247, 0.8)'
+            ],
+            borderRadius: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: (value) => value + '%'
+              }
+            }
+          }
+        }
+      });
     }
-  }
-});
 
-// Geri butonu
-prevBtn.addEventListener('click', () => {
-  if(currentStep > 0) {
-    currentStep--;
-    renderStep();
-  }
-});
+    // Event Listeners
+    startBtn.addEventListener('click', async () => {
+      await loadAircraftModels();
+      startBtn.parentElement.style.animation = 'fadeOut 0.5s ease';
+      setTimeout(() => {
+        startBtn.parentElement.classList.add('d-none');
+        stepperSection.classList.remove('d-none');
+        formSection.classList.remove('d-none');
+        renderStep();
+      }, 500);
+    });
 
-// Sonuçları göster
-function displayResults(result) {
-  stepForm.classList.add('d-none');
-  resultsDiv.classList.remove('d-none');
-  retryDiv.classList.remove('d-none');
+    nextBtn.addEventListener('click', async () => {
+      const step = steps[currentStep];
+      const input = document.getElementById(step.id);
+      const value = input.value;
 
-  // Değer durumuna göre alt metin
-  const getStatusText = (type, value) => {
-    switch(type) {
-      case 'net_profit':
-        return value >= 0 ? 'Mükemmel' : 'Kötü';
-      case 'roi':
-        if(value >= 50) return 'Mükemmel';
-        if(value >= 20) return 'İyi';
-        return 'Kötü';
-      case 'npv':
-        return value >= 0 ? 'Mükemmel' : 'Kötü';
-      case 'break_even':
-        return value ? 'İyi' : 'Kötü';
-      default:
-        return '';
-    }
-  };
+      if (!validateInput(step, value)) {
+        input.classList.add('is-invalid');
+        showToast('Lütfen geçerli bir değer girin', 'error');
+        return;
+      }
 
-  resultsDiv.innerHTML = `
-    <div class="col-lg-3 col-md-6 mt-4">
-      <div class="card bg-gradient-dark move-on-hover text-white">
-        <div class="card-body">
-          <div class="d-flex">
-            <h5 class="mb-0">Net Kâr</h5>
-            <div class="ms-auto text-end">
-              <h2 class="mb-0">$${parseFloat(result.net_profit).toLocaleString()}</h2>
-              <p class="text-sm mb-0">${getStatusText('net_profit', result.net_profit)}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+      formData[step.id] = value;
 
-    <div class="col-lg-3 col-md-6 mt-4">
-      <div class="card bg-gradient-dark move-on-hover text-white">
-        <div class="card-body">
-          <div class="d-flex">
-            <h5 class="mb-0">ROI</h5>
-            <div class="ms-auto text-end">
-              <h2 class="mb-0">${parseFloat(result.roi).toFixed(1)}%</h2>
-              <p class="text-sm mb-0">${getStatusText('roi', result.roi)}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+      if (currentStep < steps.length - 1) {
+        currentStep++;
+        renderStep();
+      } else {
+        await calculateResults();
+      }
+    });
 
-    <div class="col-lg-3 col-md-6 mt-4">
-      <div class="card bg-gradient-dark move-on-hover text-white">
-        <div class="card-body">
-          <div class="d-flex">
-            <h5 class="mb-0">Tahmini NPV</h5>
-            <div class="ms-auto text-end">
-              <h2 class="mb-0">$${parseInt(result.npv).toLocaleString()}</h2>
-              <p class="text-sm mb-0">${getStatusText('npv', result.npv)}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    prevBtn.addEventListener('click', () => {
+      if (currentStep > 0) {
+        currentStep--;
+        renderStep();
+      }
+    });
 
-    <div class="col-lg-3 col-md-6 mt-4">
-      <div class="card bg-gradient-dark move-on-hover text-white">
-        <div class="card-body">
-          <div class="d-flex">
-            <h5 class="mb-0">Break-even</h5>
-            <div class="ms-auto text-end">
-              <h2 class="mb-0">${result.break_even_years ? result.break_even_years + ' yıl' : 'Hiçbir zaman'}</h2>
-              <p class="text-sm mb-0">${getStatusText('break_even', result.break_even_years)}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
-}
+    retryBtn.addEventListener('click', () => {
+      currentStep = 0;
+      Object.keys(formData).forEach(key => delete formData[key]);
 
+      // Destroy charts
+      Object.values(charts).forEach(chart => chart.destroy());
+      charts = {};
 
+      // Reset UI
+      resultsSection.classList.add('d-none');
+      stepperSection.classList.remove('d-none');
+      formSection.classList.remove('d-none');
 
-// Tekrar Dene butonu
-retryBtn.addEventListener('click', () => {
-  currentStep = 0;
-  Object.keys(formData).forEach(k => delete formData[k]);
-  resultsDiv.classList.add('d-none');
-  retryDiv.classList.add('d-none');
-  stepForm.classList.remove('d-none');
-  progressBar.style.width = `0%`;
-  renderStep();
-});
+      // Reset metric cards
+      document.querySelectorAll('.metric-card').forEach(card => {
+        card.classList.remove('positive', 'negative');
+      });
 
-    
+      renderStep();
+    });
+
+    downloadPdfBtn.addEventListener('click', () => {
+      showToast('PDF indirme özelliği yakında eklenecek', 'success');
+    });
+
+    // Smooth Scrollbar
     var win = navigator.platform.indexOf('Win') > -1;
     if (win && document.querySelector('#sidenav-scrollbar')) {
-      var options = {
-        damping: '0.5'
-      }
+      var options = { damping: '0.5' };
       Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
     }
   </script>
-  <!-- Github buttons -->
-  <script async defer src="https://buttons.github.io/buttons.js"></script>
-  <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
-  <script src="../assets/js/material-dashboard.min.js?v=3.2.0"></script>
 </body>
-
-
-
 </html>
