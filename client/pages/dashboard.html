@@ -1,17 +1,3 @@
-<!--
-=========================================================
-* Material Dashboard 3 - v3.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard
-* Copyright 2024 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://www.creative-tim.com/license)
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
--->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -20,33 +6,454 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
   <link rel="icon" type="image/png" href="../assets/img/favicon.png">
-  <title>
-    Türk Hava Yolları Karar Destek Sistemi
-  </title>
-  <!--     Fonts and icons     -->
+  <title>Türk Hava Yolları Karar Destek Sistemi</title>
+
+  <!-- Fonts and icons -->
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" />
-  <!-- Nucleo Icons -->
   <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
   <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
-  <!-- Font Awesome Icons -->
   <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
-  <!-- Material Icons -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
-  <!-- CSS Files -->
   <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <style>
+    /* Enhanced Custom Styles */
+    :root {
+      --primary-color: #1976d2;
+      --success-color: #43a047;
+      --warning-color: #fb8c00;
+      --danger-color: #e53935;
+      --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --gradient-success: linear-gradient(135deg, #43a047 0%, #66bb6a 100%);
+      --gradient-warning: linear-gradient(135deg, #fb8c00 0%, #ffa726 100%);
+      --gradient-danger: linear-gradient(135deg, #e53935 0%, #ef5350 100%);
+      --shadow-soft: 0 2px 12px rgba(0,0,0,0.08);
+      --shadow-hover: 0 6px 24px rgba(0,0,0,0.12);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Enhanced Card Animations */
+    .card {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: none;
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    /* Stat Card Enhancements */
+    .stat-card {
+      position: relative;
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      height: 100%;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient-primary);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .stat-card:hover::before {
+      opacity: 1;
+    }
+
+    .stat-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover .stat-icon {
+      transform: scale(1.1) rotate(5deg);
+    }
+
+    /* Value Counter Animation */
+    .stat-value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin: 0.5rem 0;
+      line-height: 1.2;
+    }
+
+    .stat-label {
+      font-size: 0.875rem;
+      color: #6c757d;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 500;
+    }
+
+    .stat-change {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .stat-change.positive {
+      background: rgba(67, 160, 71, 0.1);
+      color: var(--success-color);
+    }
+
+    .stat-change.negative {
+      background: rgba(229, 57, 53, 0.1);
+      color: var(--danger-color);
+    }
+
+    /* Chart Container */
+    .chart-container {
+      position: relative;
+      height: 300px;
+      padding: 1rem;
+    }
+
+    /* Dropdown Styles */
+    .custom-select {
+      position: relative;
+      display: inline-block;
+    }
+
+    .custom-select select {
+      appearance: none;
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 8px 36px 8px 14px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #333;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .custom-select select:hover {
+      border-color: #bbb;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .custom-select select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+    }
+
+    .custom-select::after {
+      content: '▼';
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      font-size: 10px;
+      color: #666;
+    }
+
+    /* Section Headers */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin: 0;
+    }
+
+    .section-subtitle {
+      font-size: 0.875rem;
+      color: #6c757d;
+      margin: 0.25rem 0 0;
+    }
+
+    /* Loading Animation */
+    .loading-shimmer {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* Competitor Table */
+    .competitor-table {
+      width: 100%;
+      margin-top: 1rem;
+    }
+
+    .competitor-table th {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #6c757d;
+      padding: 0.75rem;
+      border-bottom: 2px solid #e9ecef;
+    }
+
+    .competitor-table td {
+      padding: 0.75rem;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .competitor-table tbody tr {
+      transition: background-color 0.2s ease;
+    }
+
+    .competitor-table tbody tr:hover {
+      background-color: #f8f9fa;
+    }
+
+    /* Badge Styles */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      gap: 6px;
+    }
+
+    .status-badge.excellent {
+      background: rgba(67, 160, 71, 0.15);
+      color: var(--success-color);
+    }
+
+    .status-badge.moderate {
+      background: rgba(251, 140, 0, 0.15);
+      color: var(--warning-color);
+    }
+
+    .status-badge.poor {
+      background: rgba(229, 57, 53, 0.15);
+      color: var(--danger-color);
+    }
+
+    /* Legend Styles */
+    .legend-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1rem;
+      justify-content: center;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.875rem;
+      transition: transform 0.2s ease;
+      cursor: pointer;
+    }
+
+    .legend-item:hover {
+      transform: scale(1.05);
+    }
+
+    .legend-color {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    .legend-label {
+      font-weight: 500;
+      color: #333;
+    }
+
+    .legend-percent {
+      color: #6c757d;
+      font-weight: 600;
+    }
+
+    /* Responsive Grid */
+    @media (max-width: 768px) {
+      .stat-value {
+        font-size: 1.5rem;
+      }
+
+      .chart-container {
+        height: 250px;
+      }
+    }
+
+    /* Smooth Page Load */
+    .fade-in {
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Dashboard Welcome */
+    .dashboard-welcome {
+      margin-bottom: 2rem;
+    }
+
+    .dashboard-welcome h3 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 0.5rem;
+    }
+
+    .dashboard-welcome p {
+      font-size: 1rem;
+      color: #6c757d;
+      line-height: 1.6;
+    }
+
+    /* Price Tag Highlight */
+    .price-highlight {
+      display: inline-block;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    /* Tooltip Enhancement */
+    [data-tooltip] {
+      position: relative;
+      cursor: help;
+    }
+
+    [data-tooltip]::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 8px 12px;
+      background: rgba(0, 0, 0, 0.9);
+      color: white;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      margin-bottom: 8px;
+    }
+
+    [data-tooltip]:hover::after {
+      opacity: 1;
+    }
+
+    /* Leaflet Map Customization */
+    #flightMap {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .leaflet-popup-content-wrapper {
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .leaflet-popup-content {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.875rem;
+      line-height: 1.5;
+      margin: 12px;
+    }
+
+    .map-popup-title {
+      font-weight: 700;
+      font-size: 1rem;
+      color: #1a1a1a;
+      margin-bottom: 6px;
+    }
+
+    .map-popup-detail {
+      color: #6c757d;
+      font-size: 0.85rem;
+    }
+
+    .map-popup-profit {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid #e9ecef;
+      font-weight: 600;
+    }
+
+    .map-popup-profit.positive {
+      color: var(--success-color);
+    }
+
+    .map-popup-profit.negative {
+      color: var(--danger-color);
+    }
+
+    .map-popup-profit.neutral {
+      color: #6c757d;
+    }
+  </style>
 </head>
 
-<body class="g-sidenav-show  bg-gray-100">
-  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
+<body class="g-sidenav-show bg-gray-100">
+
+  <!-- Sidebar -->
+  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2 bg-white my-2" id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
-      <a class="navbar-brand px-4 py-3 m-0" href=" https://www.turkishairlines.com/tr-tr/bilgi-edin/bize-ulasin/ " target="_blank">
+      <a class="navbar-brand px-4 py-3 m-0" href="https://www.turkishairlines.com/tr-tr/bilgi-edin/bize-ulasin/" target="_blank">
         <img src="../assets/img/logo-ct-dark.png" class="navbar-brand-img" width="26" height="26" alt="main_logo">
         <span class="ms-1 text-sm text-dark">Turkish-KDS</span>
       </a>
     </div>
     <hr class="horizontal dark mt-0 mb-2">
-    <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
+    <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
           <a class="nav-link active bg-gradient-dark text-white" href="../pages/dashboard.html">
@@ -66,25 +473,20 @@
             <span class="nav-link-text ms-1">Maliye</span>
           </a>
         </li>
-        
-        
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/notifications.html">
             <i class="material-symbols-rounded opacity-5">notifications</i>
             <span class="nav-link-text ms-1">What-If</span>
           </a>
         </li>
-        
-        
-        
-        
       </ul>
     </div>
-    <div class="sidenav-footer position-absolute w-100 bottom-0 ">
-      
-    </div>
+    <div class="sidenav-footer position-absolute w-100 bottom-0"></div>
   </aside>
-  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+
+  <!-- Main Content -->
+  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+
     <!-- Navbar -->
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-3 shadow-none border-radius-xl" id="navbarBlur" data-scroll="true">
       <div class="container-fluid py-1 px-3">
@@ -94,487 +496,284 @@
             <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Dashboard</li>
           </ol>
         </nav>
-        
-          <ul class="navbar-nav d-flex align-items-center  justify-content-end">
-            
-            
-            <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
-              <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
-                <div class="sidenav-toggler-inner">
-                  <i class="sidenav-toggler-line"></i>
-                  <i class="sidenav-toggler-line"></i>
-                  <i class="sidenav-toggler-line"></i>
-                </div>
-              </a>
-            </li>
-            <li class="nav-item px-3 d-flex align-items-center">
-              <a href="javascript:;" class="nav-link text-body p-0">
-                <i class="material-symbols-rounded fixed-plugin-button-nav">settings</i>
-              </a>
-            </li>
-            <li class="nav-item pe-3 d-flex align-items-center">
-  <a href="https://mail.google.com" target="_blank" class="nav-link text-body p-0">
-    <i class="material-symbols-rounded">mail</i>
-  </a>
-</li>
-              </a>
-              <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
-                <li class="mb-2">
-                  <a class="dropdown-item border-radius-md" href="javascript:;">
-                    <div class="d-flex py-1">
-                      <div class="my-auto">
-                        <img src="../assets/img/team-2.jpg" class="avatar avatar-sm  me-3 ">
-                      </div>
-                      <div class="d-flex flex-column justify-content-center">
-                        <h6 class="text-sm font-weight-normal mb-1">
-                          <span class="font-weight-bold">New message</span> from Laur
-                        </h6>
-                        <p class="text-xs text-secondary mb-0">
-                          <i class="fa fa-clock me-1"></i>
-                          13 minutes ago
-                        </p>
-                      </div>
-                    </div>
-                  </a>
-                </li>
-                <li class="mb-2">
-                  <a class="dropdown-item border-radius-md" href="javascript:;">
-                    <div class="d-flex py-1">
-                      <div class="my-auto">
-                        <img src="../assets/img/small-logos/logo-spotify.svg" class="avatar avatar-sm bg-gradient-dark  me-3 ">
-                      </div>
-                      <div class="d-flex flex-column justify-content-center">
-                        <h6 class="text-sm font-weight-normal mb-1">
-                          <span class="font-weight-bold">New album</span> by Travis Scott
-                        </h6>
-                        <p class="text-xs text-secondary mb-0">
-                          <i class="fa fa-clock me-1"></i>
-                          1 day
-                        </p>
-                      </div>
-                    </div>
-                  </a>
-                </li>
-                <li>
-                  <a class="dropdown-item border-radius-md" href="javascript:;">
-                    <div class="d-flex py-1">
-                      <div class="avatar avatar-sm bg-gradient-secondary  me-3  my-auto">
-                        <svg width="12px" height="12px" viewBox="0 0 43 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                          <title>credit-card</title>
-                          <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                            <g transform="translate(-2169.000000, -745.000000)" fill="#FFFFFF" fill-rule="nonzero">
-                              <g transform="translate(1716.000000, 291.000000)">
-                                <g transform="translate(453.000000, 454.000000)">
-                                  <path class="color-background" d="M43,10.7482083 L43,3.58333333 C43,1.60354167 41.3964583,0 39.4166667,0 L3.58333333,0 C1.60354167,0 0,1.60354167 0,3.58333333 L0,10.7482083 L43,10.7482083 Z" opacity="0.593633743"></path>
-                                  <path class="color-background" d="M0,16.125 L0,32.25 C0,34.2297917 1.60354167,35.8333333 3.58333333,35.8333333 L39.4166667,35.8333333 C41.3964583,35.8333333 43,34.2297917 43,32.25 L43,16.125 L0,16.125 Z M19.7083333,26.875 L7.16666667,26.875 L7.16666667,23.2916667 L19.7083333,23.2916667 L19.7083333,26.875 Z M35.8333333,26.875 L28.6666667,26.875 L28.6666667,23.2916667 L35.8333333,23.2916667 L35.8333333,26.875 Z"></path>
-                                </g>
-                              </g>
-                            </g>
-                          </g>
-                        </svg>
-                      </div>
-                      <div class="d-flex flex-column justify-content-center">
-                        <h6 class="text-sm font-weight-normal mb-1">
-                          Payment successfully completed
-                        </h6>
-                        <p class="text-xs text-secondary mb-0">
-                          <i class="fa fa-clock me-1"></i>
-                          2 days
-                        </p>
-                      </div>
-                    </div>
-                  </a>
-                </li>
-              </ul>
-            </li>
-            <li class="nav-item d-flex align-items-center">
-  <a href="../pages/sign-in.html" class="nav-link text-body font-weight-bold px-0">
-    <i class="material-symbols-rounded">logout</i>
-  </a>
-</li>
-
-          </ul>
-        </div>
+        <ul class="navbar-nav d-flex align-items-center justify-content-end">
+          <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
+            <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
+              <div class="sidenav-toggler-inner">
+                <i class="sidenav-toggler-line"></i>
+                <i class="sidenav-toggler-line"></i>
+                <i class="sidenav-toggler-line"></i>
+              </div>
+            </a>
+          </li>
+          <li class="nav-item px-3 d-flex align-items-center">
+            <a href="javascript:;" class="nav-link text-body p-0">
+              <i class="material-symbols-rounded fixed-plugin-button-nav">settings</i>
+            </a>
+          </li>
+          <li class="nav-item pe-3 d-flex align-items-center">
+            <a href="https://mail.google.com" target="_blank" class="nav-link text-body p-0">
+              <i class="material-symbols-rounded">mail</i>
+            </a>
+          </li>
+          <li class="nav-item d-flex align-items-center">
+            <a href="../pages/sign-in.html" class="nav-link text-body font-weight-bold px-0">
+              <i class="material-symbols-rounded">logout</i>
+            </a>
+          </li>
+        </ul>
       </div>
     </nav>
-    <!-- End Navbar -->
-    <div class="container-fluid py-2">
-      <div class="row">
-        <div class="ms-3">
-          <h3 class="mb-0 h4 font-weight-bolder">Dashboard</h3>
-          <p class="mb-4">
-            Turkish-KDS, operasyonel ve finansal performansı gerçek zamanlı olarak izlemek ve stratejik kararları desteklemek amacıyla tasarlanmıştır.
-          </p>
-        </div>
-        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-  <div class="card">
-    <div class="card-header p-2 ps-3">
-      <div class="d-flex justify-content-between">
-        <div>
-          <p class="text-sm mb-0 text-capitalize">Güncel Brent Kuru</p>
-          <h4 class="mb-0" id="fuel-price">0</h4>
-        </div>
-        <div class="icon icon-md icon-shape bg-gradient-dark shadow-dark shadow text-center border-radius-lg">
-          <i class="material-symbols-rounded opacity-10">local_gas_station</i>
-        </div>
+
+    <!-- Dashboard Content -->
+    <div class="container-fluid py-4">
+
+      <!-- Welcome Section -->
+      <div class="dashboard-welcome fade-in">
+        <h3>Dashboard</h3>
+        <p>Turkish-KDS, operasyonel ve finansal performansı gerçek zamanlı olarak izlemek ve stratejik kararları desteklemek amacıyla tasarlanmıştır.</p>
       </div>
-    </div>
-    <hr class="dark horizontal my-0">
-    <div class="card-footer p-2 ps-3">
-      <p class="mb-0 text-sm">
-        <span id="fuel-price-change" class="font-weight-bolder">0%</span> değişim
-      </p>
-    </div>
-  </div>
-</div>
-        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-  <div class="card">
-    <div class="card-header p-2 ps-3">
-      <div class="d-flex justify-content-between">
-        <div>
-          <p class="text-sm mb-0 text-capitalize">USD / TRY</p>
-          <h4 class="mb-0" id="exchange-rate">0</h4>
-        </div>
-        <div class="icon icon-md icon-shape bg-gradient-dark shadow-dark shadow text-center border-radius-lg">
-          <i class="material-symbols-rounded opacity-10">currency_exchange</i>
-        </div>
-      </div>
-    </div>
-    <hr class="dark horizontal my-0">
-    <div class="card-footer p-2 ps-3">
-      <p class="mb-0 text-sm">
-        <span id="exchange-rate-change" class="font-weight-bolder">0%</span> değişim
-      </p>
-    </div>
-  </div>
-</div>
-        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-  <div class="card">
-    <div class="card-header p-2 ps-3">
-      <div class="d-flex justify-content-between">
-        <div>
-          <p class="text-sm mb-0 text-capitalize">Zamanında Kalkış Oranı</p>
-          <h4 class="mb-0" id="otp-value">--%</h4>
-        </div>
-        <div class="icon icon-md icon-shape bg-gradient-dark shadow-dark shadow text-center border-radius-lg">
-          <i class="material-symbols-rounded opacity-10">schedule</i>
-        </div>
-      </div>
-    </div>
-    <hr class="dark horizontal my-0">
-    <div class="card-footer p-2 ps-3">
-      <p class="mb-0 text-sm" id="otp-status">Durum yükleniyor...</p>
-    </div>
-  </div>
-</div>
+
+      <!-- Stats Row -->
+      <div class="row g-3 mb-4">
+        <!-- Fuel Price Card -->
         <div class="col-xl-3 col-sm-6">
-  <div class="card">
-    <div class="card-header p-2 ps-3">
-      <div class="d-flex justify-content-between">
-        <div>
-          <p class="text-sm mb-0 text-capitalize">Brüt Hasılat</p>
-          <h4 class="mb-0" id="annual-revenue">$0</h4>
-        </div>
-        <div class="icon icon-md icon-shape bg-gradient-dark shadow-dark shadow text-center border-radius-lg">
-          <i class="material-symbols-rounded opacity-10">paid</i>
-        </div>
-      </div>
-    </div>
-    <hr class="dark horizontal my-0">
-    <div class="card-footer p-2 ps-3">
-      <p class="mb-0 text-sm" id="annual-revenue-delta">Yükleniyor...</p>
-    </div>
-  </div>
-</div>
-      <div class="row mt-4">
-        <div class="col-lg-4 col-md-6 mb-4">
-    <div class="card h-100">
-      <div class="card-body">
-              <h6 class="mb-0 ">Müşteri Memnuniyeti</h6>
-              <p class="text-sm ">Sınıflara Göre Dağılım</p>
-              <div class="pe-2">
-                <div class="chart">
-                  <canvas id="chart-bars" class="chart-canvas" height="170"></canvas>
-                </div>
+          <div class="stat-card fade-in">
+            <div class="d-flex justify-content-between align-items-start">
+              <div class="flex-grow-1">
+                <p class="stat-label mb-2">Güncel Brent Kuru</p>
+                <h4 class="stat-value mb-2" id="fuel-price">
+                  <span class="loading-shimmer" style="display: inline-block; width: 80px; height: 28px; border-radius: 4px;"></span>
+                </h4>
+                <div id="fuel-price-change-container"></div>
               </div>
-              <hr class="dark horizontal">
-              <div class="d-flex ">
-                <i class="material-symbols-rounded text-sm my-auto me-1">schedule</i>
-                <p class="mb-0 text-sm"> az önce güncellendi </p>
+              <div class="stat-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <i class="material-symbols-rounded text-white">local_gas_station</i>
               </div>
             </div>
           </div>
         </div>
 
-        <style>
-  /* Dropdown'u küçük kutucuk haline getir ve hover/focus ekle */
-  #occupancySelect {
-    width: 200px;            /* Kompakt genişlik */
-    border-radius: 8px;      /* Hafif yuvarlatılmış köşeler */
-    border: 1px solid #ccc;  /* İnce gri kenarlık */
-    padding: 6px 12px;       /* İç boşluk */
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Hafif gölge */
-    transition: all 0.2s ease-in-out;      /* Hover geçişleri */
-    background-color: #fff;
-    color: #333;
-    appearance: none;         /* Default tarayıcı stilini gizle (Chrome/Edge) */
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    cursor: pointer;
-  }
-
-  /* Hover ve focus durumları */
-  #occupancySelect:hover,
-  #occupancySelect:focus {
-    background-color: #f5f5f5;  /* Soft gri arka plan */
-    border-color: #999;          /* Hafif koyu kenarlık */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15); /* Hover gölgesi */
-    outline: none;               /* Mavi outline kaldırıldı */
-  }
-
-  /* Eğer dilersen bir aşağı ok ikonu ekleyebilirsin */
-  #occupancySelect::after {
-    content: "▼";
-    position: absolute;
-    right: 12px;
-    pointer-events: none;
-  }
-</style>
-
-
-
-
-
-
-        <div class="col-lg-4 col-md-6 mb-4">
-    <div class="card h-100">
-      <div class="card-body">
-      <h6 class="mb-0">Uçuş Doluluk Oranı</h6>
-      <p class="text-sm">En yüksek veya en düşük doluluk oranlı uçuşları görüntülemek için seçin.</p>
-
-      <!-- Dropdown -->
-      <select id="occupancySelect" class="form-select mb-3">
-        <option value="highest" selected>En Yüksek</option>
-        <option value="lowest">En Düşük</option>
-      </select>
-
-      <div class="pe-2">
-        <div class="chart">
-          <canvas id="chart-flights" class="chart-canvas" height="170"></canvas>
-        </div>
-      </div>
-      <hr class="dark horizontal">
-      <div class="d-flex">
-        <i class="material-symbols-rounded text-sm my-auto me-1">schedule</i>
-        <p class="mb-0 text-sm">az önce güncellendi</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="col-lg-4 col-md-6 mb-4">
-  <div class="card h-100 shadow-sm">
-    <div class="card-body d-flex flex-column">
-
-      <!-- Başlık ve dropdown -->
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h6 class="mb-0">Gelir Dağılımı</h6>
-        <select id="months-select" class="form-select w-auto">
-          <option value="1">1 Ay</option>
-          <option value="6" selected>6 Ay</option>
-          <option value="12">12 Ay</option>
-        </select>
-      </div>
-
-      <!-- Grafik -->
-      <div class="flex-grow-1 d-flex align-items-center justify-content-center mt-3">
-        <div id="revenueChart" style="width:100%; height:280px;"></div>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-
-
-
-
-
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-
-<style>
-  /* Compact, soft-grey dropdown (wrapper ile ok ikonu) */
-  .select-wrapper {
-    position: relative;
-    display: inline-block;
-  }
-  .select-wrapper select {
-    width: 200px;
-    border-radius: 8px;
-    border: 1px solid #d0d7de;
-    padding: 6px 36px 6px 12px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-    transition: all 0.15s ease;
-    background-color: #fff;
-    color: #222;
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    cursor: pointer;
-  }
-  .select-wrapper select:focus,
-  .select-wrapper select:hover {
-    background-color: #f5f6f7;
-    border-color: #bfc7cf;
-    box-shadow: 0 6px 14px rgba(0,0,0,0.08);
-    outline: none;
-  }
-  .select-wrapper::after {
-    content: "▾";
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #6c757d;
-    pointer-events: none;
-    font-size: 12px;
-  }
-
-  /* Vurgulu başlıklar */
-  .highlight-headers th {
-    font-weight: 700;
-    color: #2c3e50;
-    background-color: #f6f7f9;
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    letter-spacing: 0.6px;
-  }
-
-  /* Chart container */
-  .chart-wrap {
-    height: 260px;
-    width: 100%;
-    margin-bottom: 0.75rem;
-  }
-
-  /* Küçük responsive tweak */
-  @media (max-width: 768px) {
-    .select-wrapper select { width: 140px; }
-    .chart-wrap { height: 200px; }
-  }
-
-  .table-responsive {
-  display: none !important;
-}
-
-</style>
-
-<div class="col-lg-8 col-md-12 mb-4">
-  <div class="card h-100">
-    <div class="card-header pb-0">
-      <div class="row align-items-center">
-        <!-- Başlık ve sonuç -->
-        <div class="col-lg-4 col-6">
-          <h6>Rakip Tarifeler</h6>
-          <p class="text-sm mb-0">
-            <i class="fa fa-check text-info"></i>
-            <span class="font-weight-bold" id="done-count">0 sonuç</span> bulundu
-          </p>
+        <!-- Exchange Rate Card -->
+        <div class="col-xl-3 col-sm-6">
+          <div class="stat-card fade-in" style="animation-delay: 0.1s;">
+            <div class="d-flex justify-content-between align-items-start">
+              <div class="flex-grow-1">
+                <p class="stat-label mb-2">USD / TRY</p>
+                <h4 class="stat-value mb-2" id="exchange-rate">
+                  <span class="loading-shimmer" style="display: inline-block; width: 80px; height: 28px; border-radius: 4px;"></span>
+                </h4>
+                <div id="exchange-rate-change-container"></div>
+              </div>
+              <div class="stat-icon" style="background: linear-gradient(135deg, #43a047 0%, #66bb6a 100%);">
+                <i class="material-symbols-rounded text-white">currency_exchange</i>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <!-- Önerilen tarife ortada -->
-        <div class="col-lg-4 col-12 d-flex justify-content-center">
-          <p class="text-sm mb-0">
-            Önerilen Tarife: <span class="font-weight-bold" id="suggested-price">-</span>
-          </p>
+        <!-- OTP Card -->
+        <div class="col-xl-3 col-sm-6">
+          <div class="stat-card fade-in" style="animation-delay: 0.2s;">
+            <div class="d-flex justify-content-between align-items-start">
+              <div class="flex-grow-1">
+                <p class="stat-label mb-2">Zamanında Kalkış Oranı</p>
+                <h4 class="stat-value mb-2" id="otp-value">
+                  <span class="loading-shimmer" style="display: inline-block; width: 80px; height: 28px; border-radius: 4px;"></span>
+                </h4>
+                <div id="otp-status"></div>
+              </div>
+              <div class="stat-icon" style="background: linear-gradient(135deg, #fb8c00 0%, #ffa726 100%);">
+                <i class="material-symbols-rounded text-white">schedule</i>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <!-- Dropdown sağ üstte -->
-        <div class="col-lg-4 col-6 d-flex justify-content-end pe-6">
-          <div class="select-wrapper">
-            <select id="route-select" class="form-select form-select-sm w-auto">
-              <option value="">Rota seçiniz...</option>
-            </select>
+        <!-- Revenue Card -->
+        <div class="col-xl-3 col-sm-6">
+          <div class="stat-card fade-in" style="animation-delay: 0.3s;">
+            <div class="d-flex justify-content-between align-items-start">
+              <div class="flex-grow-1">
+                <p class="stat-label mb-2">Brüt Hasılat</p>
+                <h4 class="stat-value mb-2" id="annual-revenue">
+                  <span class="loading-shimmer" style="display: inline-block; width: 100px; height: 28px; border-radius: 4px;"></span>
+                </h4>
+                <div id="annual-revenue-delta"></div>
+              </div>
+              <div class="stat-icon" style="background: linear-gradient(135deg, #e53935 0%, #ef5350 100%);">
+                <i class="material-symbols-rounded text-white">paid</i>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="card-body px-0 pb-2">
-      <div class="px-3">
-        <!-- Chart -->
-        <div class="chart-wrap">
-          <canvas id="competitorBarChart"></canvas>
+      <!-- Global Flight Operations Map -->
+      <div class="row g-3 mb-4">
+        <div class="col-12">
+          <div class="card h-100 fade-in" style="animation-delay: 0.4s;">
+            <div class="card-body">
+              <div class="section-header">
+                <div>
+                  <h6 class="section-title">Global Operasyon Haritası</h6>
+                  <p class="section-subtitle">Ana Hatlar ve Hub Durumları</p>
+                </div>
+              </div>
+              <div id="flightMap" style="height: 450px; border-radius: 12px; z-index: 1;"></div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <hr class="dark horizontal">
+      <!-- Charts Row 1 -->
+      <div class="row g-3 mb-4">
 
-      <div class="table-responsive px-3">
-        <table class="table align-items-center mb-0">
-          <thead>
-            <tr class="highlight-headers">
-              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Havayolu</th>
-              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Rota</th>
-              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tarife</th>
-            </tr>
-          </thead>
-          <tbody id="competitor-table-body">
-            <!-- JS buraya satır ekleyecek -->
-          </tbody>
-        </table>
+        <!-- Customer Satisfaction -->
+        <div class="col-lg-4 col-md-6">
+          <div class="card h-100 fade-in" style="animation-delay: 0.5s;">
+            <div class="card-body">
+              <div class="section-header">
+                <div>
+                  <h6 class="section-title">Müşteri Memnuniyeti</h6>
+                  <p class="section-subtitle">Sınıflara Göre Dağılım</p>
+                </div>
+              </div>
+              <div class="chart-container">
+                <canvas id="chart-satisfaction"></canvas>
+              </div>
+              <hr class="dark horizontal my-2">
+              <div class="d-flex align-items-center">
+                <i class="material-symbols-rounded text-sm me-1" style="color: var(--success-color);">schedule</i>
+                <p class="mb-0 text-sm text-muted">az önce güncellendi</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Flight Occupancy -->
+        <div class="col-lg-4 col-md-6">
+          <div class="card h-100 fade-in" style="animation-delay: 0.6s;">
+            <div class="card-body">
+              <div class="section-header">
+                <div>
+                  <h6 class="section-title">Uçuş Doluluk Oranı</h6>
+                  <p class="section-subtitle">Doluluk Analizi</p>
+                </div>
+                <div class="custom-select">
+                  <select id="occupancySelect">
+                    <option value="highest" selected>En Yüksek</option>
+                    <option value="lowest">En Düşük</option>
+                  </select>
+                </div>
+              </div>
+              <div class="chart-container">
+                <canvas id="chart-flights"></canvas>
+              </div>
+              <hr class="dark horizontal my-2">
+              <div class="d-flex align-items-center">
+                <i class="material-symbols-rounded text-sm me-1" style="color: var(--warning-color);">schedule</i>
+                <p class="mb-0 text-sm text-muted">az önce güncellendi</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Revenue Distribution -->
+        <div class="col-lg-4 col-md-6">
+          <div class="card h-100 fade-in" style="animation-delay: 0.7s;">
+            <div class="card-body">
+              <div class="section-header">
+                <div>
+                  <h6 class="section-title">Gelir Dağılımı</h6>
+                  <p class="section-subtitle">Kaynaklara Göre</p>
+                </div>
+                <div class="custom-select">
+                  <select id="months-select">
+                    <option value="1">1 Ay</option>
+                    <option value="6" selected>6 Ay</option>
+                    <option value="12">12 Ay</option>
+                  </select>
+                </div>
+              </div>
+              <div class="chart-container">
+                <canvas id="revenueChart"></canvas>
+              </div>
+              <hr class="dark horizontal my-2">
+              <div id="revenue-legend" class="legend-container"></div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</div>
 
-<div class="col-lg-4 col-md-6 mb-4">
-  <div class="card h-100 shadow-sm">
-    <div class="card-body d-flex flex-column">
+      <!-- Charts Row 2 -->
+      <div class="row g-3 mb-4">
 
-      <!-- Başlık ve dropdown -->
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h6 class="mb-0">Maliyet Dağılımı</h6>
-        <select id="months-select-cost" class="form-select w-auto">
-          <option value="1">1 Ay</option>
-          <option value="6" selected>6 Ay</option>
-          <option value="12">12 Ay</option>
-        </select>
+        <!-- Competitor Prices -->
+        <div class="col-lg-8 col-md-12">
+          <div class="card h-100 fade-in" style="animation-delay: 0.8s;">
+            <div class="card-body">
+              <div class="section-header mb-3">
+                <div>
+                  <h6 class="section-title">Rakip Tarifeler</h6>
+                  <p class="section-subtitle">
+                    <i class="fa fa-check text-info me-1"></i>
+                    <span id="done-count">0 sonuç</span> bulundu
+                  </p>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                  <div>
+                    <span class="text-sm text-muted me-2">Önerilen Tarife:</span>
+                    <span class="price-highlight" id="suggested-price">-</span>
+                  </div>
+                  <div class="custom-select">
+                    <select id="route-select">
+                      <option value="">Rota seçiniz...</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="chart-container" style="height: 280px;">
+                <canvas id="competitorBarChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cost Distribution -->
+        <div class="col-lg-4 col-md-6">
+          <div class="card h-100 fade-in" style="animation-delay: 0.9s;">
+            <div class="card-body">
+              <div class="section-header">
+                <div>
+                  <h6 class="section-title">Maliyet Dağılımı</h6>
+                  <p class="section-subtitle">Kategorilere Göre</p>
+                </div>
+                <div class="custom-select">
+                  <select id="months-select-cost">
+                    <option value="1">1 Ay</option>
+                    <option value="6" selected>6 Ay</option>
+                    <option value="12">12 Ay</option>
+                  </select>
+                </div>
+              </div>
+              <div class="chart-container">
+                <canvas id="costChart"></canvas>
+              </div>
+              <hr class="dark horizontal my-2">
+              <div id="cost-legend" class="legend-container"></div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <!-- Grafik -->
-      <div class="flex-grow-1 d-flex align-items-center justify-content-center mt-3">
-        <div id="costChart" style="width:100%; height:280px;"></div>
-      </div>
-
-      <!-- Legend -->
-      <div id="cost-legend" class="mt-3 d-flex justify-content-around"></div>
-
-    </div>
-  </div>
-</div>
-
-<style>
-  .card-body { padding: 1.5rem; }
-  .legend-item { display: flex; align-items: center; font-weight: bold; transition: transform 0.2s; }
-  .legend-item:hover { transform: scale(1.1); }
-  .legend-color { width: 16px; height: 16px; margin-right: 6px; border-radius: 4px; }
-</style>
-
-
-
-
-
-
-      <footer class="footer py-4  ">
+      <!-- Footer -->
+      <footer class="footer py-4">
         <div class="container-fluid">
           <div class="row align-items-center justify-content-lg-between">
             <div class="col-lg-6 mb-lg-0 mb-4">
               <div class="copyright text-center text-sm text-muted text-lg-start">
-                © <script>
-                  document.write(new Date().getFullYear())
-                </script>,
+                © <script>document.write(new Date().getFullYear())</script>,
                 made with <i class="fa fa-heart"></i> by
                 <a class="font-weight-bold" target="_blank">KanbolatSoftware</a>
                 for a better decision.
@@ -601,6 +800,8 @@
       </footer>
     </div>
   </main>
+
+  <!-- Settings Plugin -->
   <div class="fixed-plugin">
     <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
       <i class="material-symbols-rounded py-2">settings</i>
@@ -616,11 +817,9 @@
             <i class="material-symbols-rounded">clear</i>
           </button>
         </div>
-        <!-- End Toggle Button -->
       </div>
       <hr class="horizontal dark my-1">
       <div class="card-body pt-sm-3 pt-0">
-        <!-- Sidebar Backgrounds -->
         <div>
           <h6 class="mb-0">Panel Rengi</h6>
         </div>
@@ -634,19 +833,14 @@
             <span class="badge filter bg-gradient-danger" data-color="danger" onclick="sidebarColor(this)"></span>
           </div>
         </a>
-        <!-- Sidenav Type -->
         <div class="mt-3">
           <h6 class="mb-0">Tema</h6>
-          
         </div>
         <div class="d-flex">
           <button class="btn bg-gradient-dark px-3 mb-2" data-class="bg-gradient-dark" onclick="sidebarType(this)">Dark</button>
           <button class="btn bg-gradient-dark px-3 mb-2 ms-2" data-class="bg-transparent" onclick="sidebarType(this)">Transparent</button>
-          <button class="btn bg-gradient-dark px-3 mb-2  active ms-2" data-class="bg-white" onclick="sidebarType(this)">White</button>
+          <button class="btn bg-gradient-dark px-3 mb-2 active ms-2" data-class="bg-white" onclick="sidebarType(this)">White</button>
         </div>
-        <p class="text-sm d-xl-none d-block mt-2">You can change the sidenav type just on desktop view.</p>
-        
-        
         <hr class="horizontal dark my-3">
         <div class="mt-2 d-flex">
           <h6 class="mb-0">Light / Dark</h6>
@@ -654,857 +848,745 @@
             <input class="form-check-input mt-1 ms-auto" type="checkbox" id="dark-version" onclick="darkMode(this)">
           </div>
         </div>
-        <hr class="horizontal dark my-sm-4">
-
-        <style>
-  #cost-legend {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    font-size: 14px;
-  }
-  .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .legend-color {
-    width: 14px;
-    height: 14px;
-    border-radius: 3px;
-    flex-shrink: 0;
-  }
-  .legend-label {
-    font-weight: 500;
-    flex: 1;
-  }
-  .legend-percent {
-    color: #555;
-  }
-</style>
-        
-        
-        
       </div>
     </div>
   </div>
-  <!--   Core JS Files   -->
+
+  <!-- Core JS Files -->
   <script src="../assets/js/core/popper.min.js"></script>
   <script src="../assets/js/core/bootstrap.min.js"></script>
   <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
   <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
-  <script src="../assets/js/plugins/chartjs.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="../assets/js/material-dashboard.min.js?v=3.2.0"></script>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
   <script>
+    // Enhanced Number Counter Animation
+    function animateValue(element, start, end, duration, suffix = '') {
+      const range = end - start;
+      const increment = range / (duration / 16);
+      let current = start;
 
-    let chartInstance = null;
+      const timer = setInterval(() => {
+        current += increment;
+        if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
+          current = end;
+          clearInterval(timer);
+        }
 
-function fetchAndRenderFlights(typeParam) {
-  fetch(`http://localhost:3000/dashboard/flights-by-occupancy/${typeParam}`)
-    .then(res => res.json())
-    .then(data => {
-      const labels = data.flights.map(f => f.flight_number);
-      const occupancyData = data.flights.map(f => parseFloat(f.occupancy_rate));
-      const routes = data.flights.map(f => `${f.departure_city} → ${f.arrival_city}`);
+        if (suffix === '$') {
+          element.textContent = suffix + Math.round(current).toLocaleString();
+        } else if (suffix === '%') {
+          element.textContent = current.toFixed(1) + suffix;
+        } else {
+          element.textContent = current.toFixed(2) + ' ' + suffix;
+        }
+      }, 16);
+    }
 
-      const ctx = document.getElementById("chart-flights").getContext("2d");
+    // Fuel Price
+    async function loadFuelPrice() {
+      try {
+        const res = await fetch('http://localhost:3000/dashboard/fuel-exchange-trends/2');
+        const data = await res.json();
 
-      // Eğer chart zaten varsa destroy et
-      if (chartInstance) {
-        chartInstance.destroy();
+        if(data.fuel_prices && data.fuel_prices.length > 0) {
+          const prices = data.fuel_prices;
+          const latest = prices[prices.length - 1];
+          const previous = prices.length > 1 ? prices[prices.length - 2] : null;
+
+          const elem = document.getElementById('fuel-price');
+          animateValue(elem, 0, latest.price, 1000, '$');
+
+          if(previous) {
+            const change = ((latest.price - previous.price) / previous.price) * 100;
+            const changeFormatted = change.toFixed(2) + '%';
+            const container = document.getElementById('fuel-price-change-container');
+            const changeClass = change > 0 ? 'positive' : 'negative';
+            const arrow = change > 0 ? '↑' : '↓';
+            container.innerHTML = `<span class="stat-change ${changeClass}">${arrow} ${Math.abs(change).toFixed(2)}%</span>`;
+          }
+        }
+      } catch(err) {
+        console.error('Fuel price error:', err);
+      }
+    }
+
+    // Exchange Rate
+    async function loadExchangeRate() {
+      try {
+        const res = await fetch('http://localhost:3000/dashboard/fuel-exchange-trends/2');
+        const data = await res.json();
+
+        if(data.exchange_rate && data.exchange_rate.length > 0) {
+          const rates = data.exchange_rate;
+          const latest = rates[rates.length - 1];
+          const previous = rates.length > 1 ? rates[rates.length - 2] : null;
+
+          const elem = document.getElementById('exchange-rate');
+          animateValue(elem, 0, latest.rate, 1000, '₺');
+
+          if(previous) {
+            const change = ((latest.rate - previous.rate) / previous.rate) * 100;
+            const container = document.getElementById('exchange-rate-change-container');
+            const changeClass = change > 0 ? 'positive' : 'negative';
+            const arrow = change > 0 ? '↑' : '↓';
+            container.innerHTML = `<span class="stat-change ${changeClass}">${arrow} ${Math.abs(change).toFixed(2)}%</span>`;
+          }
+        }
+      } catch(err) {
+        console.error('Exchange rate error:', err);
+      }
+    }
+
+    // OTP
+    async function loadOtpCard() {
+      try {
+        const res = await fetch("http://localhost:3000/dashboard/otp");
+        const data = await res.json();
+        const otp = data.otp;
+
+        const elem = document.getElementById("otp-value");
+        animateValue(elem, 0, otp, 1000, '%');
+
+        const statusElem = document.getElementById("otp-status");
+        if (otp >= 85) {
+          statusElem.innerHTML = `<span class="status-badge excellent">Excellent - Mükemmel</span>`;
+        } else if (otp >= 70) {
+          statusElem.innerHTML = `<span class="status-badge moderate">Moderate - Orta</span>`;
+        } else {
+          statusElem.innerHTML = `<span class="status-badge poor">Poor - Düşük</span>`;
+        }
+      } catch (err) {
+        console.error("OTP error:", err);
+      }
+    }
+
+    // Annual Revenue
+    async function loadAnnualRevenue() {
+      try {
+        const res = await fetch("http://localhost:3000/dashboard/annual-revenue");
+        const data = await res.json();
+
+        const elem = document.getElementById("annual-revenue");
+        animateValue(elem, 0, data.this_year_revenue, 1500, '$');
+
+        const deltaElem = document.getElementById("annual-revenue-delta");
+        const changeClass = data.delta >= 0 ? 'positive' : 'negative';
+        const arrow = data.delta >= 0 ? '↑' : '↓';
+        deltaElem.innerHTML = `<span class="stat-change ${changeClass}">${arrow} ${Math.abs(data.delta)}% yıllık</span>`;
+      } catch (err) {
+        console.error("Revenue error:", err);
+      }
+    }
+
+    // Customer Satisfaction
+    let satisfactionChart = null;
+    async function loadSatisfactionScores() {
+      try {
+        const res = await fetch('http://localhost:3000/dashboard/satisfaction-score');
+        const data = await res.json();
+
+        const labels = data.satisfactionScores.map(item => item.membership_type);
+        const scores = data.satisfactionScores.map(item => parseFloat(item.avg_loyalty_score));
+
+        const ctx = document.getElementById("chart-satisfaction").getContext("2d");
+
+        if(satisfactionChart) satisfactionChart.destroy();
+
+        satisfactionChart = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: labels,
+            datasets: [{
+              label: "Memnuniyet Skoru",
+              data: scores,
+              backgroundColor: 'rgba(67, 160, 71, 0.8)',
+              borderRadius: 8,
+              barThickness: 24
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                padding: 12,
+                titleFont: { size: 14 },
+                bodyFont: { size: 13 },
+                cornerRadius: 8
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                max: 100,
+                grid: { color: 'rgba(0,0,0,0.05)' },
+                ticks: { font: { size: 11 } }
+              },
+              x: {
+                grid: { display: false },
+                ticks: { font: { size: 11 } }
+              }
+            },
+            animation: {
+              duration: 1000,
+              easing: 'easeOutQuart'
+            }
+          }
+        });
+      } catch (err) {
+        console.error('Satisfaction error:', err);
+      }
+    }
+
+    // Flight Occupancy
+    let flightChart = null;
+    async function fetchAndRenderFlights(typeParam) {
+      try {
+        const res = await fetch(`http://localhost:3000/dashboard/flights-by-occupancy/${typeParam}`);
+        const data = await res.json();
+
+        const labels = data.flights.map(f => f.flight_number);
+        const occupancyData = data.flights.map(f => parseFloat(f.occupancy_rate));
+
+        const ctx = document.getElementById("chart-flights").getContext("2d");
+
+        if (flightChart) flightChart.destroy();
+
+        flightChart = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: labels,
+            datasets: [{
+              label: "Doluluk Oranı (%)",
+              data: occupancyData,
+              tension: 0.4,
+              borderWidth: 3,
+              pointRadius: 5,
+              pointHoverRadius: 7,
+              pointBackgroundColor: "#fb8c00",
+              pointBorderColor: "white",
+              pointBorderWidth: 2,
+              borderColor: "#fb8c00",
+              backgroundColor: "rgba(251, 140, 0, 0.1)",
+              fill: true
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                padding: 12,
+                cornerRadius: 8
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                max: 100,
+                grid: { color: 'rgba(0,0,0,0.05)' }
+              },
+              x: { grid: { display: false } }
+            },
+            animation: {
+              duration: 1200,
+              easing: 'easeOutQuart'
+            }
+          }
+        });
+      } catch(err) {
+        console.error(err);
+      }
+    }
+
+    document.getElementById("occupancySelect").addEventListener("change", (e) => {
+      fetchAndRenderFlights(e.target.value);
+    });
+
+    // Revenue Distribution
+    let revenueChart = null;
+    async function loadRevenueChart(months) {
+      try {
+        const res = await fetch(`http://localhost:3000/dashboard/revenue-by-months?months=${months}`);
+        const data = await res.json();
+
+        const revenueData = [
+          data.ticket_sales ? parseFloat(data.ticket_sales) : 0,
+          data.cargo_revenue ? parseFloat(data.cargo_revenue) : 0,
+          data.other_revenue ? parseFloat(data.other_revenue) : 0
+        ];
+
+        const labels = ["Bilet", "Kargo", "Diğer"];
+        const colors = ['#1976d2', '#43a047', '#fb8c00'];
+
+        const ctx = document.getElementById('revenueChart').getContext('2d');
+
+        if (revenueChart) revenueChart.destroy();
+
+        revenueChart = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: labels,
+            datasets: [{
+              data: revenueData,
+              backgroundColor: colors,
+              borderWidth: 4,
+              borderColor: '#fff'
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                padding: 12,
+                cornerRadius: 8,
+                callbacks: {
+                  label: function(context) {
+                    const val = context.parsed;
+                    const sum = revenueData.reduce((a,b) => a+b, 0);
+                    const percent = sum ? (val/sum*100).toFixed(1) : 0;
+                    return `₺${val.toLocaleString('tr-TR')} (${percent}%)`;
+                  }
+                }
+              }
+            },
+            cutout: '65%',
+            animation: {
+              animateRotate: true,
+              duration: 1200
+            }
+          }
+        });
+
+        // Legend
+        const legendDiv = document.getElementById('revenue-legend');
+        legendDiv.innerHTML = '';
+        const sum = revenueData.reduce((a,b)=>a+b,0) || 1;
+        revenueData.forEach((val, idx) => {
+          const percent = ((val/sum)*100).toFixed(1) + '%';
+          const item = document.createElement('div');
+          item.classList.add('legend-item');
+          item.innerHTML = `
+            <span class="legend-color" style="background:${colors[idx]}"></span>
+            <span class="legend-label">${labels[idx]}</span>
+            <span class="legend-percent">${percent}</span>
+          `;
+          legendDiv.appendChild(item);
+        });
+
+      } catch (err) {
+        console.error('Revenue chart error:', err);
+      }
+    }
+
+    const monthsSelect = document.getElementById('months-select');
+    monthsSelect.addEventListener('change', () => loadRevenueChart(monthsSelect.value));
+
+    // Competitor Prices
+    const routeSelect = document.getElementById('route-select');
+    const doneCount = document.getElementById('done-count');
+    const suggestedPriceElem = document.getElementById('suggested-price');
+    let competitorChart = null;
+
+    function formatTL(v) {
+      return Number(v).toLocaleString('tr-TR') + ' ₺';
+    }
+
+    async function loadRoutes() {
+      try {
+        const res = await fetch('http://localhost:3000/dashboard/routes');
+        const routes = await res.json();
+
+        routeSelect.querySelectorAll('option:not(:first-child)').forEach(o => o.remove());
+
+        routes.forEach((route) => {
+          const option = document.createElement('option');
+          option.value = route.id;
+          option.textContent = route.route;
+          routeSelect.appendChild(option);
+        });
+
+        const defaultRoute = routes.find(r => r.id === 2) || routes[0];
+        if(defaultRoute) {
+          routeSelect.value = defaultRoute.id;
+          await loadRouteData(defaultRoute.id);
+        }
+      } catch (err) {
+        console.error('Routes error:', err);
+      }
+    }
+
+    async function loadRouteData(flightId) {
+      if(!flightId) return;
+
+      try {
+        const [pricesRes, suggestedRes] = await Promise.all([
+          fetch(`http://localhost:3000/dashboard/competitor-prices/${flightId}`),
+          fetch(`http://localhost:3000/dashboard/suggested-price/${flightId}`)
+        ]);
+        const prices = await pricesRes.json();
+        const suggestedData = await suggestedRes.json();
+
+        doneCount.textContent = `${prices.length} sonuç`;
+
+        const suggestedPrice = suggestedData?.suggested_price ?? null;
+        suggestedPriceElem.textContent = suggestedPrice ? formatTL(suggestedPrice) : '-';
+
+        updateCompetitorChart(prices, suggestedPrice);
+      } catch (err) {
+        console.error('Route data error:', err);
+      }
+    }
+
+    function updateCompetitorChart(prices, ourPrice) {
+      if(!prices || prices.length === 0) {
+        if(competitorChart) competitorChart.destroy();
+        return;
       }
 
-      chartInstance = new Chart(ctx, {
-        type: "line",
+      const items = prices.map(p => ({
+        name: p.competitor_name,
+        price: Number(p.price),
+        isUs: false
+      }));
+
+      if(ourPrice !== null && !isNaN(Number(ourPrice))) {
+        items.push({
+          name: 'Önerilen Tarife',
+          price: Number(ourPrice),
+          isUs: true
+        });
+      }
+
+      items.sort((a,b) => b.price - a.price);
+
+      const labels = items.map(i => i.name);
+      const data = items.map(i => i.price);
+      const colors = items.map(i => i.isUs ? 'rgba(67, 160, 71, 0.9)' : 'rgba(108, 117, 125, 0.7)');
+
+      if(competitorChart) competitorChart.destroy();
+
+      const ctx = document.getElementById('competitorBarChart').getContext('2d');
+      competitorChart = new Chart(ctx, {
+        type: 'bar',
         data: {
-          labels: labels,
+          labels,
           datasets: [{
-            label: "Doluluk Oranı (%)",
-            data: occupancyData,
-            tension: 0.4,
-            borderWidth: 2,
-            pointRadius: 4,
-            pointBackgroundColor: "#FF7043",
-            pointBorderColor: "transparent",
-            borderColor: "#FF7043",
-            backgroundColor: "rgba(255,112,67,0.2)",
-            fill: true
+            label: 'Fiyat',
+            data,
+            backgroundColor: colors,
+            borderRadius: 8,
+            barThickness: 20
           }]
         },
         options: {
+          indexAxis: 'y',
           responsive: true,
           maintainAspectRatio: false,
+          scales: {
+            x: {
+              ticks: {
+                callback: function(value) { return value + ' ₺'; }
+              },
+              grid: { color: 'rgba(0,0,0,0.05)' }
+            },
+            y: {
+              grid: { display: false }
+            }
+          },
           plugins: {
             legend: { display: false },
             tooltip: {
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              padding: 12,
+              cornerRadius: 8,
               callbacks: {
-                label: function(context) {
-                  const flightIdx = context.dataIndex;
-                  const occupancy = occupancyData[flightIdx];
-                  const route = routes[flightIdx];
-                  return `${route}: ${occupancy}%`;
+                label: function(ctx) {
+                  return formatTL(ctx.parsed.x);
                 }
               }
             }
           },
-          interaction: {
-            intersect: false,
-            mode: 'index'
-          },
-          scales: {
-            y: {
-              beginAtZero: true,
-              max: 100,
-              title: { display: true, text: "Doluluk Oranı (%)" },
-              ticks: { color: '#737373', stepSize: 10 }
-            },
-            x: { ticks: { color: '#737373' } }
+          animation: {
+            duration: 1000,
+            easing: 'easeOutQuart'
           }
         }
       });
-    })
-    .catch(err => console.error(err));
-}
-
-// Dropdown değiştiğinde grafiği güncelle
-document.getElementById("occupancySelect").addEventListener("change", (e) => {
-  fetchAndRenderFlights(e.target.value);
-});
-
-// Sayfa yüklenince default highest ile grafik
-fetchAndRenderFlights('highest');
-
-
-async function loadFuelPrice() {
-  try {
-    const res = await fetch('http://localhost:3000/dashboard/fuel-exchange-trends/2');
-    const data = await res.json();
-
-    if(data.fuel_prices && data.fuel_prices.length > 0) {
-      const prices = data.fuel_prices;
-      const latest = prices[prices.length - 1];
-      const previous = prices.length > 1 ? prices[prices.length - 2] : null;
-
-      document.getElementById('fuel-price').textContent = latest.price.toFixed(2) + ' $';
-
-      if(previous) {
-        const change = ((latest.price - previous.price) / previous.price) * 100;
-        const changeFormatted = change.toFixed(2) + '%';
-        const changeElement = document.getElementById('fuel-price-change');
-        changeElement.textContent = change > 0 ? `+${changeFormatted}` : `${changeFormatted}`;
-        changeElement.className = change > 0 ? 'font-weight-bolder text-success' : 'font-weight-bolder text-danger';
-      }
     }
 
-  } catch(err) {
-    console.error('Fuel price yüklenirken hata:', err);
-  }
-}
+    routeSelect.addEventListener('change', () => {
+      const flightId = routeSelect.value;
+      loadRouteData(flightId);
+    });
 
-loadFuelPrice();
+    // Cost Distribution
+    let costChart = null;
+    async function loadCostChart(months) {
+      try {
+        const res = await fetch(`http://localhost:3000/dashboard/cost-by-months?months=${months}`);
+        const data = await res.json();
 
+        const costData = [
+          data.fuel_cost ? parseFloat(data.fuel_cost) : 0,
+          data.staff_cost ? parseFloat(data.staff_cost) : 0,
+          data.maintenance_cost ? parseFloat(data.maintenance_cost) : 0,
+          data.other_costs ? parseFloat(data.other_costs) : 0
+        ];
 
+        const labels = ["Yakıt", "Personel", "Bakım", "Diğer"];
+        const colors = ['#1976d2', '#43a047', '#fb8c00', '#e53935'];
 
+        const ctx = document.getElementById('costChart').getContext('2d');
 
-(function(){
-  const monthsSelect = document.getElementById('months-select-cost');
-  const legendDiv = document.getElementById('cost-legend');
-  let chart = null;
+        if(costChart) costChart.destroy();
 
-  // Tüm paleti aynı kaynaktan kullan -> chart + legend
-  const baseColors = ["#1E88E5","#43A047","#FB8C00","#8E24AA"];
-
-  async function loadCostChart(months) {
-    try {
-      const res = await fetch(`http://localhost:3000/dashboard/cost-by-months?months=${months}`);
-      const data = await res.json();
-
-      const costData = [
-        data.fuel_cost ? parseFloat(data.fuel_cost) : 0,
-        data.staff_cost ? parseFloat(data.staff_cost) : 0,
-        data.maintenance_cost ? parseFloat(data.maintenance_cost) : 0,
-        data.other_costs ? parseFloat(data.other_costs) : 0
-      ];
-
-      const labels = ["Yakıt Maliyeti","Personel Maliyeti","Bakım Maliyeti","Diğer Maliyetler"];
-
-      if(chart) chart.destroy();
-
-      chart = new ApexCharts(document.querySelector("#costChart"), {
-        series: costData,
-        chart: {
-          type: 'donut',
-          height: 280
-        },
-        labels: labels,
-        colors: baseColors,
-        plotOptions: {
-          pie: {
-            startAngle: -90,
-            endAngle: 270
-          }
-        },
-        fill: {
-          type: 'gradient',
-          gradient: {
-            shade: 'light',
-            type: "vertical",
-            shadeIntensity: 0.5,
-            opacityFrom: 0.9,
-            opacityTo: 0.8,
-          }
-        },
-        tooltip: {
-          y: {
-            formatter: function(val, opts) {
-              const sum = opts.w.globals.seriesTotals.reduce((a,b)=>a+b,0);
-              const percent = sum ? (val/sum*100).toFixed(1) : 0;
-              return `₺${val.toLocaleString('tr-TR')} (${percent}%)`;
-            }
-          }
-        },
-        legend: {
-          show: false
-        },
-        responsive: [{
-          breakpoint: 480,
+        costChart = new Chart(ctx, {
+          type: 'polarArea',
+          data: {
+            labels: labels,
+            datasets: [{
+              data: costData,
+              backgroundColor: colors.map(c => c + '99'),
+              borderWidth: 2,
+              borderColor: '#fff'
+            }]
+          },
           options: {
-            chart: { width: 200 }
-          }
-        }]
-      });
-
-      chart.render();
-
-      // Custom legend
-      legendDiv.innerHTML = '';
-      const sum = costData.reduce((a,b)=>a+b,0) || 1;
-      costData.forEach((val, idx) => {
-        const percent = ((val/sum)*100).toFixed(1) + '%';
-        const item = document.createElement('div');
-        item.classList.add('legend-item');
-        item.innerHTML = `
-          <span class="legend-color" style="background:${baseColors[idx]}"></span>
-          <span class="legend-label">${labels[idx]}</span>
-          <span class="legend-percent">${percent}</span>
-        `;
-        legendDiv.appendChild(item);
-      });
-
-    } catch(err){ 
-      console.error('Maliyet grafiği yüklenemedi:', err); 
-    }
-  }
-
-  loadCostChart(monthsSelect.value);
-  monthsSelect.addEventListener('change', () => loadCostChart(monthsSelect.value));
-})();
-
-
-const routeSelect = document.getElementById('route-select');
-  const tableBody = document.getElementById('competitor-table-body');
-  const doneCount = document.getElementById('done-count');
-  const suggestedPriceElem = document.getElementById('suggested-price');
-  const ctxChart = document.getElementById('competitorBarChart').getContext('2d');
-  let competitorChart = null;
-
-  // Helper: para formatı
-  function formatTL(v) {
-    return Number(v).toLocaleString('tr-TR') + ' ₺';
-  }
-
-  // 1. Rotaları yükle
-  async function loadRoutes() {
-    try {
-      const res = await fetch('http://localhost:3000/dashboard/routes');
-      const routes = await res.json();
-
-      // temizle (vars. içinde başlangıç option'ı zaten var)
-      routeSelect.querySelectorAll('option:not(:first-child)').forEach(o => o.remove());
-
-      routes.forEach((route) => {
-        const option = document.createElement('option');
-        option.value = route.id;
-        option.textContent = route.route;
-        routeSelect.appendChild(option);
-      });
-
-      // Varsayılan rota (eğer varsa id:2)
-      const defaultRoute = routes.find(r => r.id === 2) || routes[0];
-      if(defaultRoute) {
-        routeSelect.value = defaultRoute.id;
-        await loadRouteData(defaultRoute.id);
-      }
-
-    } catch (err) {
-      console.error('Rota yüklenirken hata:', err);
-    }
-  }
-
-  // 2. Bir rota seçildiğinde hem rakipleri hem önerilen fiyatı tek seferde çek ve güncelle
-  async function loadRouteData(flightId) {
-    tableBody.innerHTML = '';
-    if(!flightId) return;
-
-    try {
-      // eş zamanlı fetch'ler
-      const [pricesRes, suggestedRes] = await Promise.all([
-        fetch(`http://localhost:3000/dashboard/competitor-prices/${flightId}`),
-        fetch(`http://localhost:3000/dashboard/suggested-price/${flightId}`)
-      ]);
-      const prices = await pricesRes.json();
-      const suggestedData = await suggestedRes.json();
-
-      // tablo güncelle
-      doneCount.textContent = `${prices.length} sonuç`;
-      tableBody.innerHTML = '';
-      prices.forEach(item => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>
-            <div class="d-flex px-2 py-1">
-              <div>
-                <i class="material-symbols-rounded text-primary me-3">flight</i>
-              </div>
-              <div class="d-flex flex-column justify-content-center">
-                <h6 class="mb-0 text-sm">${item.competitor_name}</h6>
-              </div>
-            </div>
-          </td>
-          <td>
-            <span class="text-xs font-weight-bold">${item.route}</span>
-          </td>
-          <td class="align-middle text-center text-sm">
-            <span class="text-xs font-weight-bold">${formatTL(item.price)}</span>
-          </td>
-        `;
-        tableBody.appendChild(tr);
-      });
-
-      // önerilen fiyat göster
-      const suggestedPrice = suggestedData?.suggested_price ?? null;
-      suggestedPriceElem.textContent = suggestedPrice ? formatTL(suggestedPrice) : '-';
-
-      // grafiği güncelle (rakipler + bizim önerilen fiyat)
-      updateCompetitorChart(prices, suggestedPrice);
-
-    } catch (err) {
-      console.error('Route data yüklenirken hata:', err);
-      doneCount.textContent = '0 sonuç';
-      suggestedPriceElem.textContent = '-';
-      updateCompetitorChart([], null); // boş chart
-    }
-  }
-
-  // 3. Grafik güncelleme
-  function updateCompetitorChart(prices, ourPrice) {
-    // Eğer rakip yoksa boş göster
-    if(!prices || prices.length === 0) {
-      if(competitorChart) { competitorChart.destroy(); competitorChart = null; }
-      // basit placeholder chart
-      competitorChart = new Chart(ctxChart, {
-        type: 'bar',
-        data: { labels: ['Veri yok'], datasets: [{ data: [1], backgroundColor: ['#e9ecef'] }] },
-        options: { indexAxis: 'y', maintainAspectRatio: false, plugins: { legend: { display: false } } }
-      });
-      return;
-    }
-
-    // items: rakipler
-    const items = prices.map(p => ({
-      name: p.competitor_name,
-      price: Number(p.price),
-      isUs: false
-    }));
-
-    // bizim fiyatı ekle (label "Biz (Önerilen)")
-    if(ourPrice !== null && !isNaN(Number(ourPrice))) {
-      items.push({
-        name: 'Önerilen Tarife',
-        price: Number(ourPrice),
-        isUs: true
-      });
-    }
-
-    // Sort: büyükten küçüğe (görsel tercih) — istersen küçükten büyüğe değiştir
-    items.sort((a,b) => b.price - a.price);
-
-    const labels = items.map(i => i.name);
-    const data = items.map(i => i.price);
-    const colors = items.map(i => i.isUs ? 'rgba(0,200,83,0.95)' : 'rgba(108,117,125,0.95)'); // yeşil vs gri
-
-    // destroy önceki chart
-    if(competitorChart) competitorChart.destroy();
-
-    competitorChart = new Chart(ctxChart, {
-      type: 'bar',
-      data: {
-        labels,
-        datasets: [{
-          label: 'Fiyat',
-          data,
-          backgroundColor: colors,
-          borderRadius: 6,
-          barThickness: 16
-        }]
-      },
-      options: {
-        indexAxis: 'y',
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          x: {
-            ticks: {
-              callback: function(value) { return value + ' ₺'; }
-            },
-            grid: { color: 'rgba(0,0,0,0.05)' }
-          },
-          y: {
-            grid: { display: false },
-            ticks: { autoSkip: false }
-          }
-        },
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            callbacks: {
-              label: function(ctx) {
-                return formatTL(ctx.parsed.x);
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                padding: 12,
+                cornerRadius: 8,
+                callbacks: {
+                  label: function(context) {
+                    const val = context.parsed.r;
+                    const sum = costData.reduce((a,b)=>a+b,0);
+                    const percent = sum ? (val/sum*100).toFixed(1) : 0;
+                    return `₺${val.toLocaleString('tr-TR')} (${percent}%)`;
+                  }
+                }
               }
+            },
+            scales: {
+              r: {
+                ticks: { display: false },
+                grid: { color: 'rgba(0,0,0,0.1)' }
+              }
+            },
+            animation: {
+              duration: 1200,
+              easing: 'easeOutQuart'
             }
           }
-        },
-        animation: {
-          duration: 600,
-          easing: 'easeOutCubic'
+        });
+
+        // Legend
+        const legendDiv = document.getElementById('cost-legend');
+        legendDiv.innerHTML = '';
+        const sum = costData.reduce((a,b)=>a+b,0) || 1;
+        costData.forEach((val, idx) => {
+          const percent = ((val/sum)*100).toFixed(1) + '%';
+          const item = document.createElement('div');
+          item.classList.add('legend-item');
+          item.innerHTML = `
+            <span class="legend-color" style="background:${colors[idx]}"></span>
+            <span class="legend-label">${labels[idx]}</span>
+            <span class="legend-percent">${percent}</span>
+          `;
+          legendDiv.appendChild(item);
+        });
+
+      } catch(err){
+        console.error('Cost chart error:', err);
+      }
+    }
+
+    const monthsSelectCost = document.getElementById('months-select-cost');
+    monthsSelectCost.addEventListener('change', () => loadCostChart(monthsSelectCost.value));
+
+    // Global Flight Operations Map
+    let flightMap = null;
+    async function loadFlightMap() {
+      try {
+        // Initialize Leaflet map
+        flightMap = L.map('flightMap', {
+          center: [39, 35],
+          zoom: 3,
+          zoomControl: true,
+          scrollWheelZoom: true
+        });
+
+        // Add dark themed tile layer
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+          subdomains: 'abcd',
+          maxZoom: 19
+        }).addTo(flightMap);
+
+        // Fetch map data
+        const res = await fetch('http://localhost:3000/dashboard/map-data');
+        const data = await res.json();
+
+        // Create a map to store hub locations
+        const hubLocations = new Map();
+
+        // First, extract hub locations from routes
+        if (data.routes && data.routes.length > 0) {
+          data.routes.forEach(route => {
+            if (!hubLocations.has(route.origin.iata)) {
+              hubLocations.set(route.origin.iata, {
+                lat: route.origin.lat,
+                lon: route.origin.lon,
+                iata: route.origin.iata
+              });
+            }
+            if (!hubLocations.has(route.destination.iata)) {
+              hubLocations.set(route.destination.iata, {
+                lat: route.destination.lat,
+                lon: route.destination.lon,
+                iata: route.destination.iata
+              });
+            }
+          });
         }
-      }
-    });
-  }
 
-  // Event: rota değiştiğinde
-  routeSelect.addEventListener('change', () => {
-    const flightId = routeSelect.value;
-    loadRouteData(flightId);
-  });
+        // Render Routes
+        if (data.routes && data.routes.length > 0) {
+          data.routes.forEach(route => {
+            const origin = [route.origin.lat, route.origin.lon];
+            const destination = [route.destination.lat, route.destination.lon];
+            const profitability = route.profitability;
 
-  // İlk yükleme
-  loadRoutes();
+            // Determine line style based on profitability
+            let lineColor, lineWeight, lineDashArray;
 
-async function loadExchangeRate() {
-  try {
-    const res = await fetch('http://localhost:3000/dashboard/fuel-exchange-trends/2');
-    const data = await res.json();
-
-    if(data.exchange_rate && data.exchange_rate.length > 0) {
-      const rates = data.exchange_rate;
-      const latest = rates[rates.length - 1];
-      const previous = rates.length > 1 ? rates[rates.length - 2] : null;
-
-      document.getElementById('exchange-rate').textContent = latest.rate.toFixed(2);
-
-      if(previous) {
-        const change = ((latest.rate - previous.rate) / previous.rate) * 100;
-        const changeFormatted = change.toFixed(2) + '%';
-        const changeElement = document.getElementById('exchange-rate-change');
-        changeElement.textContent = change > 0 ? `+${changeFormatted}` : `${changeFormatted}`;
-        changeElement.className = change > 0 ? 'font-weight-bolder text-success' : 'font-weight-bolder text-danger';
-      }
-    }
-
-  } catch(err) {
-    console.error('Exchange rate yüklenirken hata:', err);
-  }
-}
-
-loadExchangeRate();
-
-async function loadOtpCard() {
-    try {
-      const res = await fetch("http://localhost:3000/dashboard/otp");
-      const data = await res.json();
-
-      // OTP değeri
-      const otp = data.otp;
-      document.getElementById("otp-value").innerText = otp + "%";
-
-      // Durum değerlendirmesi
-      const statusElem = document.getElementById("otp-status");
-      if (otp >= 85) {
-        statusElem.innerHTML = `<span class="text-success font-weight-bolder">Excellent</span> - Mükemmel Zamanında Kalkış`;
-      } else if (otp >= 70) {
-        statusElem.innerHTML = `<span class="text-warning font-weight-bolder">Moderate</span> - Orta Performans`;
-      } else if (otp > 30) {
-        statusElem.innerHTML = `<span class="text-danger font-weight-bolder">Poor</span> - Düşük Performans`;
-      } else {
-        statusElem.innerHTML = `<span class="text-danger font-weight-bolder">Critical</span> - Kritik Düzey`;
-      }
-
-    } catch (err) {
-      console.error("OTP verisi alınamadı:", err);
-      document.getElementById("otp-status").innerText = "Veri alınamadı";
-    }
-  }
-
-  // Sayfa açıldığında yükle
-loadOtpCard();
-
-const monthsSelect = document.getElementById('months-select');
-let revenueChart = null;
-
-async function loadRevenueChart(months) {
-  try {
-    const res = await fetch(`http://localhost:3000/dashboard/revenue-by-months?months=${months}`);
-    const data = await res.json();
-
-    const revenueData = [
-      data.ticket_sales ? parseFloat(data.ticket_sales) : 0,
-      data.cargo_revenue ? parseFloat(data.cargo_revenue) : 0,
-      data.other_revenue ? parseFloat(data.other_revenue) : 0
-    ];
-
-    const labels = ["Bilet Geliri", "Kargo Geliri", "Diğer Gelirler"];
-
-    // Önce varsa eski grafiği temizle
-    if (revenueChart) {
-      revenueChart.destroy();
-    }
-
-    const options = {
-  series: revenueData,
-  chart: {
-    type: 'polarArea',
-    height: 280
-  },
-  labels: labels,
-  stroke: {
-    colors: ['#fff']
-  },
-  fill: {
-    opacity: 0.9
-  },
-  legend: {
-    position: 'bottom'
-  },
-  tooltip: {
-  formatter: function({ series, seriesIndex, w }) {
-    const val = series[seriesIndex];
-    const sum = w.globals.seriesTotals.reduce((a, b) => a + b, 0);
-    const percent = sum ? (val / sum * 100).toFixed(1) : 0;
-    return `₺${val.toLocaleString('tr-TR')} (${percent}%)`;
-  }
-}
-};
-
-
-    revenueChart = new ApexCharts(document.querySelector("#revenueChart"), options);
-    revenueChart.render();
-
-  } catch (err) {
-    console.error('Gelir grafiği yüklenemedi:', err);
-  }
-}
-
-// İlk yükleme
-loadRevenueChart(monthsSelect.value);
-monthsSelect.addEventListener('change', ()=>loadRevenueChart(monthsSelect.value));
-
-
-
-
-
-    async function loadSatisfactionScores() {
-  try {
-    const res = await fetch('http://localhost:3000/dashboard/satisfaction-score');
-    const data = await res.json();
-
-    const labels = data.satisfactionScores.map(item => item.membership_type);
-    const scores = data.satisfactionScores.map(item => parseFloat(item.avg_loyalty_score));
-
-    const ctx = document.getElementById("chart-bars").getContext("2d");
-
-    // Var olan chart varsa destroy et (sayfa reload vb durumları için)
-    if(window.satisfactionChart) window.satisfactionChart.destroy();
-
-    window.satisfactionChart = new Chart(ctx, {
-      type: "bar",
-      data: {
-        labels: labels,
-        datasets: [{
-          label: "Avg Loyalty Score",
-          tension: 0.4,
-          borderWidth: 0,
-          borderRadius: 4,
-          borderSkipped: false,
-          backgroundColor: "#43A047",
-          data: scores,
-          barThickness: 'flex'
-        }],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false,
-          }
-        },
-        interaction: {
-          intersect: false,
-          mode: 'index',
-        },
-        scales: {
-          y: {
-            grid: {
-              drawBorder: false,
-              display: true,
-              drawOnChartArea: true,
-              drawTicks: false,
-              borderDash: [5, 5],
-              color: '#e5e5e5'
-            },
-            ticks: {
-              suggestedMin: 0,
-              suggestedMax: 100,
-              beginAtZero: true,
-              padding: 10,
-              font: {
-                size: 14,
-                lineHeight: 2
-              },
-              color: "#737373"
-            },
-          },
-          x: {
-            grid: {
-              drawBorder: false,
-              display: false,
-              drawOnChartArea: false,
-              drawTicks: false,
-              borderDash: [5, 5]
-            },
-            ticks: {
-              display: true,
-              color: '#737373',
-              padding: 10,
-              font: {
-                size: 14,
-                lineHeight: 2
-              },
+            if (profitability > 0) {
+              lineColor = '#66bb6a';
+              lineWeight = 3;
+              lineDashArray = null;
+            } else if (profitability < 0) {
+              lineColor = '#ef5350';
+              lineWeight = 2;
+              lineDashArray = null;
+            } else {
+              lineColor = '#6c757d';
+              lineWeight = 2;
+              lineDashArray = '5, 5';
             }
-          },
-        },
-      },
-    });
 
-  } catch (err) {
-    console.error('Satisfaction Scores yüklenirken hata:', err);
-  }
-}
+            // Create polyline
+            const polyline = L.polyline([origin, destination], {
+              color: lineColor,
+              weight: lineWeight,
+              opacity: 0.7,
+              dashArray: lineDashArray
+            }).addTo(flightMap);
 
-// Sayfa yüklenince çalıştır
-loadSatisfactionScores();
+            // Format profitability
+            const profitClass = profitability > 0 ? 'positive' : profitability < 0 ? 'negative' : 'neutral';
+            const profitFormatted = profitability.toLocaleString('tr-TR');
 
-async function loadAnnualRevenue() {
-    try {
-      const res = await fetch("http://localhost:3000/dashboard/annual-revenue");
-      const data = await res.json();
+            // Add popup
+            const popupContent = `
+              <div class="map-popup-title">${route.origin.iata} → ${route.destination.iata}</div>
+              <div class="map-popup-profit ${profitClass}">
+                Karlılık: ₺${profitFormatted}
+              </div>
+            `;
 
-      // geliri ekrana bas
-      document.getElementById("annual-revenue").innerText = 
-        "$" + Number(data.this_year_revenue).toLocaleString();
+            polyline.bindPopup(popupContent);
+          });
+        }
 
-      // değişim oranı
-      const deltaElem = document.getElementById("annual-revenue-delta");
-      if (data.delta >= 0) {
-        deltaElem.innerHTML = `<span class="text-success font-weight-bolder">+${data.delta}% </span>yıllık değişim`;
-      } else {
-        deltaElem.innerHTML = `<span class="text-danger font-weight-bolder">${data.delta}% </span>yıllık değişim`;
-      }
+        // Render Hubs
+        if (data.hubs && data.hubs.length > 0) {
+          data.hubs.forEach(hub => {
+            const location = hubLocations.get(hub.iata);
 
-    } catch (err) {
-      console.error("Yıllık hasılat alınamadı:", err);
-      document.getElementById("annual-revenue-delta").innerText = "Veri alınamadı";
-    }
-  }
+            if (location) {
+              // Determine hub color based on status
+              let hubColor;
+              let statusText;
 
-  loadAnnualRevenue();
-
-
-
-    var ctx2 = document.getElementById("chart-line").getContext("2d");
-
-    new Chart(ctx2, {
-      type: "line",
-      data: {
-        labels: ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"],
-        datasets: [{
-          label: "Sales",
-          tension: 0,
-          borderWidth: 2,
-          pointRadius: 3,
-          pointBackgroundColor: "#43A047",
-          pointBorderColor: "transparent",
-          borderColor: "#43A047",
-          backgroundColor: "transparent",
-          fill: true,
-          data: [120, 230, 130, 440, 250, 360, 270, 180, 90, 300, 310, 220],
-          maxBarThickness: 6
-
-        }],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false,
-          },
-          tooltip: {
-            callbacks: {
-              title: function(context) {
-                const fullMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-                return fullMonths[context[0].dataIndex];
+              if (hub.status === 'green') {
+                hubColor = '#43a047';
+                statusText = 'Excellent';
+              } else if (hub.status === 'yellow') {
+                hubColor = '#fb8c00';
+                statusText = 'Moderate';
+              } else {
+                hubColor = '#6c757d';
+                statusText = 'Normal';
               }
+
+              // Create circle marker for hub
+              const circleMarker = L.circleMarker([location.lat, location.lon], {
+                radius: 10,
+                fillColor: hubColor,
+                color: '#fff',
+                weight: 3,
+                opacity: 1,
+                fillOpacity: 0.9
+              }).addTo(flightMap);
+
+              // Add popup
+              const hubPopupContent = `
+                <div class="map-popup-title">${hub.iata} Hub</div>
+                <div class="map-popup-detail">Status: ${statusText}</div>
+              `;
+
+              circleMarker.bindPopup(hubPopupContent);
             }
-          }
-        },
-        interaction: {
-          intersect: false,
-          mode: 'index',
-        },
-        scales: {
-          y: {
-            grid: {
-              drawBorder: false,
-              display: true,
-              drawOnChartArea: true,
-              drawTicks: false,
-              borderDash: [4, 4],
-              color: '#e5e5e5'
-            },
-            ticks: {
-              display: true,
-              color: '#737373',
-              padding: 10,
-              font: {
-                size: 12,
-                lineHeight: 2
-              },
-            }
-          },
-          x: {
-            grid: {
-              drawBorder: false,
-              display: false,
-              drawOnChartArea: false,
-              drawTicks: false,
-              borderDash: [5, 5]
-            },
-            ticks: {
-              display: true,
-              color: '#737373',
-              padding: 10,
-              font: {
-                size: 12,
-                lineHeight: 2
-              },
-            }
-          },
-        },
-      },
+          });
+        }
+
+        // Add smooth animation on load
+        setTimeout(() => {
+          flightMap.invalidateSize();
+        }, 500);
+
+      } catch (err) {
+        console.error('Flight map error:', err);
+      }
+    }
+
+    // Initialize All
+    document.addEventListener('DOMContentLoaded', () => {
+      loadFuelPrice();
+      loadExchangeRate();
+      loadOtpCard();
+      loadAnnualRevenue();
+      loadFlightMap();
+      loadSatisfactionScores();
+      fetchAndRenderFlights('highest');
+      loadRevenueChart(6);
+      loadRoutes();
+      loadCostChart(6);
     });
 
-    var ctx3 = document.getElementById("chart-line-tasks").getContext("2d");
-
-    new Chart(ctx3, {
-      type: "line",
-      data: {
-        labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-        datasets: [{
-          label: "Tasks",
-          tension: 0,
-          borderWidth: 2,
-          pointRadius: 3,
-          pointBackgroundColor: "#43A047",
-          pointBorderColor: "transparent",
-          borderColor: "#43A047",
-          backgroundColor: "transparent",
-          fill: true,
-          data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
-          maxBarThickness: 6
-
-        }],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false,
-          }
-        },
-        interaction: {
-          intersect: false,
-          mode: 'index',
-        },
-        scales: {
-          y: {
-            grid: {
-              drawBorder: false,
-              display: true,
-              drawOnChartArea: true,
-              drawTicks: false,
-              borderDash: [4, 4],
-              color: '#e5e5e5'
-            },
-            ticks: {
-              display: true,
-              padding: 10,
-              color: '#737373',
-              font: {
-                size: 14,
-                lineHeight: 2
-              },
-            }
-          },
-          x: {
-            grid: {
-              drawBorder: false,
-              display: false,
-              drawOnChartArea: false,
-              drawTicks: false,
-              borderDash: [4, 4]
-            },
-            ticks: {
-              display: true,
-              color: '#737373',
-              padding: 10,
-              font: {
-                size: 14,
-                lineHeight: 2
-              },
-            }
-          },
-        },
-      },
-    });
-  </script>
-  <script>
+    // Smooth Scrollbar
     var win = navigator.platform.indexOf('Win') > -1;
     if (win && document.querySelector('#sidenav-scrollbar')) {
-      var options = {
-        damping: '0.5'
-      }
+      var options = { damping: '0.5' }
       Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
     }
   </script>
-  <!-- Github buttons -->
-  <script async defer src="https://buttons.github.io/buttons.js"></script>
-  <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
-  <script src="../assets/js/material-dashboard.min.js?v=3.2.0"></script>
 </body>
 
 </html>

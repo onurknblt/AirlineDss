@@ -14,5 +14,5 @@ router.get('/otp', dashboardController.getOtp); //zamanında kalkış oranı
 router.get('/annual-revenue', dashboardController.getAnnualRevenue); //yıllık gelir
 router.get('/revenue-by-months/:year?', dashboardController.getRevenueByMonths); //Aylara göre gelir
 router.get('/cost-by-months', dashboardController.getCostByMonths);//Aylara göre maliyet
-
+router.get('/map-data', dashboardController.getMapData); //Harita verisi (rotalar ve karlılık)
 module.exports = router;

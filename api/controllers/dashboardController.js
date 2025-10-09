@@ -524,5 +524,83 @@ const getCostByMonths = (req, res) => {
   }
 };
 
+/**
+ * Dashboard haritası için gerekli olan rota ve hub verilerini oluşturur.
+ * Bu versiyon, async/await yerine standart mysql2 callback yapısıyla çalışır.
+ * @param {object} req - Express request objesi.
+ * @param {object} res - Express response objesi.
+ */
+const getMapData = (req, res) => {
+  // 1. Rotaları, koordinatları ve kârlılık bilgilerini çekmek için ana sorgu
+  const routesQuery = `
+    SELECT 
+      rd.origin_iata_code,
+      origin_airport.latitude AS origin_lat,
+      origin_airport.longitude AS origin_lon,
+      rd.destination_iata_code,
+      dest_airport.latitude AS dest_lat,
+      dest_airport.longitude AS dest_lon,
+      COALESCE(SUM(rev.ticket_sales) - SUM(costs.fuel_cost + costs.staff_cost), 0) AS profitability
+    FROM route_details rd
+    JOIN airports origin_airport ON rd.origin_iata_code = origin_airport.iata_code
+    JOIN airports dest_airport ON rd.destination_iata_code = dest_airport.iata_code
+    LEFT JOIN revenue rev ON rd.flight_id = rev.flight_id AND rev.date >= NOW() - INTERVAL 30 DAY
+    LEFT JOIN flight_costs costs ON rd.flight_id = costs.flight_id AND costs.date >= NOW() - INTERVAL 30 DAY
+    GROUP BY 
+      rd.origin_iata_code, origin_lat, origin_lon, 
+      rd.destination_iata_code, dest_lat, dest_lon;
+  `;
 
-module.exports = {getOtp,getCostByMonths,getRevenueByMonths,getAnnualRevenue,getFuelExchangeTrends,getSuggestedPrice,getAllFlightPrices,getAverageOccupancyRates,getAllRoutes,getFlightsByOccupancy,getCustomerSatisfactionScores,getCompetitorPrices};
+  // İlk sorguyu çalıştırıyoruz
+  db.query(routesQuery, (err1, routesData) => {
+    // İlk sorguda bir hata olursa, hatayı loglayıp 500 cevabı dönüyoruz.
+    if (err1) {
+      console.error("Harita için rota verileri alınırken SQL hatası:", err1);
+      return res.status(500).json({ message: "Sunucu hatası: Rota verileri alınamadı." });
+    }
+
+    // İlk sorgu başarılıysa, şimdi ikinci sorguyu (hub durumu) çalıştırıyoruz.
+    const hubStatusQuery = `
+      SELECT COUNT(*) as delayedCount
+      FROM flight_operations fo
+      JOIN route_details rd ON fo.flight_id = rd.flight_id
+      WHERE rd.origin_iata_code = 'IST' 
+        AND fo.status LIKE '%Delayed%' 
+        AND fo.scheduled_departure >= NOW() - INTERVAL 3 HOUR;
+    `;
+
+    db.query(hubStatusQuery, (err2, hubStatusData) => {
+      // İkinci sorguda bir hata olursa, yine hatayı loglayıp 500 cevabı dönüyoruz.
+      if (err2) {
+        console.error("Harita için hub durumu alınırken SQL hatası:", err2);
+        return res.status(500).json({ message: "Sunucu hatası: Hub durumu alınamadı." });
+      }
+
+      // İki sorgu da başarılıysa, artık veriyi işleyip cevabı hazırlayabiliriz.
+      const routes = routesData.map(route => ({
+        origin: {
+          iata: route.origin_iata_code,
+          lat: parseFloat(route.origin_lat),
+          lon: parseFloat(route.origin_lon)
+        },
+        destination: {
+          iata: route.destination_iata_code,
+          lat: parseFloat(route.dest_lat),
+          lon: parseFloat(route.dest_lon)
+        },
+        profitability: parseFloat(route.profitability)
+      }));
+
+      const hubs = [{
+        iata: 'IST',
+        status: hubStatusData[0].delayedCount > 5 ? 'yellow' : 'green'
+      }];
+
+      // Başarılı cevabı ve hazırladığımız JSON'ı gönderiyoruz.
+      res.status(200).json({ routes, hubs });
+    });
+  });
+};
+
+
+module.exports = {getMapData,getOtp,getCostByMonths,getRevenueByMonths,getAnnualRevenue,getFuelExchangeTrends,getSuggestedPrice,getAllFlightPrices,getAverageOccupancyRates,getAllRoutes,getFlightsByOccupancy,getCustomerSatisfactionScores,getCompetitorPrices};
