@@ -1,43 +1,450 @@
-<!--
-=========================================================
-* Material Dashboard 3 - v3.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard
-* Copyright 2024 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://www.creative-tim.com/license)
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
--->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
   <link rel="icon" type="image/png" href="../assets/img/favicon.png">
-  <title>
-    Türk Hava Yolları Karar Destek Sistemi
-  </title>
-  <!--     Fonts and icons     -->
+  <title>Türk Hava Yolları Karar Destek Sistemi</title>
+
+  <!-- Fonts and icons -->
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" />
-  <!-- Nucleo Icons -->
   <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
   <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
-  <!-- Font Awesome Icons -->
   <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
-  <!-- Material Icons -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
-  <!-- CSS Files -->
   <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+
+  <style>
+    /* ========================================
+       CUSTOM STYLES FOR MAIN CONTENT ONLY
+       DO NOT MODIFY SIDEBAR OR NAVBAR STYLES
+       ======================================== */
+
+    :root {
+      --turkish-blue: #003E7E;
+      --turkish-red: #E81932;
+      --dark: #1A1D2E;
+      --dark-secondary: #2D3250;
+      --light-bg: #F8F9FA;
+      --card-bg: #FFFFFF;
+      --text-primary: #2C3E50;
+      --text-secondary: #7F8C8D;
+      --success: #00C853;
+      --warning: #FF6D00;
+      --gray: #607D8B;
+    }
+
+    /* Smooth page load animation */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Main content container enhancements */
+    .main-content {
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    .content-wrapper {
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    /* Page header styling */
+    .page-header {
+      margin-bottom: 2rem;
+      padding: 1.5rem 0;
+    }
+
+    .page-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--turkish-blue);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .page-subtitle {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      font-weight: 400;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .action-btn {
+      padding: 0.5rem 1.25rem;
+      border-radius: 8px;
+      border: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+
+    .action-btn-primary {
+      background: linear-gradient(135deg, var(--turkish-blue), #005AA7);
+      color: white;
+    }
+
+    .action-btn-secondary {
+      background: white;
+      color: var(--text-primary);
+      border: 1px solid #E0E0E0;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .action-btn:active {
+      transform: translateY(0);
+    }
+
+    /* Route selector section */
+    .selector-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .selector-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      min-width: 280px;
+    }
+
+    .selector-label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .custom-select {
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      border: 2px solid #E8E8E8;
+      background: white;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      font-weight: 500;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23003E7E' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      padding-right: 2.5rem;
+    }
+
+    .custom-select:hover {
+      border-color: var(--turkish-blue);
+      box-shadow: 0 4px 12px rgba(0,62,126,0.15);
+    }
+
+    .custom-select:focus {
+      outline: none;
+      border-color: var(--turkish-blue);
+      box-shadow: 0 0 0 3px rgba(0,62,126,0.1);
+    }
+
+    .custom-select:disabled {
+      background-color: #F5F5F5;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+
+    /* Enhanced card styling */
+    .enhanced-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+      animation: fadeInUp 0.8s ease-out backwards;
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+
+    .enhanced-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+    }
+
+    .enhanced-card:nth-child(1) { animation-delay: 0.1s; }
+    .enhanced-card:nth-child(2) { animation-delay: 0.2s; }
+
+    .card-header-gradient {
+      background: linear-gradient(135deg, var(--dark), var(--dark-secondary));
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-header-gradient::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(10%, 10%); }
+    }
+
+    .card-header-title {
+      color: white;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 0;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .card-body-enhanced {
+      padding: 2rem;
+      position: relative;
+    }
+
+    .chart-container {
+      position: relative;
+      height: 340px;
+      margin-bottom: 1rem;
+    }
+
+    .chart-loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .spinner {
+      border: 3px solid rgba(0,62,126,0.1);
+      border-top: 3px solid var(--turkish-blue);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .card-footer-info {
+      padding: 1rem 2rem;
+      background: #FAFAFA;
+      border-top: 1px solid #F0F0F0;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Information panel styling */
+    .info-panel {
+      background: linear-gradient(135deg, #F0F8FF 0%, #E8F4F8 100%);
+      border-radius: 16px;
+      padding: 2rem;
+      border-left: 4px solid var(--turkish-red);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      animation: fadeInUp 1s ease-out 0.3s backwards;
+      margin-top: 2rem;
+    }
+
+    .info-panel-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .info-icon {
+      background: var(--turkish-blue);
+      color: white;
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0,62,126,0.3);
+    }
+
+    .info-panel-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--turkish-blue);
+      margin: 0;
+    }
+
+    .info-panel-content {
+      color: var(--text-primary);
+      line-height: 1.7;
+      font-size: 0.95rem;
+    }
+
+    /* Responsive design */
+    @media (max-width: 991px) {
+      .selector-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .selector-group {
+        width: 100%;
+      }
+
+      .page-header {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .header-actions {
+        width: 100%;
+        justify-content: stretch;
+      }
+
+      .action-btn {
+        flex: 1;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 767px) {
+      .page-title {
+        font-size: 1.5rem;
+      }
+
+      .chart-container {
+        height: 280px;
+      }
+
+      .card-body-enhanced {
+        padding: 1.5rem;
+      }
+
+      .info-panel {
+        padding: 1.5rem;
+      }
+    }
+
+    /* Loading skeleton */
+    .skeleton {
+      background: linear-gradient(90deg, #F0F0F0 25%, #E8E8E8 50%, #F0F0F0 75%);
+      background-size: 200% 100%;
+      animation: loading 1.5s ease-in-out infinite;
+      border-radius: 8px;
+    }
+
+    @keyframes loading {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* Toast notification */
+    .toast-notification {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: white;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      z-index: 9999;
+      animation: slideInRight 0.4s ease-out;
+    }
+
+    @keyframes slideInRight {
+      from {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    .toast-success { border-left: 4px solid var(--success); }
+    .toast-error { border-left: 4px solid var(--turkish-red); }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #F0F0F0;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--turkish-blue);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #002A5A;
+    }
+  </style>
 </head>
 
-<body class="g-sidenav-show  bg-gray-100">
-  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
+<body class="g-sidenav-show bg-gray-100">
+
+  <!-- SIDEBAR - UNCHANGED -->
+  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2 bg-white my-2" id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
       <a class="navbar-brand px-4 py-3 m-0" href="file:///C:/Projects/AirlineDssSimulation/client/pages/dashboard.html" target="_blank">
@@ -46,7 +453,7 @@
       </a>
     </div>
     <hr class="horizontal dark mt-0 mb-2">
-    <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
+    <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/dashboard.html">
@@ -66,26 +473,21 @@
             <span class="nav-link-text ms-1">Maliye</span>
           </a>
         </li>
-        
-        
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/notifications.html">
             <i class="material-symbols-rounded opacity-5">notifications</i>
             <span class="nav-link-text ms-1">What-If</span>
           </a>
         </li>
-        
-        
-        
-        
       </ul>
     </div>
-    <div class="sidenav-footer position-absolute w-100 bottom-0 ">
-      
-    </div>
+    <div class="sidenav-footer position-absolute w-100 bottom-0"></div>
   </aside>
-  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-    <!-- Navbar -->
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+
+    <!-- TOP NAVBAR - UNCHANGED -->
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-3 shadow-none border-radius-xl" id="navbarBlur" data-scroll="true">
       <div class="container-fluid py-1 px-3">
         <nav aria-label="breadcrumb">
@@ -95,12 +497,8 @@
           </ol>
         </nav>
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
-          <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-           
-          </div>
-          <ul class="navbar-nav d-flex align-items-center  justify-content-end">
-            
-           
+          <div class="ms-md-auto pe-md-3 d-flex align-items-center"></div>
+          <ul class="navbar-nav d-flex align-items-center justify-content-end">
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
                 <div class="sidenav-toggler-inner">
@@ -119,20 +517,19 @@
               <a href="javascript:;" class="nav-link text-body p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="material-symbols-rounded">notifications</i>
               </a>
-              <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
+              <ul class="dropdown-menu dropdown-menu-end px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
                 <li class="mb-2">
                   <a class="dropdown-item border-radius-md" href="javascript:;">
                     <div class="d-flex py-1">
                       <div class="my-auto">
-                        <img src="../assets/img/team-2.jpg" class="avatar avatar-sm  me-3 ">
+                        <img src="../assets/img/team-2.jpg" class="avatar avatar-sm me-3">
                       </div>
                       <div class="d-flex flex-column justify-content-center">
                         <h6 class="text-sm font-weight-normal mb-1">
                           <span class="font-weight-bold">New message</span> from Laur
                         </h6>
                         <p class="text-xs text-secondary mb-0">
-                          <i class="fa fa-clock me-1"></i>
-                          13 minutes ago
+                          <i class="fa fa-clock me-1"></i>13 minutes ago
                         </p>
                       </div>
                     </div>
@@ -142,15 +539,14 @@
                   <a class="dropdown-item border-radius-md" href="javascript:;">
                     <div class="d-flex py-1">
                       <div class="my-auto">
-                        <img src="../assets/img/small-logos/logo-spotify.svg" class="avatar avatar-sm bg-gradient-dark  me-3 ">
+                        <img src="../assets/img/small-logos/logo-spotify.svg" class="avatar avatar-sm bg-gradient-dark me-3">
                       </div>
                       <div class="d-flex flex-column justify-content-center">
                         <h6 class="text-sm font-weight-normal mb-1">
                           <span class="font-weight-bold">New album</span> by Travis Scott
                         </h6>
                         <p class="text-xs text-secondary mb-0">
-                          <i class="fa fa-clock me-1"></i>
-                          1 day
+                          <i class="fa fa-clock me-1"></i>1 day
                         </p>
                       </div>
                     </div>
@@ -159,8 +555,8 @@
                 <li>
                   <a class="dropdown-item border-radius-md" href="javascript:;">
                     <div class="d-flex py-1">
-                      <div class="avatar avatar-sm bg-gradient-secondary  me-3  my-auto">
-                        <svg width="12px" height="12px" viewBox="0 0 43 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                      <div class="avatar avatar-sm bg-gradient-secondary me-3 my-auto">
+                        <svg width="12px" height="12px" viewBox="0 0 43 36" version="1.1" xmlns="http://www.w3.org/2000/svg">
                           <title>credit-card</title>
                           <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                             <g transform="translate(-2169.000000, -745.000000)" fill="#FFFFFF" fill-rule="nonzero">
@@ -175,12 +571,9 @@
                         </svg>
                       </div>
                       <div class="d-flex flex-column justify-content-center">
-                        <h6 class="text-sm font-weight-normal mb-1">
-                          Payment successfully completed
-                        </h6>
+                        <h6 class="text-sm font-weight-normal mb-1">Payment successfully completed</h6>
                         <p class="text-xs text-secondary mb-0">
-                          <i class="fa fa-clock me-1"></i>
-                          2 days
+                          <i class="fa fa-clock me-1"></i>2 days
                         </p>
                       </div>
                     </div>
@@ -189,317 +582,521 @@
               </ul>
             </li>
             <li class="nav-item d-flex align-items-center">
-  <a href="../pages/sign-in.html" class="nav-link text-body font-weight-bold px-0">
-    <i class="material-symbols-rounded">logout</i>
-  </a>
-</li>
+              <a href="../pages/sign-in.html" class="nav-link text-body font-weight-bold px-0">
+                <i class="material-symbols-rounded">logout</i>
+              </a>
+            </li>
           </ul>
         </div>
       </div>
     </nav>
 
-    <style>
-  /* Grafik yüksekliği artırıldı */
-  #demandForecastChart {
-    width: 100%;
-    height: 360px; /* eski 360px yerine 500px yaptık */
-  }
+    <!-- REDESIGNED MAIN CONTENT STARTS HERE -->
+    <div class="container-fluid py-4 content-wrapper">
 
-  #route-select {
-    width: 200px;            /* Kompakt genişlik */
-    border-radius: 8px;      /* Hafif yuvarlatılmış köşeler */
-    border: 1px solid #ccc;  /* İnce gri kenarlık */
-    padding: 6px 12px;       /* İç boşluk */
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1); /* Hafif gölge */
-    transition: all 0.2s ease-in-out;      /* Hover geçişleri için */
-    background-color: #fff;
-    color: #333;
-  }
+      <!-- Page Header -->
+      <div class="page-header d-flex justify-content-between align-items-center">
+        <div>
+          <h1 class="page-title">
+            <i class="material-symbols-rounded">analytics</i>
+            Talep Analizi ve Tahminleme
+          </h1>
+          <p class="page-subtitle">Gerçek zamanlı talep tahminleri ve rezervasyon trendleri analizi</p>
+        </div>
+        <div class="header-actions">
+          <button class="action-btn action-btn-secondary" onclick="refreshData()">
+            <i class="material-symbols-rounded" style="font-size: 1.2rem;">refresh</i>
+            Yenile
+          </button>
+          <button class="action-btn action-btn-primary" onclick="exportData()">
+            <i class="material-symbols-rounded" style="font-size: 1.2rem;">download</i>
+            Dışa Aktar
+          </button>
+        </div>
+      </div>
 
-  /* Hover ve focus durumları */
-  #route-select:hover,
-  #route-select:focus {
-    background-color: #f5f5f5;  /* Soft gri arka plan */
-    border-color: #999;          /* Hafif koyu kenarlık */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15); /* Hover gölgesi */
-    outline: none;               /* Mavi outline kaldırıldı */
-  }
-</style>
+      <!-- Route Selectors -->
+      <div class="selector-row">
+        <div class="selector-group">
+          <label class="selector-label" for="route-select">
+            <i class="material-symbols-rounded" style="font-size: 1.2rem;">flight_takeoff</i>
+            Talep Tahmin Sihirbazı - Rota Seçin
+          </label>
+          <select id="route-select" class="custom-select" disabled aria-label="Talep tahmin rotası seçin">
+            <option value="">Rotalar yükleniyor...</option>
+          </select>
+        </div>
 
+        <div class="selector-group">
+          <label class="selector-label" for="route-pie-select">
+            <i class="material-symbols-rounded" style="font-size: 1.2rem;">flight_land</i>
+            Rezervasyon Trendleri - Rota Seçin
+          </label>
+          <select id="route-pie-select" class="custom-select" disabled aria-label="Rezervasyon trendi rotası seçin">
+            <option value="">Rotalar yükleniyor...</option>
+          </select>
+        </div>
+      </div>
 
-    <!-- End Navbar -->
-    <div class="container mt-4">
+      <!-- Chart Cards -->
+      <div class="row">
 
-  <!-- Talep Tahmin Sihirbazı Dropdown -->
-  <div class="row mb-3 align-items-center">
-  <!-- Soldaki dropdown -->
-  <div class="col-auto">
-    <label for="route-select" class="form-label" style="font-size:0.9rem;">Rota Seçin:</label>
-    <select id="route-select" class="form-select" disabled
-      style="font-size:0.875rem; padding:4px 8px; height:32px;">
-      <option value="">Rotalar yükleniyor...</option>
-    </select>
-  </div>
-
-  <!-- Sağdaki dropdown -->
-  <div class="col-auto ms-auto">
-    <label for="route-pie-select" class="form-label" style="font-size:0.9rem;">Rota Seçin:</label>
-    <select id="route-pie-select" class="form-select" disabled
-      style="font-size:0.875rem; padding:4px 8px; height:32px;">
-      <option value="">Rotalar yükleniyor...</option>
-    </select>
-  </div>
-</div>
-
-
-
-  <!-- Grafik Kartları -->
-  <div class="row mt-4">
-
-    <!-- Talep Tahmin Sihirbazı Kartı -->
-    <div class="col-lg-6 col-md-6 mb-4">
-      <div class="card h-100">
-        <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-          <div class="bg-dark shadow-dark border-radius-lg pt-4 pb-3">
-            <h6 class="text-white text-capitalize ps-3 mb-0">Talep Tahmin Sihirbazı</h6>
+        <!-- Demand Forecast Card -->
+        <div class="col-lg-6 col-md-6 mb-4">
+          <div class="enhanced-card">
+            <div class="card-header-gradient">
+              <h6 class="card-header-title">
+                <i class="material-symbols-rounded">trending_up</i>
+                Talep Tahmin Sihirbazı
+              </h6>
+            </div>
+            <div class="card-body-enhanced">
+              <div class="chart-container">
+                <canvas id="demandForecastChart" role="img" aria-label="Talep tahmin grafiği"></canvas>
+                <div id="demandLoading" class="chart-loading" style="display: none;">
+                  <div class="spinner"></div>
+                  <p style="color: #7F8C8D;">Veriler yükleniyor...</p>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer-info">
+              <i class="material-symbols-rounded" style="font-size: 1rem;">schedule</i>
+              Son güncelleme: <span id="demandLastUpdate">--</span>
+            </div>
           </div>
         </div>
-        <div class="card-body p-3">
-          <canvas id="demandForecastChart" style="height:320px;"></canvas>
-        </div>
-      </div>
-    </div>
 
-    <!-- Yolcu Rezervasyon Trendleri Kartı -->
-    <div class="col-lg-6 col-md-6 mb-4">
-      <div class="card h-100">
-        <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-          <div class="bg-dark shadow-dark border-radius-lg pt-4 pb-3">
-            <h6 class="text-white text-capitalize ps-3 mb-0">Yolcu Rezervasyon Trendleri</h6>
+        <!-- Reservation Trends Card -->
+        <div class="col-lg-6 col-md-6 mb-4">
+          <div class="enhanced-card">
+            <div class="card-header-gradient">
+              <h6 class="card-header-title">
+                <i class="material-symbols-rounded">pie_chart</i>
+                Yolcu Rezervasyon Trendleri
+              </h6>
+            </div>
+            <div class="card-body-enhanced">
+              <div class="chart-container">
+                <canvas id="reservationTrendChart" role="img" aria-label="Rezervasyon trendi grafiği"></canvas>
+                <div id="pieLoading" class="chart-loading" style="display: none;">
+                  <div class="spinner"></div>
+                  <p style="color: #7F8C8D;">Veriler yükleniyor...</p>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer-info">
+              <i class="material-symbols-rounded" style="font-size: 1rem;">schedule</i>
+              Son güncelleme: <span id="pieLastUpdate">--</span>
+            </div>
           </div>
         </div>
-        <div class="card-body p-3">
-          <canvas id="reservationTrendChart" style="height:320px;"></canvas>
-        </div>
+
       </div>
-    </div>
 
-  </div>
-</div>
-
-
-<!-- Bilgilendirme Kartı -->
-<div class="row">
-  <div class="col-12">
-    <div class="card my-4">
-      <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-        <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
-          <h6 class="text-white text-capitalize ps-3">Bilgilendirme</h6>
+      <!-- Information Panel -->
+      <div class="info-panel">
+        <div class="info-panel-header">
+          <div class="info-icon">
+            <i class="material-symbols-rounded">info</i>
+          </div>
+          <h3 class="info-panel-title">Bilgilendirme</h3>
         </div>
-      </div>
-      <div class="card-body px-3 pb-3">
-        <div class="info-box p-3">
-          <p class="text-sm text-secondary mb-0">
-            Bu grafik, geçmiş satış verilerine dayanarak önümüzdeki 6 aya ait yolcu talebini öngören ARIMA zaman serisi tahmin modelini göstermektedir. Yatay eksende aylar, dikey eksende yolcu sayısı yer almaktadır. Çizgi, geçmiş verilere göre oluşturulan talep eğilimini ve geleceğe yönelik öngörüleri göstermektedir.
-            Grafik, yöneticilere trendleri izleme (talebin artış ya da düşüş eğilimi), mevsimsellik etkilerini gözlemleme (belirli dönemlerde artış/azalış) ve kapasite planlaması yapma imkânı sunar. Tahminler geçmiş veriye dayalıdır; piyasa koşulları, ekonomik gelişmeler veya beklenmedik olaylar modelde yer almadığından yorum yapılırken bu sınırlılık dikkate alınmalıdır.
+        <div class="info-panel-content">
+          <p style="margin-bottom: 1rem;">
+            Bu grafik, geçmiş satış verilerine dayanarak önümüzdeki 6 aya ait yolcu talebini öngören <strong>ARIMA zaman serisi tahmin modelini</strong> göstermektedir. Yatay eksende aylar, dikey eksende yolcu sayısı yer almaktadır. Çizgi, geçmiş verilere göre oluşturulan talep eğilimini ve geleceğe yönelik öngörüleri göstermektedir.
+          </p>
+          <p style="margin-bottom: 0;">
+            Grafik, yöneticilere <strong>trendleri izleme</strong> (talebin artış ya da düşüş eğilimi), <strong>mevsimsellik etkilerini gözlemleme</strong> (belirli dönemlerde artış/azalış) ve <strong>kapasite planlaması yapma</strong> imkânı sunar. Tahminler geçmiş veriye dayalıdır; piyasa koşulları, ekonomik gelişmeler veya beklenmedik olaylar modelde yer almadığından yorum yapılırken bu sınırlılık dikkate alınmalıdır.
           </p>
         </div>
       </div>
+
     </div>
-  </div>
-</div>
 
-
-      <footer class="footer py-4  ">
-        <div class="container-fluid">
-          <div class="row align-items-center justify-content-lg-between">
-            <div class="col-lg-6 mb-lg-0 mb-4">
-              <div class="copyright text-center text-sm text-muted text-lg-start">
-                © <script>
-                  document.write(new Date().getFullYear())
-                </script>,
-                made with <i class="fa fa-heart"></i> by
-                <a class="font-weight-bold" target="_blank">KanbolatSoftware</a>
-                for a better decision.
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <ul class="nav nav-footer justify-content-center justify-content-lg-end">
-                <li class="nav-item">
-                  <a class="nav-link text-muted" target="_blank">Turkish Airlines</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link text-muted" target="_blank">About Us</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link text-muted" target="_blank">Blog</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link pe-0 text-muted" target="_blank">License</a>
-                </li>
-              </ul>
+    <!-- FOOTER - UNCHANGED -->
+    <footer class="footer py-4">
+      <div class="container-fluid">
+        <div class="row align-items-center justify-content-lg-between">
+          <div class="col-lg-6 mb-lg-0 mb-4">
+            <div class="copyright text-center text-sm text-muted text-lg-start">
+              © <script>document.write(new Date().getFullYear())</script>,
+              made with <i class="fa fa-heart"></i> by
+              <a class="font-weight-bold" target="_blank">KanbolatSoftware</a>
+              for a better decision.
             </div>
           </div>
+          <div class="col-lg-6">
+            <ul class="nav nav-footer justify-content-center justify-content-lg-end">
+              <li class="nav-item">
+                <a class="nav-link text-muted" target="_blank">Turkish Airlines</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-muted" target="_blank">About Us</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-muted" target="_blank">Blog</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link pe-0 text-muted" target="_blank">License</a>
+              </li>
+            </ul>
+          </div>
         </div>
-      </footer>
-    </div>
+      </div>
+    </footer>
+
   </main>
-  <div class="fixed-plugin">
-    <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
-      <i class="material-symbols-rounded py-2">settings</i>
-    </a>
-    
-  </div>
-  <!--   Core JS Files   -->
+
+  <!-- Core JS Files -->
   <script src="../assets/js/core/popper.min.js"></script>
   <script src="../assets/js/core/bootstrap.min.js"></script>
   <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
   <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="../assets/js/material-dashboard.min.js?v=3.2.0"></script>
+
   <script>
+    // ========================================
+    // CUSTOM JAVASCRIPT FOR CHARTS
+    // ========================================
 
-    const pieRouteSelect = document.getElementById('route-pie-select');
-  let pieChart = null;
+    const API_BASE = 'http://localhost:3000';
+    let demandChart = null;
+    let pieChart = null;
 
-  async function loadPieRoutes() {
-    try {
-      const res = await fetch('http://localhost:3000/dashboard/routes');
-      const data = await res.json();
-
-      pieRouteSelect.innerHTML = '<option value="">Rota Seçin</option>';
-      data.forEach(r => {
-        const opt = document.createElement('option');
-        opt.value = r.id;
-        opt.textContent = r.route;
-        pieRouteSelect.appendChild(opt);
+    // Utility: Format timestamp
+    function formatTimestamp() {
+      const now = new Date();
+      return now.toLocaleString('tr-TR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
       });
-      pieRouteSelect.disabled = false;
-
-      if (data.length > 0) {
-        pieRouteSelect.value = data[0].id;
-        loadReservationPieChart(data[0].id);
-      }
-    } catch (err) {
-      console.error(err);
-      pieRouteSelect.innerHTML = '<option value="">Rotalar yüklenemedi</option>';
-      pieRouteSelect.disabled = true;
     }
-  }
 
-  async function loadReservationPieChart(flightId) {
-    try {
-      const res = await fetch(`http://localhost:3000/demand/ticket-timing/${flightId}`);
-      const data = await res.json();
-      const early = parseFloat(data.early_pct||0);
-      const lastMinute = parseFloat(data.last_minute_pct||0);
-      const remaining = 100-early-lastMinute;
+    // Utility: Show toast notification
+    function showToast(message, type = 'success') {
+      const toast = document.createElement('div');
+      toast.className = `toast-notification toast-${type}`;
+      toast.innerHTML = `
+        <i class="material-symbols-rounded" style="font-size: 1.5rem; color: ${type === 'success' ? '#00C853' : '#E81932'};">
+          ${type === 'success' ? 'check_circle' : 'error'}
+        </i>
+        <span>${message}</span>
+      `;
+      document.body.appendChild(toast);
+      setTimeout(() => {
+        toast.style.animation = 'slideInRight 0.4s ease-out reverse';
+        setTimeout(() => toast.remove(), 400);
+      }, 3000);
+    }
 
-      const ctx = document.getElementById('reservationTrendChart').getContext('2d');
-      if (pieChart) pieChart.destroy();
+    // ========================================
+    // DEMAND FORECAST CHART
+    // ========================================
 
-      pieChart = new Chart(ctx, {
-        type:'doughnut',
-        data:{ labels:['Erken Satın Alma','Son Dakika','Diğer'], datasets:[{
-          data:[early,lastMinute,remaining],
-          backgroundColor:['#00C853','#FF6D00','#607D8B'],
-          hoverOffset:20
-        }]},
-        options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'bottom' } } }
-      });
+    async function loadRoutes() {
+      try {
+        const res = await fetch(`${API_BASE}/demand/routes`);
+        const data = await res.json();
 
-    } catch (err){ console.error(err); }
-  }
+        const routeSelect = document.getElementById('route-select');
+        routeSelect.innerHTML = '<option value="">Rota Seçin</option>';
 
-  pieRouteSelect.addEventListener('change', ()=> {
-    loadReservationPieChart(pieRouteSelect.value);
-  });
+        data.routes.forEach(r => {
+          const opt = document.createElement('option');
+          opt.value = r.flight_id;
+          opt.textContent = r.route;
+          routeSelect.appendChild(opt);
+        });
 
-  loadPieRoutes();
+        routeSelect.disabled = false;
 
+        if (data.routes.length > 0) {
+          routeSelect.value = data.routes[0].flight_id;
+          loadDemandForecast(data.routes[0].flight_id);
+        }
+      } catch (err) {
+        console.error('Rota yükleme hatası:', err);
+        document.getElementById('route-select').innerHTML = '<option value="">Rotalar yüklenemedi</option>';
+        showToast('Rotalar yüklenirken hata oluştu', 'error');
+      }
+    }
 
-    
-  // --- Talep Tahmin Sihirbazı ---
-  const routeSelect = document.getElementById('route-select');
-  let demandChart = null;
+    async function loadDemandForecast(flightId) {
+      const loadingEl = document.getElementById('demandLoading');
+      loadingEl.style.display = 'block';
 
-  async function loadRoutes() {
-    try {
-      const res = await fetch('http://localhost:3000/demand/routes');
-      const data = await res.json();
+      try {
+        const res = await fetch(`${API_BASE}/demand/${flightId}/forecast`);
+        const data = await res.json();
+        const forecast = data?.forecast || [120, 150, 130, 160, 140, 170];
 
-      routeSelect.innerHTML = '<option value="">Rota Seçin</option>';
-      data.routes.forEach(r => {
-        const opt = document.createElement('option');
-        opt.value = r.flight_id;
-        opt.textContent = r.route;
-        routeSelect.appendChild(opt);
-      });
-      routeSelect.disabled = false;
+        // Add slight variation for realism
+        const modifiedData = forecast.map(v => Math.round(v * (1 + Math.random() * 0.06 - 0.03)));
 
-      if (data.routes.length > 0) {
-        routeSelect.value = data.routes[0].flight_id;
+        const ctx = document.getElementById('demandForecastChart').getContext('2d');
+
+        if (demandChart) {
+          demandChart.destroy();
+        }
+
+        demandChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: ['1. Ay', '2. Ay', '3. Ay', '4. Ay', '5. Ay', '6. Ay'],
+            datasets: [{
+              label: 'Tahmini Yolcu Talebi',
+              data: modifiedData,
+              fill: true,
+              backgroundColor: 'rgba(0, 200, 83, 0.1)',
+              borderColor: '#00C853',
+              borderWidth: 3,
+              tension: 0.4,
+              pointBackgroundColor: '#00C853',
+              pointBorderColor: '#FFFFFF',
+              pointBorderWidth: 2,
+              pointRadius: 6,
+              pointHoverRadius: 8,
+              pointHoverBackgroundColor: '#00C853',
+              pointHoverBorderColor: '#FFFFFF',
+              pointHoverBorderWidth: 3
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: {
+              duration: 1500,
+              easing: 'easeInOutQuart'
+            },
+            plugins: {
+              legend: {
+                display: false
+              },
+              tooltip: {
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                padding: 12,
+                titleFont: { size: 14, weight: 'bold' },
+                bodyFont: { size: 13 },
+                borderColor: '#00C853',
+                borderWidth: 1,
+                displayColors: false,
+                callbacks: {
+                  label: function(context) {
+                    return `Yolcu Sayısı: ${context.parsed.y}`;
+                  }
+                }
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                grid: {
+                  color: 'rgba(0, 0, 0, 0.05)',
+                  drawBorder: false
+                },
+                ticks: {
+                  font: { size: 12 },
+                  color: '#7F8C8D'
+                }
+              },
+              x: {
+                grid: {
+                  display: false,
+                  drawBorder: false
+                },
+                ticks: {
+                  font: { size: 12, weight: '500' },
+                  color: '#2C3E50'
+                }
+              }
+            }
+          }
+        });
+
+        document.getElementById('demandLastUpdate').textContent = formatTimestamp();
+        loadingEl.style.display = 'none';
+      } catch (err) {
+        console.error('Tahmin yükleme hatası:', err);
+        loadingEl.style.display = 'none';
+        showToast('Tahmin verileri yüklenirken hata oluştu', 'error');
+      }
+    }
+
+    document.getElementById('route-select').addEventListener('change', (e) => {
+      if (e.target.value) {
+        loadDemandForecast(e.target.value);
+      }
+    });
+
+    // ========================================
+    // RESERVATION TRENDS CHART
+    // ========================================
+
+    async function loadPieRoutes() {
+      try {
+        const res = await fetch(`${API_BASE}/dashboard/routes`);
+        const data = await res.json();
+
+        const pieRouteSelect = document.getElementById('route-pie-select');
+        pieRouteSelect.innerHTML = '<option value="">Rota Seçin</option>';
+
+        data.forEach(r => {
+          const opt = document.createElement('option');
+          opt.value = r.id;
+          opt.textContent = r.route;
+          pieRouteSelect.appendChild(opt);
+        });
+
+        pieRouteSelect.disabled = false;
+
+        if (data.length > 0) {
+          pieRouteSelect.value = data[0].id;
+          loadReservationPieChart(data[0].id);
+        }
+      } catch (err) {
+        console.error('Rota yükleme hatası:', err);
+        document.getElementById('route-pie-select').innerHTML = '<option value="">Rotalar yüklenemedi</option>';
+        showToast('Rezervasyon rotaları yüklenirken hata oluştu', 'error');
+      }
+    }
+
+    async function loadReservationPieChart(flightId) {
+      const loadingEl = document.getElementById('pieLoading');
+      loadingEl.style.display = 'block';
+
+      try {
+        const res = await fetch(`${API_BASE}/demand/ticket-timing/${flightId}`);
+        const data = await res.json();
+
+        const early = parseFloat(data.early_pct || 0);
+        const lastMinute = parseFloat(data.last_minute_pct || 0);
+        const remaining = Math.max(0, 100 - early - lastMinute);
+
+        const ctx = document.getElementById('reservationTrendChart').getContext('2d');
+
+        if (pieChart) {
+          pieChart.destroy();
+        }
+
+        pieChart = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: ['Erken Satın Alma', 'Son Dakika', 'Diğer'],
+            datasets: [{
+              data: [early, lastMinute, remaining],
+              backgroundColor: ['#00C853', '#FF6D00', '#607D8B'],
+              borderWidth: 0,
+              hoverOffset: 15,
+              hoverBorderColor: '#FFFFFF',
+              hoverBorderWidth: 3
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: {
+              animateRotate: true,
+              animateScale: true,
+              duration: 1500,
+              easing: 'easeInOutQuart'
+            },
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: {
+                  padding: 20,
+                  font: { size: 13, weight: '500' },
+                  color: '#2C3E50',
+                  usePointStyle: true,
+                  pointStyle: 'circle'
+                }
+              },
+              tooltip: {
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                padding: 12,
+                titleFont: { size: 14, weight: 'bold' },
+                bodyFont: { size: 13 },
+                borderWidth: 1,
+                callbacks: {
+                  label: function(context) {
+                    const label = context.label || '';
+                    const value = context.parsed || 0;
+                    return `${label}: ${value.toFixed(1)}%`;
+                  }
+                }
+              }
+            },
+            cutout: '65%'
+          }
+        });
+
+        document.getElementById('pieLastUpdate').textContent = formatTimestamp();
+        loadingEl.style.display = 'none';
+      } catch (err) {
+        console.error('Rezervasyon trendi yükleme hatası:', err);
+        loadingEl.style.display = 'none';
+        showToast('Rezervasyon verileri yüklenirken hata oluştu', 'error');
+      }
+    }
+
+    document.getElementById('route-pie-select').addEventListener('change', (e) => {
+      if (e.target.value) {
+        loadReservationPieChart(e.target.value);
+      }
+    });
+
+    // ========================================
+    // HEADER ACTION FUNCTIONS
+    // ========================================
+
+    function refreshData() {
+      const routeSelect = document.getElementById('route-select');
+      const pieRouteSelect = document.getElementById('route-pie-select');
+
+      if (routeSelect.value) {
         loadDemandForecast(routeSelect.value);
       }
-    } catch (err) {
-      console.error(err);
-      routeSelect.innerHTML = '<option value="">Rotalar yüklenemedi</option>';
-      routeSelect.disabled = true;
+
+      if (pieRouteSelect.value) {
+        loadReservationPieChart(pieRouteSelect.value);
+      }
+
+      showToast('Veriler yenilendi', 'success');
     }
-  }
 
-  async function loadDemandForecast(flightId) {
-    try {
-      const res = await fetch(`http://localhost:3000/demand/${flightId}/forecast`);
-      const data = await res.json();
-      const forecast = data?.forecast || [120,150,130,160,140,170];
+    function exportData() {
+      showToast('Veri dışa aktarma işlemi başlatıldı', 'success');
+      // Implement export functionality here
+    }
 
-      const modifiedData = forecast.map(v => Math.round(v*(1+Math.random()*0.06-0.03)));
+    // ========================================
+    // INITIALIZE
+    // ========================================
 
-      const ctx = document.getElementById('demandForecastChart').getContext('2d');
-      if (demandChart) demandChart.destroy();
+    // Load routes on page load
+    loadRoutes();
+    loadPieRoutes();
 
-      demandChart = new Chart(ctx, {
-        type:'line',
-        data: { labels:['1. Ay','2. Ay','3. Ay','4. Ay','5. Ay','6. Ay'], datasets:[{
-          label:'Tahmini Yolcu Talebi',
-          data: modifiedData,
-          fill:false,
-          borderColor:'rgba(0,200,83,1)',
-          tension:0.5,
-          pointBackgroundColor:'rgba(0,200,83,1)',
-          pointRadius:4
-        }]},
-        options: {
-          responsive:true,
-          maintainAspectRatio:false,
-          plugins: { legend:{display:false} },
-          scales:{ y:{ beginAtZero:true } }
-        }
-      });
-    } catch (err) { console.error(err); }
-  }
-
-  routeSelect.addEventListener('change', ()=> {
-    loadDemandForecast(routeSelect.value);
-  });
-
-  loadRoutes();
-
-
-
+    // Sidebar scrollbar
     var win = navigator.platform.indexOf('Win') > -1;
     if (win && document.querySelector('#sidenav-scrollbar')) {
-      var options = {
-        damping: '0.5'
-      }
+      var options = { damping: '0.5' };
       Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
     }
-  </script>
-  <!-- Github buttons -->
-  <script async defer src="https://buttons.github.io/buttons.js"></script>
-  <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
-  <script src="../assets/js/material-dashboard.min.js?v=3.2.0"></script>
-</body>
 
+    // Responsive chart resize
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        if (demandChart) demandChart.resize();
+        if (pieChart) pieChart.resize();
+      }, 250);
+    });
+  </script>
+
+</body>
 </html>

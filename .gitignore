@@ -27,6 +27,7 @@ coverage/
 # API-specific
 api/.env
 api/venv/
+venv
 
 # Client-specific
 client/.env

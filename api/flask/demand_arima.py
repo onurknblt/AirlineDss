@@ -17,7 +17,7 @@ def forecast_demand(sales_data):
         df = df.sort_index()
 
         # **Aylık** bazda veriyi yeniden düzenle
-        df = df.resample('ME').sum()
+        df = df.resample('M').sum()
 
         # Eğer yeterli veri yoksa hata döndür
         if len(df) < 6:

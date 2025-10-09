@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "concurrently \"python flask/demand_arima.py\" \"python flask/revenue_arima.py\" \"python flask/satisfaction.py\" \"node app.js\""
+    "start": "concurrently \"python flask/demand_arima.py\" \"python flask/revenue_arima.py\" \"node app.js\""
   },
   "dependencies": {
     "axios": "^1.8.1",

@@ -6,7 +6,6 @@ var cors = require('cors');
 
 const demandRouter = require('./routes/demandRoutes');
 const revenueRouter = require('./routes/revenueRoutes');
-const satisfactionRouter = require('./routes/satisfactionRoutes');
 const dashboardRouter = require('./routes/dashboardRoutes');
 const whatIfRouter = require('./routes/whatIfRoutes');
 const aircraftRouter = require('./routes/aircraftRoutes');
@@ -24,7 +23,6 @@ app.use(cookieParser());
 
 app.use('/demand', demandRouter);
 app.use('/revenue', revenueRouter);
-app.use('/satisfaction', satisfactionRouter);
 app.use('/dashboard', dashboardRouter);
 app.use('/what-if', whatIfRouter);
 app.use('/aircraft', aircraftRouter);

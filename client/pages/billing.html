@@ -1,52 +1,659 @@
-<!--
-=========================================================
-* Material Dashboard 3 - v3.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard
-* Copyright 2024 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://www.creative-tim.com/license)
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
--->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
   <link rel="icon" type="image/png" href="../assets/img/favicon.png">
-  <title>
-    Türk Hava Yolları Karar Destek Sistemi
-  </title>
-  <!--     Fonts and icons     -->
+  <title>Türk Hava Yolları Karar Destek Sistemi</title>
+
+  <!-- Fonts and icons -->
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" />
-  <!-- Nucleo Icons -->
   <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
   <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
-  <!-- Font Awesome Icons -->
   <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
-  <!-- Material Icons -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
-  <!-- CSS Files -->
   <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+
+  <style>
+    /* ========================================
+       CUSTOM STYLES FOR MAIN CONTENT ONLY
+       DO NOT MODIFY SIDEBAR OR NAVBAR STYLES
+       ======================================== */
+
+    :root {
+      --turkish-blue: #003E7E;
+      --turkish-red: #E81932;
+      --dark: #1A1D2E;
+      --dark-secondary: #2D3250;
+      --light-bg: #F8F9FA;
+      --card-bg: #FFFFFF;
+      --text-primary: #2C3E50;
+      --text-secondary: #7F8C8D;
+      --success: #00C853;
+      --warning: #FF6D00;
+      --gray: #607D8B;
+    }
+
+    /* Smooth page load animation */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Main content container enhancements */
+    .main-content {
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    .content-wrapper {
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    /* Page header styling */
+    .page-header {
+      margin-bottom: 2rem;
+      padding: 1.5rem 0;
+    }
+
+    .page-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--turkish-blue);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .page-subtitle {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      font-weight: 400;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .action-btn {
+      padding: 0.5rem 1.25rem;
+      border-radius: 8px;
+      border: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+
+    .action-btn-primary {
+      background: linear-gradient(135deg, var(--turkish-blue), #005AA7);
+      color: white;
+    }
+
+    .action-btn-secondary {
+      background: white;
+      color: var(--text-primary);
+      border: 1px solid #E0E0E0;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .action-btn:active {
+      transform: translateY(0);
+    }
+
+    /* Route selector section */
+    .selector-row {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      margin-bottom: 2rem;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .selector-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      min-width: 280px;
+    }
+
+    .selector-label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .custom-select {
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      border: 2px solid #E8E8E8;
+      background: white;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      font-weight: 500;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23003E7E' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      padding-right: 2.5rem;
+    }
+
+    .custom-select:hover {
+      border-color: var(--turkish-blue);
+      box-shadow: 0 4px 12px rgba(0,62,126,0.15);
+    }
+
+    .custom-select:focus {
+      outline: none;
+      border-color: var(--turkish-blue);
+      box-shadow: 0 0 0 3px rgba(0,62,126,0.1);
+    }
+
+    .custom-select:disabled {
+      background-color: #F5F5F5;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+
+    /* Enhanced card styling */
+    .enhanced-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+      animation: fadeInUp 0.8s ease-out backwards;
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+
+    .enhanced-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+    }
+
+    .enhanced-card:nth-child(1) { animation-delay: 0.1s; }
+    .enhanced-card:nth-child(2) { animation-delay: 0.2s; }
+    .enhanced-card:nth-child(3) { animation-delay: 0.3s; }
+    .enhanced-card:nth-child(4) { animation-delay: 0.4s; }
+
+    .card-header-gradient {
+      background: linear-gradient(135deg, var(--dark), var(--dark-secondary));
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-header-gradient::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(10%, 10%); }
+    }
+
+    .card-header-title {
+      color: white;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 0;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .card-body-enhanced {
+      padding: 2rem;
+      position: relative;
+    }
+
+    /* KPI Cards */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .kpi-card {
+      background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+      animation: fadeInUp 0.8s ease-out backwards;
+      border-left: 5px solid var(--success);
+    }
+
+    .kpi-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    }
+
+    .kpi-card.profit-margin { border-left-color: var(--success); animation-delay: 0.1s; }
+    .kpi-card.total-profit { border-left-color: var(--warning); animation-delay: 0.2s; }
+    .kpi-card.best-month { border-left-color: var(--turkish-red); animation-delay: 0.3s; }
+
+    .kpi-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.5rem;
+    }
+
+    .kpi-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 0.25rem;
+    }
+
+    .kpi-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* Alert/Insight Box */
+    .insight-box {
+      background: linear-gradient(135deg, #fff3cd 0%, #ffecb5 100%);
+      border-left: 5px solid var(--warning);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 16px rgba(255, 193, 7, 0.2);
+      animation: fadeInUp 0.7s ease-out;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .insight-icon {
+      font-size: 1.5rem;
+    }
+
+    .insight-text {
+      margin: 0;
+      font-size: 0.95rem;
+      color: #664d03;
+      font-weight: 500;
+    }
+
+    /* Chart Container */
+    .chart-container {
+      position: relative;
+      height: 380px;
+      margin-bottom: 1rem;
+    }
+
+    .chart-loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .spinner {
+      border: 3px solid rgba(0,62,126,0.1);
+      border-top: 3px solid var(--turkish-blue);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .card-footer-info {
+      padding: 1rem 2rem;
+      background: #FAFAFA;
+      border-top: 1px solid #F0F0F0;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Information panel styling */
+    .info-panel {
+      background: linear-gradient(135deg, #F0F8FF 0%, #E8F4F8 100%);
+      border-radius: 16px;
+      padding: 2rem;
+      border-left: 4px solid var(--turkish-red);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      animation: fadeInUp 1s ease-out 0.3s backwards;
+    }
+
+    .info-panel-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .info-icon {
+      background: var(--turkish-blue);
+      color: white;
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0,62,126,0.3);
+    }
+
+    .info-panel-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--turkish-blue);
+      margin: 0;
+    }
+
+    .info-panel-content {
+      color: var(--text-primary);
+      line-height: 1.7;
+      font-size: 0.95rem;
+    }
+
+    /* Strategy List */
+    .strategy-list-container {
+      max-height: 500px;
+      overflow-y: auto;
+      padding-right: 0.5rem;
+    }
+
+    .strategy-list-container::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .strategy-list-container::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+
+    .strategy-list-container::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, var(--dark-secondary) 0%, var(--dark) 100%);
+      border-radius: 10px;
+    }
+
+    .strategy-item {
+      background: #ffffff;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      padding: 1.25rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      border-left: 4px solid transparent;
+    }
+
+    .strategy-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 4px;
+      background: linear-gradient(180deg, var(--dark-secondary) 0%, var(--dark) 100%);
+      transform: scaleY(0);
+      transition: transform 0.3s ease;
+    }
+
+    .strategy-item:hover {
+      transform: translateX(8px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    .strategy-item:hover::before {
+      transform: scaleY(1);
+    }
+
+    .strategy-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 0.5rem;
+    }
+
+    .strategy-description {
+      color: var(--text-secondary);
+      line-height: 1.5;
+      font-size: 0.875rem;
+    }
+
+    .strategy-badge {
+      padding: 6px 14px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 20px;
+    }
+
+    /* Model Info Card */
+    .model-info-card {
+      background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .model-info-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .model-info-item:last-child {
+      border-bottom: none;
+    }
+
+    .model-info-label {
+      font-weight: 500;
+      color: #1e3a8a;
+      font-size: 0.9rem;
+    }
+
+    .model-info-value {
+      font-weight: 600;
+      color: var(--dark);
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+    }
+
+    /* Modal Enhancements */
+    .modal-content {
+      border-radius: 20px;
+      border: none;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+
+    .modal-header.bg-dark {
+      background: linear-gradient(135deg, var(--dark) 0%, var(--dark-secondary) 100%) !important;
+      padding: 1.5rem 2rem;
+      border-bottom: none;
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+
+    .modal-body {
+      padding: 2rem;
+      background: #fafbfc;
+    }
+
+    .modal-body p {
+      margin-bottom: 1rem;
+      line-height: 1.7;
+    }
+
+    .modal-body strong {
+      color: var(--dark);
+      font-weight: 600;
+      display: inline-block;
+      min-width: 140px;
+    }
+
+    /* Error Message */
+    .error-message {
+      background: linear-gradient(135deg, #f8d7da 0%, #f5c2c7 100%);
+      border-left: 5px solid var(--turkish-red);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      color: #842029;
+      text-align: center;
+      font-weight: 500;
+    }
+
+    .loading-text {
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 1rem;
+      padding: 3rem 1rem;
+    }
+
+    /* Responsive design */
+    @media (max-width: 991px) {
+      .selector-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .selector-group {
+        width: 100%;
+      }
+
+      .page-header {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .header-actions {
+        width: 100%;
+        justify-content: stretch;
+      }
+
+      .action-btn {
+        flex: 1;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 767px) {
+      .page-title {
+        font-size: 1.5rem;
+      }
+
+      .kpi-value {
+        font-size: 1.5rem;
+      }
+
+      .chart-container {
+        height: 280px;
+      }
+
+      .card-body-enhanced {
+        padding: 1.5rem;
+      }
+
+      .info-panel {
+        padding: 1.5rem;
+      }
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #F0F0F0;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--turkish-blue);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #002A5A;
+    }
+  </style>
 </head>
 
-<body class="g-sidenav-show  bg-gray-100">
-  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
+<body class="g-sidenav-show bg-gray-100">
+
+  <!-- SIDEBAR - UNCHANGED -->
+  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2 bg-white my-2" id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
-      <a class="navbar-brand px-4 py-3 m-0" href="file:///C:/Projects/AirlineDssSimulation/client/pages/dashboard.html" target="_blank">
+      <a class="navbar-brand px-4 py-3 m-0" href="../pages/dashboard.html">
         <img src="../assets/img/logo-ct-dark.png" class="navbar-brand-img" width="26" height="26" alt="main_logo">
         <span class="ms-1 text-sm text-dark">Turkish-KDS</span>
       </a>
     </div>
     <hr class="horizontal dark mt-0 mb-2">
-    <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
+    <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/dashboard.html">
@@ -66,24 +673,21 @@
             <span class="nav-link-text ms-1">Maliye</span>
           </a>
         </li>
-        
-        
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/notifications.html">
             <i class="material-symbols-rounded opacity-5">notifications</i>
             <span class="nav-link-text ms-1">What-If</span>
           </a>
         </li>
-        
-        
-        
-        
       </ul>
     </div>
-    
+    <div class="sidenav-footer position-absolute w-100 bottom-0"></div>
   </aside>
-  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-    <!-- Navbar -->
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+
+    <!-- TOP NAVBAR - UNCHANGED -->
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-3 shadow-none border-radius-xl" id="navbarBlur" data-scroll="true">
       <div class="container-fluid py-1 px-3">
         <nav aria-label="breadcrumb">
@@ -93,12 +697,8 @@
           </ol>
         </nav>
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
-          <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-            
-          </div>
-          <ul class="navbar-nav d-flex align-items-center  justify-content-end">
-            
-            
+          <div class="ms-md-auto pe-md-3 d-flex align-items-center"></div>
+          <ul class="navbar-nav d-flex align-items-center justify-content-end">
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
                 <div class="sidenav-toggler-inner">
@@ -117,68 +717,19 @@
               <a href="javascript:;" class="nav-link text-body p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="material-symbols-rounded">notifications</i>
               </a>
-              <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
+              <ul class="dropdown-menu dropdown-menu-end px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
                 <li class="mb-2">
                   <a class="dropdown-item border-radius-md" href="javascript:;">
                     <div class="d-flex py-1">
                       <div class="my-auto">
-                        <img src="../assets/img/team-2.jpg" class="avatar avatar-sm  me-3 ">
+                        <img src="../assets/img/team-2.jpg" class="avatar avatar-sm me-3">
                       </div>
                       <div class="d-flex flex-column justify-content-center">
                         <h6 class="text-sm font-weight-normal mb-1">
                           <span class="font-weight-bold">New message</span> from Laur
                         </h6>
                         <p class="text-xs text-secondary mb-0">
-                          <i class="fa fa-clock me-1"></i>
-                          13 minutes ago
-                        </p>
-                      </div>
-                    </div>
-                  </a>
-                </li>
-                <li class="mb-2">
-                  <a class="dropdown-item border-radius-md" href="javascript:;">
-                    <div class="d-flex py-1">
-                      <div class="my-auto">
-                        <img src="../assets/img/small-logos/logo-spotify.svg" class="avatar avatar-sm bg-gradient-dark  me-3 ">
-                      </div>
-                      <div class="d-flex flex-column justify-content-center">
-                        <h6 class="text-sm font-weight-normal mb-1">
-                          <span class="font-weight-bold">New album</span> by Travis Scott
-                        </h6>
-                        <p class="text-xs text-secondary mb-0">
-                          <i class="fa fa-clock me-1"></i>
-                          1 day
-                        </p>
-                      </div>
-                    </div>
-                  </a>
-                </li>
-                <li>
-                  <a class="dropdown-item border-radius-md" href="javascript:;">
-                    <div class="d-flex py-1">
-                      <div class="avatar avatar-sm bg-gradient-secondary  me-3  my-auto">
-                        <svg width="12px" height="12px" viewBox="0 0 43 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                          <title>credit-card</title>
-                          <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                            <g transform="translate(-2169.000000, -745.000000)" fill="#FFFFFF" fill-rule="nonzero">
-                              <g transform="translate(1716.000000, 291.000000)">
-                                <g transform="translate(453.000000, 454.000000)">
-                                  <path class="color-background" d="M43,10.7482083 L43,3.58333333 C43,1.60354167 41.3964583,0 39.4166667,0 L3.58333333,0 C1.60354167,0 0,1.60354167 0,3.58333333 L0,10.7482083 L43,10.7482083 Z" opacity="0.593633743"></path>
-                                  <path class="color-background" d="M0,16.125 L0,32.25 C0,34.2297917 1.60354167,35.8333333 3.58333333,35.8333333 L39.4166667,35.8333333 C41.3964583,35.8333333 43,34.2297917 43,32.25 L43,16.125 L0,16.125 Z M19.7083333,26.875 L7.16666667,26.875 L7.16666667,23.2916667 L19.7083333,23.2916667 L19.7083333,26.875 Z M35.8333333,26.875 L28.6666667,26.875 L28.6666667,23.2916667 L35.8333333,23.2916667 L35.8333333,26.875 Z"></path>
-                                </g>
-                              </g>
-                            </g>
-                          </g>
-                        </svg>
-                      </div>
-                      <div class="d-flex flex-column justify-content-center">
-                        <h6 class="text-sm font-weight-normal mb-1">
-                          Payment successfully completed
-                        </h6>
-                        <p class="text-xs text-secondary mb-0">
-                          <i class="fa fa-clock me-1"></i>
-                          2 days
+                          <i class="fa fa-clock me-1"></i>13 minutes ago
                         </p>
                       </div>
                     </div>
@@ -187,328 +738,728 @@
               </ul>
             </li>
             <li class="nav-item d-flex align-items-center">
-  <a href="../pages/sign-in.html" class="nav-link text-body font-weight-bold px-0">
-    <i class="material-symbols-rounded">logout</i>
-  </a>
-</li>
+              <a href="../pages/sign-in.html" class="nav-link text-body font-weight-bold px-0">
+                <i class="material-symbols-rounded">logout</i>
+              </a>
+            </li>
           </ul>
         </div>
       </div>
     </nav>
-    <!-- End Navbar -->
-    
-            
-            
 
-            <!-- Rota Dropdown -->
-<!-- Dropdown (Grafiğin üstünde, ayrı tutulmuş) -->
-<div class="mb-3" style="max-width:200px;">
-  <label for="routeDropdown" class="form-label" style="font-size:0.9rem;">Rota Seçin:</label>
-  <select id="routeDropdown" class="form-select"
-    style="font-size:0.875rem; padding:4px 8px; height:45px;" disabled>
-    <option value="">Rotalar yükleniyor...</option>
-  </select>
-</div>
+    <!-- REDESIGNED MAIN CONTENT STARTS HERE -->
+    <div class="container-fluid py-4 content-wrapper">
 
-<div class="row">
-  <!-- Gelir & Maliyet Tahmin Kartı (2/3 genişlik) -->
-  <div class="col-lg-7 col-md-12 mb-4">
-    <div class="card h-100">
-      <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-        <div class="bg-dark shadow-dark border-radius-lg pt-4 pb-3 d-flex justify-content-between align-items-center">
-          <h6 class="text-white text-capitalize ps-3 mb-0">Uçuş Gelir ve Maliyet Tahmini</h6>
+      <!-- Page Header -->
+      <div class="page-header d-flex justify-content-between align-items-center">
+        <div>
+          <h1 class="page-title">
+            <i class="material-symbols-rounded">account_balance</i>
+            Finansal Analiz ve Tahminleme
+          </h1>
+          <p class="page-subtitle">Gelir, maliyet ve kar marjı tahminleri ile stratejik planlama</p>
+        </div>
+        <div class="header-actions">
+          <button class="action-btn action-btn-secondary" onclick="refreshData()">
+            <i class="material-symbols-rounded" style="font-size: 1.2rem;">refresh</i>
+            Yenile
+          </button>
+          <button class="action-btn action-btn-primary" onclick="exportData()">
+            <i class="material-symbols-rounded" style="font-size: 1.2rem;">download</i>
+            Dışa Aktar
+          </button>
         </div>
       </div>
-      <div class="card-body p-3">
-        <canvas id="revenueCostChart" style="height:320px;"></canvas>
-      </div>
-    </div>
-  </div>
 
-  <!-- Borç / Leasing Ödemeleri Kartı (1/3 genişlik) -->
-  <div class="col-lg-5 col-md-12 mb-4">
-  <div class="card h-100">
-    <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-      <div class="bg-dark shadow-dark border-radius-lg pt-4 pb-3">
-        <h6 class="text-white text-capitalize ps-3 mb-0">Günlük İç Strateji Hamleleri</h6>
-      </div>
-    </div>
-    <div class="card-body p-3" style="height:400px; overflow-y:auto;">
-      <ul id="strategyList" class="list-group">
-        <!-- JS ile doldurulacak -->
-      </ul>
-    </div>
-  </div>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="strategyModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header bg-dark text-white">
-        <h5 class="modal-title" id="modalTitle">Hamle Başlığı</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <p><strong>Uçak / Kuyruk No:</strong> <span id="modalAircraft"></span></p>
-        <p><strong>Tarih:</strong> <span id="modalDate"></span></p>
-        <p><strong>Öncelik:</strong> <span id="modalPriority"></span></p>
-        <p><strong>Detay:</strong></p>
-        <p id="modalDescription"></p>
-        <p><strong>Notlar:</strong> <span id="modalNotes"></span></p>
-      </div>
-    </div>
-  </div>
-</div>
-</div>
-
-<div class="row">
-  <div class="col-12">
-    <div class="card my-4">
-      <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-        <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
-          <h6 class="text-white text-capitalize ps-3">Bilgilendirme</h6>
+      <!-- Route Selector -->
+      <div class="selector-row">
+        <div class="selector-group">
+          <label class="selector-label" for="routeDropdown">
+            <i class="material-symbols-rounded" style="font-size: 1.2rem;">flight</i>
+            Rota Seçin
+          </label>
+          <select id="routeDropdown" class="custom-select" disabled aria-label="Finansal tahmin rotası seçin">
+            <option value="">Rotalar yükleniyor...</option>
+          </select>
         </div>
       </div>
-      <div class="card-body px-3 pb-3">
-        <div class="info-box p-3">
-          <p class="text-sm text-secondary mb-0">
-            Bu kart, belirli bir uçuş için önümüzdeki 6 ayın gelir ve maliyet tahminlerini görsel olarak sunar. Tahminler, uçuşun geçmiş finansal verileri temel alınarak yapılır. Bu veriler arasında bilet satışları, kargo gelirleri, yakıt giderleri, personel maliyetleri, bakım ve diğer operasyonel giderler yer alır.
 
-Tahmin metodolojisi olarak ARIMA (AutoRegressive Integrated Moving Average) modeli kullanılmıştır. ARIMA modeli, geçmiş veri serisindeki trend ve mevsimsellikleri değerlendirerek geleceğe dönük tahminler üretir. Model, gelir ve maliyet sütunlarını ayrı ayrı işler: gelir sütunları toplam gelir (bilet + kargo + diğer gelirler) olarak hesaplanırken, maliyet sütunları toplam maliyet (yakıt + personel + bakım + diğer giderler) olarak hesaplanır. Model parametreleri örnek olarak (p=5, d=1, q=0) seçilmiştir ve en az 6 aylık veri ile çalışacak şekilde tasarlanmıştır.
+      <!-- Automated Insight Box -->
+      <div id="insightBox" class="insight-box" style="display: none;">
+        <span class="insight-icon">⚠️</span>
+        <p class="insight-text" id="insightText"></p>
+      </div>
 
-Kartın üstündeki çizgiler, beklenen gelir ve maliyeti aylık bazda gösterir. Bu sayede yöneticiler, uçuşun karlılık trendini hızlıca görerek yakıt alımı, promosyonlar veya kapasite planlaması gibi kritik mali kararları destekleyebilir.
-
-Önemli not: Tahminler geçmiş verilere ve model varsayımlarına dayanmaktadır. Beklenmeyen operasyonel veya ekonomik değişiklikler, tahminleri etkileyebilir.
-          </p>
+      <!-- KPI Cards -->
+      <div class="kpi-grid">
+        <div class="kpi-card profit-margin">
+          <div class="kpi-label">Ortalama Kar Marjı</div>
+          <div class="kpi-value" id="avgProfitMargin">--%</div>
+          <div class="kpi-subtitle">12 aylık ortalama</div>
+        </div>
+        <div class="kpi-card total-profit">
+          <div class="kpi-label">Toplam Tahmini Kar</div>
+          <div class="kpi-value" id="totalProfit">-- ₺</div>
+          <div class="kpi-subtitle">Tahmin dönemi toplamı</div>
+        </div>
+        <div class="kpi-card best-month">
+          <div class="kpi-label">En Karlı Ay</div>
+          <div class="kpi-value" id="bestMonth">--</div>
+          <div class="kpi-subtitle" id="bestMonthProfit">-- ₺</div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
 
+      <!-- Chart Cards -->
+      <div class="row">
 
-  
-
-
-      
-      <footer class="footer py-4  ">
-        <div class="container-fluid">
-          <div class="row align-items-center justify-content-lg-between">
-            <div class="col-lg-6 mb-lg-0 mb-4">
-              <div class="copyright text-center text-sm text-muted text-lg-start">
-                © <script>
-                  document.write(new Date().getFullYear())
-                </script>,
-                made with <i class="fa fa-heart"></i> by
-                <a class="font-weight-bold" target="_blank">KanbolatSoftware</a>
-                for a better decision.
+        <!-- Revenue & Cost Forecast Chart -->
+        <div class="col-lg-8 col-md-12 mb-4">
+          <div class="enhanced-card">
+            <div class="card-header-gradient">
+              <h6 class="card-header-title">
+                <i class="material-symbols-rounded">trending_up</i>
+                Uçuş Gelir ve Maliyet Tahmini (12 Ay)
+              </h6>
+            </div>
+            <div class="card-body-enhanced">
+              <div class="chart-container" id="chartContainer">
+                <div class="loading-text">Veri yükleniyor...</div>
               </div>
             </div>
-            <div class="col-lg-6">
-              <ul class="nav nav-footer justify-content-center justify-content-lg-end">
-                <li class="nav-item">
-                  <a class="nav-link text-muted" target="_blank">Turkish Airlines</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link text-muted" target="_blank">About Us</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link text-muted" target="_blank">Blog</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link pe-0 text-muted" target="_blank">License</a>
-                </li>
-              </ul>
+            <div class="card-footer-info">
+              <i class="material-symbols-rounded" style="font-size: 1rem;">schedule</i>
+              Son güncelleme: <span id="chartLastUpdate">--</span>
             </div>
           </div>
         </div>
-      </footer>
-    </div>
-  </main>
-  <div class="fixed-plugin">
-    <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
-      <i class="material-symbols-rounded py-2">settings</i>
-    </a>
-    
-  </div>
-</div>
 
+        <!-- Strategy Actions Card -->
+        <div class="col-lg-4 col-md-12 mb-4">
+          <div class="enhanced-card">
+            <div class="card-header-gradient">
+              <h6 class="card-header-title">
+                <i class="material-symbols-rounded">event_note</i>
+                Günlük Strateji Hamleleri
+              </h6>
+            </div>
+            <div class="card-body-enhanced">
+              <div class="strategy-list-container" id="strategyListContainer">
+                <div class="loading-text">Stratejiler yükleniyor...</div>
+              </div>
+            </div>
+            <div class="card-footer-info">
+              <i class="material-symbols-rounded" style="font-size: 1rem;">schedule</i>
+              Son güncelleme: <span id="strategyLastUpdate">--</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Information Cards Row -->
+      <div class="row">
+
+        <!-- Information Panel -->
+        <div class="col-lg-8 col-md-12 mb-4">
+          <div class="info-panel">
+            <div class="info-panel-header">
+              <div class="info-icon">
+                <i class="material-symbols-rounded">info</i>
+              </div>
+              <h3 class="info-panel-title">Bilgilendirme</h3>
+            </div>
+            <div class="info-panel-content">
+              <p>
+                Bu panel, seçilen uçuş rotası için önümüzdeki 12 ayın gelir ve maliyet tahminlerini sunar.
+                Tahminler, geçmiş finansal veriler ile petrol fiyatları ve döviz kurları gibi dış pazar koşullarını
+                birlikte analiz eden <strong>SARIMAX (Seasonal AutoRegressive Integrated Moving Average with eXogenous regressors)</strong>
+                metodolojisine dayanmaktadır.
+              </p>
+              <p style="margin-bottom: 0;">
+                Sistem, auto_arima algoritması kullanarak her bir rota için en uygun (p,d,q)(P,D,Q) parametrelerini otomatik olarak belirler.
+                Grafikteki ana çizgiler beklenen değerleri, gölgeli alanlar ise tahminin %95 güven aralığını (iyimser ve kötümser senaryoları) göstermektedir.
+                Bu analiz, yöneticilerin proaktif olarak fiyatlandırma, maliyet optimizasyonu ve kapasite planlaması gibi stratejik kararlar almasına yardımcı olur.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Model Parameters Card -->
+        <div class="col-lg-4 col-md-12 mb-4">
+          <div class="enhanced-card">
+            <div class="card-header-gradient">
+              <h6 class="card-header-title">
+                <i class="material-symbols-rounded">tune</i>
+                Model Parametreleri
+              </h6>
+            </div>
+            <div class="card-body-enhanced">
+              <div class="model-info-card">
+                <div class="model-info-item">
+                  <span class="model-info-label">Gelir Modeli (Order):</span>
+                  <span class="model-info-value" id="revenueOrder">--</span>
+                </div>
+                <div class="model-info-item">
+                  <span class="model-info-label">Gelir Modeli (Seasonal):</span>
+                  <span class="model-info-value" id="revenueSeasonal">--</span>
+                </div>
+                <div class="model-info-item">
+                  <span class="model-info-label">Maliyet Modeli (Order):</span>
+                  <span class="model-info-value" id="costOrder">--</span>
+                </div>
+                <div class="model-info-item">
+                  <span class="model-info-label">Maliyet Modeli (Seasonal):</span>
+                  <span class="model-info-value" id="costSeasonal">--</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- FOOTER - UNCHANGED -->
+    <footer class="footer py-4">
+      <div class="container-fluid">
+        <div class="row align-items-center justify-content-lg-between">
+          <div class="col-lg-6 mb-lg-0 mb-4">
+            <div class="copyright text-center text-sm text-muted text-lg-start">
+              © <script>document.write(new Date().getFullYear())</script>,
+              made with <i class="fa fa-heart"></i> by
+              <a class="font-weight-bold" target="_blank">KanbolatSoftware</a>
+              for a better decision.
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <ul class="nav nav-footer justify-content-center justify-content-lg-end">
+              <li class="nav-item">
+                <a class="nav-link text-muted" target="_blank">Turkish Airlines</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-muted" target="_blank">About Us</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-muted" target="_blank">Blog</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link pe-0 text-muted" target="_blank">License</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- Strategy Modal -->
+  <div class="modal fade" id="strategyModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-dark text-white">
+          <h5 class="modal-title" id="modalTitle">Hamle Detayı</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p><strong>Uçak / Kuyruk No:</strong> <span id="modalAircraft"></span></p>
+          <p><strong>Tarih:</strong> <span id="modalDate"></span></p>
+          <p><strong>Öncelik:</strong> <span id="modalPriority"></span></p>
+          <p><strong>Detay:</strong></p>
+          <p id="modalDescription"></p>
+          <p><strong>Notlar:</strong> <span id="modalNotes"></span></p>
+        </div>
+      </div>
+    </div>
   </div>
-  <!--   Core JS Files   -->
+
+  <!-- Core JS Files -->
   <script src="../assets/js/core/popper.min.js"></script>
   <script src="../assets/js/core/bootstrap.min.js"></script>
   <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
   <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="../assets/js/material-dashboard.min.js?v=3.2.0"></script>
+
   <script>
+    // ========================================
+    // CUSTOM JAVASCRIPT FOR CHARTS AND DATA
+    // ========================================
 
-    async function loadInternalStrategy() {
-  const res = await fetch('http://localhost:3000/revenue/internal-strategy-today');
-  const data = await res.json();
-  const list = document.getElementById('strategyList');
-  list.innerHTML = '';
+    const API_BASE = 'http://localhost:3000';
+    let revenueCostChart = null;
+    let currentFlightId = null;
 
-  data.forEach(item => {
-  const li = document.createElement('li');
-  li.className = 'list-group-item d-flex justify-content-between align-items-start cursor-pointer';
-  li.style.cursor = 'pointer';
-
-  // Soft renkler
-  let bgColor = '';
-  let textColor = '';
-  if(item.priority === 'High') { bgColor = '#f8d7da'; textColor = '#842029'; }
-  else if(item.priority === 'Medium') { bgColor = '#fff3cd'; textColor = '#664d03'; }
-  else if(item.priority === 'Low') { bgColor = '#d4edda'; textColor = '#155724'; }
-
-  li.innerHTML = `
-    <div>
-      <div class="fw-bold">${item.action_title}</div>
-      <small>${item.description.slice(0,100)}${item.description.length>100?'...':''}</small>
-    </div>
-    <span class="badge rounded-pill" style="background-color:${bgColor}; color:${textColor}; padding:0.4em 0.7em;">
-      ${item.priority}
-    </span>
-  `;
-
-  // Modal açma
-  li.addEventListener('click', () => {
-    document.getElementById('modalTitle').textContent = item.action_title;
-    document.getElementById('modalAircraft').textContent = `${item.aircraft_model}, ${item.tail_number}`;
-    document.getElementById('modalDate').textContent = new Date(item.action_date).toLocaleString();
-    document.getElementById('modalPriority').textContent = item.priority;
-    document.getElementById('modalDescription').textContent = item.description;
-    document.getElementById('modalNotes').textContent = item.notes;
-    const modal = new bootstrap.Modal(document.getElementById('strategyModal'));
-    modal.show();
-  });
-
-  list.appendChild(li);
-});
-}
-
-loadInternalStrategy();
-
-
-
-    let revenueCostChart;
-
-document.addEventListener("DOMContentLoaded", async () => {
-  await loadRoutes();
-});
-
-// Rotaları çek
-async function loadRoutes() {
-  try {
-    const res = await fetch("http://localhost:3000/dashboard/routes");
-    const routes = await res.json();
-
-    const dropdown = document.getElementById("routeDropdown");
-    dropdown.removeAttribute("disabled");
-
-    routes.forEach(route => {
-      const option = document.createElement("option");
-      option.value = route.id;
-      option.textContent = route.route;
-      dropdown.appendChild(option);
-    });
-
-    // İlk rota otomatik yükle
-    if (routes.length > 0) {
-      dropdown.value = routes[0].id;
-      loadRevenueCostChart(routes[0].id);
+    // Utility: Format timestamp
+    function formatTimestamp() {
+      const now = new Date();
+      return now.toLocaleString('tr-TR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
     }
 
-    dropdown.addEventListener("change", e => {
-      if (e.target.value) {
-        loadRevenueCostChart(e.target.value);
-      }
-    });
-
-  } catch (err) {
-    console.error("Rotalar yüklenemedi:", err);
-  }
-}
-
-// Grafik yükle
-async function loadRevenueCostChart(flightId) {
-  try {
-    const res = await fetch(`http://localhost:3000/revenue/${flightId}/forecast`);
-    const data = await res.json();
-
-    const ctx = document.getElementById('revenueCostChart');
-
-    if (revenueCostChart) {
-      revenueCostChart.destroy();
+    // Utility: Format currency
+    function formatCurrency(value) {
+      if (value === null || value === undefined) return '--';
+      return new Intl.NumberFormat('tr-TR', {
+        style: 'currency',
+        currency: 'TRY',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+      }).format(value);
     }
 
-    revenueCostChart = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: ['1. Ay', '2. Ay', '3. Ay', '4. Ay', '5. Ay', '6. Ay'],
-        datasets: [
-          {
-            label: 'Gelir Tahmini',
-            data: data.revenue_forecast,
-            borderColor: '#00C853',
-            backgroundColor: 'rgba(0,200,83,0.2)',
-            fill: true,
-            tension: 0.4,
-            pointRadius: 5,
-            pointBackgroundColor: '#00C853'
-          },
-          {
-            label: 'Maliyet Tahmini',
-            data: data.cost_forecast,
-            borderColor: '#FF5252',
-            backgroundColor: 'rgba(255,82,82,0.2)',
-            fill: true,
-            tension: 0.4,
-            pointRadius: 5,
-            pointBackgroundColor: '#FF5252'
+    // Utility: Format month
+    function formatMonth(monthStr) {
+      const [year, month] = monthStr.split('-');
+      const months = {
+        '01': 'Ocak', '02': 'Şubat', '03': 'Mart', '04': 'Nisan',
+        '05': 'Mayıs', '06': 'Haziran', '07': 'Temmuz', '08': 'Ağustos',
+        '09': 'Eylül', '10': 'Ekim', '11': 'Kasım', '12': 'Aralık'
+      };
+      return `${months[month]} ${year}`;
+    }
+
+    // Utility: Show error
+    function showError(containerId, message) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = `<div class="error-message">${message}</div>`;
+    }
+
+    // Utility: Show loading
+    function showLoading(containerId) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = `<div class="loading-text">Veri yükleniyor...</div>`;
+    }
+
+    // ========================================
+    // LOAD ROUTES
+    // ========================================
+
+    async function loadRoutes() {
+      try {
+        const res = await fetch(`${API_BASE}/dashboard/routes`);
+        if (!res.ok) throw new Error('Rotalar yüklenemedi');
+
+        const routes = await res.json();
+        const dropdown = document.getElementById('routeDropdown');
+
+        dropdown.innerHTML = '<option value="">Rota seçin...</option>';
+        dropdown.removeAttribute('disabled');
+
+        routes.forEach(route => {
+          const option = document.createElement('option');
+          option.value = route.id;
+          option.textContent = route.route;
+          dropdown.appendChild(option);
+        });
+
+        if (routes.length > 0) {
+          dropdown.value = routes[0].id;
+          currentFlightId = routes[0].id;
+          await loadForecastData(routes[0].id);
+        }
+
+        dropdown.addEventListener('change', async (e) => {
+          if (e.target.value) {
+            currentFlightId = e.target.value;
+            await loadForecastData(e.target.value);
           }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { position: 'top' },
-          tooltip: {
-            callbacks: {
-              label: function(context) {
-                return context.dataset.label + ': ' +
-                       Number(context.raw).toLocaleString() + ' ₺';
+        });
+
+      } catch (err) {
+        console.error('Rotalar yüklenemedi:', err);
+        const dropdown = document.getElementById('routeDropdown');
+        dropdown.innerHTML = '<option value="">Hata: Rotalar yüklenemedi</option>';
+      }
+    }
+
+    // ========================================
+    // LOAD FORECAST DATA
+    // ========================================
+
+    async function loadForecastData(flightId) {
+      showLoading('chartContainer');
+
+      try {
+        const res = await fetch(`${API_BASE}/revenue/${flightId}/forecast`);
+        if (!res.ok) throw new Error('Tahmin verileri yüklenemedi');
+
+        const data = await res.json();
+
+        updateKPIs(data.forecast_results.kpis);
+        updateModelInfo(data.forecast_results.model_info);
+
+        if (data.forecast_results.automated_insight) {
+          document.getElementById('insightBox').style.display = 'block';
+          document.getElementById('insightText').textContent = data.forecast_results.automated_insight;
+        } else {
+          document.getElementById('insightBox').style.display = 'none';
+        }
+
+        renderChart(data.forecast_results);
+        document.getElementById('chartLastUpdate').textContent = formatTimestamp();
+
+      } catch (err) {
+        console.error('Tahmin verileri yüklenemedi:', err);
+        showError('chartContainer', 'Tahmin verileri yüklenemedi. Lütfen daha sonra tekrar deneyin.');
+      }
+    }
+
+    // ========================================
+    // UPDATE KPIs
+    // ========================================
+
+    function updateKPIs(kpis) {
+      if (!kpis || kpis.length === 0) return;
+
+      const avgMargin = kpis.reduce((sum, k) => sum + k.profit_margin_percent, 0) / kpis.length;
+      document.getElementById('avgProfitMargin').textContent = `%${avgMargin.toFixed(1)}`;
+
+      const totalProfit = kpis.reduce((sum, k) => sum + k.profit_forecast, 0);
+      const totalProfitFormatted = totalProfit >= 1000000
+        ? `${(totalProfit / 1000000).toFixed(1)}M ₺`
+        : formatCurrency(totalProfit);
+      document.getElementById('totalProfit').textContent = totalProfitFormatted;
+
+      const bestMonth = kpis.reduce((max, k) => k.profit_forecast > max.profit_forecast ? k : max, kpis[0]);
+      document.getElementById('bestMonth').textContent = formatMonth(bestMonth.month);
+      document.getElementById('bestMonthProfit').textContent = formatCurrency(bestMonth.profit_forecast);
+    }
+
+    // ========================================
+    // UPDATE MODEL INFO
+    // ========================================
+
+    function updateModelInfo(modelInfo) {
+      if (!modelInfo) return;
+
+      document.getElementById('revenueOrder').textContent = modelInfo.revenue_model?.order || '--';
+      document.getElementById('revenueSeasonal').textContent = modelInfo.revenue_model?.seasonal_order || '--';
+      document.getElementById('costOrder').textContent = modelInfo.cost_model?.order || '--';
+      document.getElementById('costSeasonal').textContent = modelInfo.cost_model?.seasonal_order || '--';
+    }
+
+    // ========================================
+    // RENDER CHART
+    // ========================================
+
+    function renderChart(forecastResults) {
+      const ctx = document.getElementById('chartContainer');
+      ctx.innerHTML = '<canvas id="revenueCostChart" style="height:380px;"></canvas>';
+
+      const canvas = document.getElementById('revenueCostChart');
+
+      if (revenueCostChart) {
+        revenueCostChart.destroy();
+      }
+
+      const labels = forecastResults.forecast_period.map(month => formatMonth(month));
+      const kpis = forecastResults.kpis;
+
+      const revenueExpected = kpis.map(k => k.revenue_forecast.expected);
+      const revenueLower = kpis.map(k => k.revenue_forecast.lower_bound);
+      const revenueUpper = kpis.map(k => k.revenue_forecast.upper_bound);
+
+      const costExpected = kpis.map(k => k.cost_forecast.expected);
+      const costLower = kpis.map(k => k.cost_forecast.lower_bound);
+      const costUpper = kpis.map(k => k.cost_forecast.upper_bound);
+
+      revenueCostChart = new Chart(canvas, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Gelir Üst Sınır',
+              data: revenueUpper,
+              borderColor: 'rgba(0, 200, 83, 0)',
+              backgroundColor: 'rgba(0, 200, 83, 0.1)',
+              fill: '+1',
+              pointRadius: 0,
+              tension: 0.4,
+              order: 4
+            },
+            {
+              label: 'Gelir Alt Sınır',
+              data: revenueLower,
+              borderColor: 'rgba(0, 200, 83, 0)',
+              backgroundColor: 'rgba(0, 200, 83, 0.1)',
+              fill: false,
+              pointRadius: 0,
+              tension: 0.4,
+              order: 3
+            },
+            {
+              label: 'Beklenen Gelir',
+              data: revenueExpected,
+              borderColor: '#00C853',
+              backgroundColor: 'rgba(0, 200, 83, 0.2)',
+              borderWidth: 3,
+              pointRadius: 5,
+              pointBackgroundColor: '#00C853',
+              pointBorderColor: '#fff',
+              pointBorderWidth: 2,
+              tension: 0.4,
+              fill: false,
+              order: 1
+            },
+            {
+              label: 'Maliyet Üst Sınır',
+              data: costUpper,
+              borderColor: 'rgba(255, 82, 82, 0)',
+              backgroundColor: 'rgba(255, 82, 82, 0.1)',
+              fill: '+1',
+              pointRadius: 0,
+              tension: 0.4,
+              order: 4
+            },
+            {
+              label: 'Maliyet Alt Sınır',
+              data: costLower,
+              borderColor: 'rgba(255, 82, 82, 0)',
+              backgroundColor: 'rgba(255, 82, 82, 0.1)',
+              fill: false,
+              pointRadius: 0,
+              tension: 0.4,
+              order: 3
+            },
+            {
+              label: 'Beklenen Maliyet',
+              data: costExpected,
+              borderColor: '#FF5252',
+              backgroundColor: 'rgba(255, 82, 82, 0.2)',
+              borderWidth: 3,
+              pointRadius: 5,
+              pointBackgroundColor: '#FF5252',
+              pointBorderColor: '#fff',
+              pointBorderWidth: 2,
+              tension: 0.4,
+              fill: false,
+              order: 2
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: {
+            duration: 1500,
+            easing: 'easeInOutQuart'
+          },
+          interaction: {
+            mode: 'index',
+            intersect: false,
+          },
+          plugins: {
+            legend: {
+              position: 'top',
+              labels: {
+                filter: function(item) {
+                  return item.text === 'Beklenen Gelir' || item.text === 'Beklenen Maliyet';
+                },
+                font: {
+                  size: 13,
+                  weight: '600'
+                },
+                padding: 15
+              }
+            },
+            tooltip: {
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              padding: 12,
+              titleFont: {
+                size: 14,
+                weight: 'bold'
+              },
+              bodyFont: {
+                size: 13
+              },
+              callbacks: {
+                title: function(context) {
+                  return context[0].label;
+                },
+                label: function(context) {
+                  const datasetLabel = context.dataset.label;
+
+                  if (datasetLabel.includes('Sınır')) {
+                    return null;
+                  }
+
+                  const index = context.dataIndex;
+                  const kpi = kpis[index];
+
+                  if (datasetLabel === 'Beklenen Gelir') {
+                    return [
+                      `Beklenen: ${formatCurrency(kpi.revenue_forecast.expected)}`,
+                      `En Düşük: ${formatCurrency(kpi.revenue_forecast.lower_bound)}`,
+                      `En Yüksek: ${formatCurrency(kpi.revenue_forecast.upper_bound)}`
+                    ];
+                  } else if (datasetLabel === 'Beklenen Maliyet') {
+                    return [
+                      `Beklenen: ${formatCurrency(kpi.cost_forecast.expected)}`,
+                      `En Düşük: ${formatCurrency(kpi.cost_forecast.lower_bound)}`,
+                      `En Yüksek: ${formatCurrency(kpi.cost_forecast.upper_bound)}`
+                    ];
+                  }
+
+                  return `${datasetLabel}: ${formatCurrency(context.parsed.y)}`;
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: false,
+              ticks: {
+                callback: function(value) {
+                  return formatCurrency(value);
+                },
+                font: {
+                  size: 11
+                },
+                color: '#7F8C8D'
+              },
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)',
+                drawBorder: false
+              }
+            },
+            x: {
+              ticks: {
+                font: {
+                  size: 11,
+                  weight: '500'
+                },
+                maxRotation: 45,
+                minRotation: 45,
+                color: '#2C3E50'
+              },
+              grid: {
+                display: false,
+                drawBorder: false
               }
             }
           }
-        },
-        scales: {
-          y: { ticks: { callback: v => v.toLocaleString() + ' ₺' } }
         }
+      });
+    }
+
+    // ========================================
+    // LOAD INTERNAL STRATEGY
+    // ========================================
+
+    async function loadInternalStrategy() {
+      try {
+        const res = await fetch(`${API_BASE}/revenue/internal-strategy-today`);
+        if (!res.ok) throw new Error('Stratejiler yüklenemedi');
+
+        const data = await res.json();
+        const container = document.getElementById('strategyListContainer');
+
+        if (data.length === 0) {
+          container.innerHTML = '<div class="loading-text">Bugün için strateji bulunmuyor.</div>';
+          return;
+        }
+
+        container.innerHTML = '';
+
+        data.forEach(item => {
+          const strategyItem = document.createElement('div');
+          strategyItem.className = 'strategy-item d-flex justify-content-between align-items-start';
+
+          let bgColor = '';
+          let textColor = '';
+          if (item.priority === 'High') {
+            bgColor = '#f8d7da';
+            textColor = '#842029';
+          } else if (item.priority === 'Medium') {
+            bgColor = '#fff3cd';
+            textColor = '#664d03';
+          } else if (item.priority === 'Low') {
+            bgColor = '#d4edda';
+            textColor = '#155724';
+          }
+
+          strategyItem.innerHTML = `
+            <div>
+              <div class="strategy-title">${item.action_title}</div>
+              <div class="strategy-description">${item.description.slice(0, 100)}${item.description.length > 100 ? '...' : ''}</div>
+            </div>
+            <span class="strategy-badge" style="background-color:${bgColor}; color:${textColor};">
+              ${item.priority}
+            </span>
+          `;
+
+          strategyItem.addEventListener('click', () => {
+            document.getElementById('modalTitle').textContent = item.action_title;
+            document.getElementById('modalAircraft').textContent = `${item.aircraft_model}, ${item.tail_number}`;
+            document.getElementById('modalDate').textContent = new Date(item.action_date).toLocaleString('tr-TR');
+            document.getElementById('modalPriority').textContent = item.priority;
+            document.getElementById('modalDescription').textContent = item.description;
+            document.getElementById('modalNotes').textContent = item.notes;
+            const modal = new bootstrap.Modal(document.getElementById('strategyModal'));
+            modal.show();
+          });
+
+          container.appendChild(strategyItem);
+        });
+
+        document.getElementById('strategyLastUpdate').textContent = formatTimestamp();
+
+      } catch (err) {
+        console.error('Stratejiler yüklenemedi:', err);
+        const container = document.getElementById('strategyListContainer');
+        container.innerHTML = '<div class="error-message">Stratejiler yüklenemedi.</div>';
       }
+    }
+
+    // ========================================
+    // HEADER ACTION FUNCTIONS
+    // ========================================
+
+    function refreshData() {
+      if (currentFlightId) {
+        loadForecastData(currentFlightId);
+      }
+      loadInternalStrategy();
+    }
+
+    function exportData() {
+      alert('Veri dışa aktarma işlemi başlatıldı');
+    }
+
+    // ========================================
+    // INITIALIZE
+    // ========================================
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      await Promise.all([
+        loadRoutes(),
+        loadInternalStrategy()
+      ]);
     });
 
-  } catch (err) {
-    console.error('Gelir/Maliyet tahmini yüklenemedi:', err);
-  }
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
+    // Sidebar scrollbar
     var win = navigator.platform.indexOf('Win') > -1;
     if (win && document.querySelector('#sidenav-scrollbar')) {
-      var options = {
-        damping: '0.5'
-      }
+      var options = { damping: '0.5' };
       Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
     }
-  </script>
-  <!-- Github buttons -->
-  <script async defer src="https://buttons.github.io/buttons.js"></script>
-  <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
-  <script src="../assets/js/material-dashboard.min.js?v=3.2.0"></script>
-</body>
 
+    // Responsive chart resize
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        if (revenueCostChart) revenueCostChart.resize();
+      }, 250);
+    });
+  </script>
+
+</body>
 </html>
