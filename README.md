@@ -67,6 +67,12 @@ git clone https://github.com/onurknblt/AirlineDss.git
 cd AirlineDss
 ```
 
+### 2. Sanal ortamı kurun (venv) ve içerisine girin
+```
+python -m venv venv
+venv\Scripts\activate
+```
+
 ### 2. Frontend paket kurulumu
 ```
 cd ../client
@@ -85,7 +91,7 @@ cd ..
 npm install
 ```
 
-### Ana kök dizinde ayağa kaldır
+### Ana kök dizinde (venv) ayağa kaldır
 ```
 npm start
 ```

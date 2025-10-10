@@ -135,8 +135,5 @@ const getInternalStrategyToday = (req, res) => {
   }
 };
 
-module.exports = { 
-  getRevenueForecastByFlightId,
-  getInternalStrategyToday 
-};
+module.exports = { getRevenueForecastByFlightId,getInternalStrategyToday };
 
