@@ -73,13 +73,13 @@ python -m venv venv
 venv\Scripts\activate
 ```
 
-### 2. Frontend paket kurulumu
+### 3. Frontend paket kurulumu
 ```
 cd ../client
 npm install
 ```
 
-### 3. Backend paket kurulumu
+### 4. Backend paket kurulumu
 ```
 cd ../api
 npm install
