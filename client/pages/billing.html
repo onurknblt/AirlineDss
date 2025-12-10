@@ -662,7 +662,7 @@
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/dashboard.html">
             <i class="material-symbols-rounded opacity-5">dashboard</i>
-            <span class="nav-link-text ms-1">Dashboard</span>
+            <span class="nav-link-text ms-1">Genel Bakış</span>
           </a>
         </li>
         <li class="nav-item">
@@ -674,7 +674,7 @@
         <li class="nav-item">
           <a class="nav-link active bg-gradient-dark text-white" href="../pages/billing.html">
             <i class="material-symbols-rounded opacity-5">receipt_long</i>
-            <span class="nav-link-text ms-1">Maliye</span>
+            <span class="nav-link-text ms-1">Finans</span>
           </a>
         </li>
         <li class="nav-item">
@@ -838,25 +838,38 @@
         </div>
 
         <!-- Strategy Actions Card -->
+
         <div class="col-lg-4 col-md-12 mb-4">
           <div class="enhanced-card">
             <div class="card-header-gradient">
               <h6 class="card-header-title">
-                <i class="material-symbols-rounded">event_note</i>
-                Öncelikli Aksiyon Bülteni
+                <i class="material-symbols-rounded">tune</i>
+                Model Parametreleri
               </h6>
             </div>
             <div class="card-body-enhanced">
-              <div class="strategy-list-container" id="strategyListContainer">
-                <div class="loading-text">Stratejiler yükleniyor...</div>
+              <div class="model-info-card">
+                <div class="model-info-item">
+                  <span class="model-info-label">Gelir Modeli (Order):</span>
+                  <span class="model-info-value" id="revenueOrder">--</span>
+                </div>
+                <div class="model-info-item">
+                  <span class="model-info-label">Gelir Modeli (Seasonal):</span>
+                  <span class="model-info-value" id="revenueSeasonal">--</span>
+                </div>
+                <div class="model-info-item">
+                  <span class="model-info-label">Maliyet Modeli (Order):</span>
+                  <span class="model-info-value" id="costOrder">--</span>
+                </div>
+                <div class="model-info-item">
+                  <span class="model-info-label">Maliyet Modeli (Seasonal):</span>
+                  <span class="model-info-value" id="costSeasonal">--</span>
+                </div>
               </div>
-            </div>
-            <div class="card-footer-info">
-              <i class="material-symbols-rounded" style="font-size: 1rem;">schedule</i>
-              Son güncelleme: <span id="strategyLastUpdate">--</span>
             </div>
           </div>
         </div>
+        
 
       </div>
 
@@ -889,36 +902,7 @@
         </div>
 
         <!-- Model Parameters Card -->
-        <div class="col-lg-4 col-md-12 mb-4">
-          <div class="enhanced-card">
-            <div class="card-header-gradient">
-              <h6 class="card-header-title">
-                <i class="material-symbols-rounded">tune</i>
-                Model Parametreleri
-              </h6>
-            </div>
-            <div class="card-body-enhanced">
-              <div class="model-info-card">
-                <div class="model-info-item">
-                  <span class="model-info-label">Gelir Modeli (Order):</span>
-                  <span class="model-info-value" id="revenueOrder">--</span>
-                </div>
-                <div class="model-info-item">
-                  <span class="model-info-label">Gelir Modeli (Seasonal):</span>
-                  <span class="model-info-value" id="revenueSeasonal">--</span>
-                </div>
-                <div class="model-info-item">
-                  <span class="model-info-label">Maliyet Modeli (Order):</span>
-                  <span class="model-info-value" id="costOrder">--</span>
-                </div>
-                <div class="model-info-item">
-                  <span class="model-info-label">Maliyet Modeli (Seasonal):</span>
-                  <span class="model-info-value" id="costSeasonal">--</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        
 
       </div>
 

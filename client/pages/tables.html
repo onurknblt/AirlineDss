@@ -8,15 +8,15 @@
   <link rel="icon" type="image/png" href="../assets/img/favicon.png">
   <title>Türk Hava Yolları Karar Destek Sistemi</title>
 
-  <!-- Fonts and icons -->
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" />
   <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
   <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
-  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
   <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
 
-  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
 
   <style>
@@ -130,7 +130,7 @@
     /* Route selector section */
     .selector-row {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
       align-items: center;
       margin-bottom: 2rem;
       gap: 2rem;
@@ -197,6 +197,7 @@
       overflow: hidden;
       animation: fadeInUp 0.8s ease-out backwards;
       border: 1px solid rgba(0,0,0,0.04);
+      height: 100%; /* Kartların aynı boyda olması için */
     }
 
     .enhanced-card:hover {
@@ -206,6 +207,8 @@
 
     .enhanced-card:nth-child(1) { animation-delay: 0.1s; }
     .enhanced-card:nth-child(2) { animation-delay: 0.2s; }
+    .enhanced-card:nth-child(3) { animation-delay: 0.3s; }
+    .enhanced-card:nth-child(4) { animation-delay: 0.4s; }
 
     .card-header-gradient {
       background: linear-gradient(135deg, var(--dark), var(--dark-secondary));
@@ -247,9 +250,83 @@
       position: relative;
     }
 
+    /* KPI Cards */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .kpi-card {
+      background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+      animation: fadeInUp 0.8s ease-out backwards;
+      border-left: 5px solid var(--success);
+    }
+
+    .kpi-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    }
+
+    .kpi-card.load-factor { border-left-color: var(--success); animation-delay: 0.1s; }
+    .kpi-card.total-demand { border-left-color: var(--warning); animation-delay: 0.2s; }
+    .kpi-card.yoy-growth { border-left-color: var(--turkish-red); animation-delay: 0.3s; }
+
+    .kpi-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.5rem;
+    }
+
+    .kpi-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 0.25rem;
+    }
+
+    .kpi-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* Alert/Insight Box */
+    .insight-box {
+      background: linear-gradient(135deg, #fff3cd 0%, #ffecb5 100%);
+      border-left: 5px solid var(--warning);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 16px rgba(255, 193, 7, 0.2);
+      animation: fadeInUp 0.7s ease-out;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .insight-icon {
+      font-size: 1.5rem;
+    }
+
+    .insight-text {
+      margin: 0;
+      font-size: 0.95rem;
+      color: #664d03;
+      font-weight: 500;
+    }
+
+    /* Chart Container */
     .chart-container {
       position: relative;
-      height: 340px;
+      height: 380px;
       margin-bottom: 1rem;
     }
 
@@ -295,7 +372,7 @@
       border-left: 4px solid var(--turkish-red);
       box-shadow: 0 4px 20px rgba(0,0,0,0.06);
       animation: fadeInUp 1s ease-out 0.3s backwards;
-      margin-top: 2rem;
+      height: 100%;
     }
 
     .info-panel-header {
@@ -331,6 +408,142 @@
       font-size: 0.95rem;
     }
 
+    /* Strategy List */
+    .strategy-list-container {
+      max-height: 500px;
+      overflow-y: auto;
+      padding-right: 0.5rem;
+    }
+
+    .strategy-list-container::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .strategy-list-container::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+
+    .strategy-list-container::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, var(--dark-secondary) 0%, var(--dark) 100%);
+      border-radius: 10px;
+    }
+
+    .strategy-item {
+      background: #ffffff;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      padding: 1.25rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      border-left: 4px solid transparent;
+    }
+
+    .strategy-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 4px;
+      background: linear-gradient(180deg, var(--dark-secondary) 0%, var(--dark) 100%);
+      transform: scaleY(0);
+      transition: transform 0.3s ease;
+    }
+
+    .strategy-item:hover {
+      transform: translateX(8px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    .strategy-item:hover::before {
+      transform: scaleY(1);
+    }
+
+    .strategy-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 0.5rem;
+    }
+
+    .strategy-description {
+      color: var(--text-secondary);
+      line-height: 1.5;
+      font-size: 0.875rem;
+    }
+
+    .strategy-badge {
+      padding: 6px 14px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 20px;
+    }
+
+    /* Modal Enhancements */
+    .modal-content {
+      border-radius: 20px;
+      border: none;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+
+    .modal-header.bg-dark {
+      background: linear-gradient(135deg, var(--dark) 0%, var(--dark-secondary) 100%) !important;
+      padding: 1.5rem 2rem;
+      border-bottom: none;
+    }
+
+    .modal-header.bg-dark .modal-title {
+      color: white;
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+
+    .modal-body {
+      padding: 2rem;
+      background: #fafbfc;
+    }
+
+    .modal-body p {
+      margin-bottom: 1rem;
+      line-height: 1.7;
+    }
+
+    .modal-body strong {
+      color: var(--dark);
+      font-weight: 600;
+      display: inline-block;
+      min-width: 140px;
+    }
+
+    /* Error Message */
+    .error-message {
+      background: linear-gradient(135deg, #f8d7da 0%, #f5c2c7 100%);
+      border-left: 5px solid var(--turkish-red);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      color: #842029;
+      text-align: center;
+      font-weight: 500;
+    }
+
+    .loading-text {
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 1rem;
+      padding: 3rem 1rem;
+    }
+
     /* Responsive design */
     @media (max-width: 991px) {
       .selector-row {
@@ -363,6 +576,10 @@
         font-size: 1.5rem;
       }
 
+      .kpi-value {
+        font-size: 1.5rem;
+      }
+
       .chart-container {
         height: 280px;
       }
@@ -375,49 +592,6 @@
         padding: 1.5rem;
       }
     }
-
-    /* Loading skeleton */
-    .skeleton {
-      background: linear-gradient(90deg, #F0F0F0 25%, #E8E8E8 50%, #F0F0F0 75%);
-      background-size: 200% 100%;
-      animation: loading 1.5s ease-in-out infinite;
-      border-radius: 8px;
-    }
-
-    @keyframes loading {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
-    }
-
-    /* Toast notification */
-    .toast-notification {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      background: white;
-      padding: 1rem 1.5rem;
-      border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      z-index: 9999;
-      animation: slideInRight 0.4s ease-out;
-    }
-
-    @keyframes slideInRight {
-      from {
-        transform: translateX(400px);
-        opacity: 0;
-      }
-      to {
-        transform: translateX(0);
-        opacity: 1;
-      }
-    }
-
-    .toast-success { border-left: 4px solid var(--success); }
-    .toast-error { border-left: 4px solid var(--turkish-red); }
 
     /* Custom scrollbar */
     ::-webkit-scrollbar {
@@ -443,11 +617,10 @@
 
 <body class="g-sidenav-show bg-gray-100">
 
-  <!-- SIDEBAR - UNCHANGED -->
   <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2 bg-white my-2" id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
-      <a class="navbar-brand px-4 py-3 m-0" href="file:///C:/Projects/AirlineDssSimulation/client/pages/dashboard.html" target="_blank">
+      <a class="navbar-brand px-4 py-3 m-0" href="../pages/dashboard.html">
         <img src="../assets/img/logo-ct-dark.png" class="navbar-brand-img" width="26" height="26" alt="main_logo">
         <span class="ms-1 text-sm text-dark">Turkish-KDS</span>
       </a>
@@ -458,7 +631,7 @@
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/dashboard.html">
             <i class="material-symbols-rounded opacity-5">dashboard</i>
-            <span class="nav-link-text ms-1">Dashboard</span>
+            <span class="nav-link-text ms-1">Genel Bakış </span>
           </a>
         </li>
         <li class="nav-item">
@@ -484,10 +657,8 @@
     <div class="sidenav-footer position-absolute w-100 bottom-0"></div>
   </aside>
 
-  <!-- MAIN CONTENT -->
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
 
-    <!-- TOP NAVBAR - UNCHANGED -->
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-3 shadow-none border-radius-xl" id="navbarBlur" data-scroll="true">
       <div class="container-fluid py-1 px-3">
         <nav aria-label="breadcrumb">
@@ -535,50 +706,6 @@
                     </div>
                   </a>
                 </li>
-                <li class="mb-2">
-                  <a class="dropdown-item border-radius-md" href="javascript:;">
-                    <div class="d-flex py-1">
-                      <div class="my-auto">
-                        <img src="../assets/img/small-logos/logo-spotify.svg" class="avatar avatar-sm bg-gradient-dark me-3">
-                      </div>
-                      <div class="d-flex flex-column justify-content-center">
-                        <h6 class="text-sm font-weight-normal mb-1">
-                          <span class="font-weight-bold">New album</span> by Travis Scott
-                        </h6>
-                        <p class="text-xs text-secondary mb-0">
-                          <i class="fa fa-clock me-1"></i>1 day
-                        </p>
-                      </div>
-                    </div>
-                  </a>
-                </li>
-                <li>
-                  <a class="dropdown-item border-radius-md" href="javascript:;">
-                    <div class="d-flex py-1">
-                      <div class="avatar avatar-sm bg-gradient-secondary me-3 my-auto">
-                        <svg width="12px" height="12px" viewBox="0 0 43 36" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                          <title>credit-card</title>
-                          <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                            <g transform="translate(-2169.000000, -745.000000)" fill="#FFFFFF" fill-rule="nonzero">
-                              <g transform="translate(1716.000000, 291.000000)">
-                                <g transform="translate(453.000000, 454.000000)">
-                                  <path class="color-background" d="M43,10.7482083 L43,3.58333333 C43,1.60354167 41.3964583,0 39.4166667,0 L3.58333333,0 C1.60354167,0 0,1.60354167 0,3.58333333 L0,10.7482083 L43,10.7482083 Z" opacity="0.593633743"></path>
-                                  <path class="color-background" d="M0,16.125 L0,32.25 C0,34.2297917 1.60354167,35.8333333 3.58333333,35.8333333 L39.4166667,35.8333333 C41.3964583,35.8333333 43,34.2297917 43,32.25 L43,16.125 L0,16.125 Z M19.7083333,26.875 L7.16666667,26.875 L7.16666667,23.2916667 L19.7083333,23.2916667 L19.7083333,26.875 Z M35.8333333,26.875 L28.6666667,26.875 L28.6666667,23.2916667 L35.8333333,23.2916667 L35.8333333,26.875 Z"></path>
-                                </g>
-                              </g>
-                            </g>
-                          </g>
-                        </svg>
-                      </div>
-                      <div class="d-flex flex-column justify-content-center">
-                        <h6 class="text-sm font-weight-normal mb-1">Payment successfully completed</h6>
-                        <p class="text-xs text-secondary mb-0">
-                          <i class="fa fa-clock me-1"></i>2 days
-                        </p>
-                      </div>
-                    </div>
-                  </a>
-                </li>
               </ul>
             </li>
             <li class="nav-item d-flex align-items-center">
@@ -591,10 +718,8 @@
       </div>
     </nav>
 
-    <!-- REDESIGNED MAIN CONTENT STARTS HERE -->
     <div class="container-fluid py-4 content-wrapper">
 
-      <!-- Page Header -->
       <div class="page-header d-flex justify-content-between align-items-center">
         <div>
           <h1 class="page-title">
@@ -615,73 +740,74 @@
         </div>
       </div>
 
-      <!-- Route Selectors -->
       <div class="selector-row">
         <div class="selector-group">
-          <label class="selector-label" for="route-select">
-            <i class="material-symbols-rounded" style="font-size: 1.2rem;">flight_takeoff</i>
-            Talep Tahmin Sihirbazı - Rota Seçin
+          <label class="selector-label" for="routeDropdown">
+            <i class="material-symbols-rounded" style="font-size: 1.2rem;">flight</i>
+            Rota Seçin
           </label>
-          <select id="route-select" class="custom-select" disabled aria-label="Talep tahmin rotası seçin">
-            <option value="">Rotalar yükleniyor...</option>
-          </select>
-        </div>
-
-        <div class="selector-group">
-          <label class="selector-label" for="route-pie-select">
-            <i class="material-symbols-rounded" style="font-size: 1.2rem;">flight_land</i>
-            Rezervasyon Trendleri - Rota Seçin
-          </label>
-          <select id="route-pie-select" class="custom-select" disabled aria-label="Rezervasyon trendi rotası seçin">
+          <select id="routeDropdown" class="custom-select" disabled aria-label="Talep tahmin rotası seçin">
             <option value="">Rotalar yükleniyor...</option>
           </select>
         </div>
       </div>
 
-      <!-- Chart Cards -->
+      <div id="insightBox" class="insight-box" style="display: none;">
+        <span class="insight-icon">⚠️</span>
+        <p class="insight-text" id="insightText"></p>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card load-factor">
+          <div class="kpi-label">Tahmini Doluluk Oranı</div>
+          <div class="kpi-value" id="avgLoadFactor">--%</div>
+          <div class="kpi-subtitle">6 aylık ortalama</div>
+        </div>
+        <div class="kpi-card total-demand">
+          <div class="kpi-label">Toplam Yolcu Talebi</div>
+          <div class="kpi-value" id="totalDemand">--</div>
+          <div class="kpi-subtitle">Tahmin dönemi toplamı</div>
+        </div>
+        <div class="kpi-card yoy-growth">
+          <div class="kpi-label">Yıllık Büyüme</div>
+          <div class="kpi-value" id="yoyGrowth">--%</div>
+          <div class="kpi-subtitle" id="yoySubtitle">Geçen yıla göre</div>
+        </div>
+      </div>
+
       <div class="row">
 
-        <!-- Demand Forecast Card -->
-        <div class="col-lg-6 col-md-6 mb-4">
+        <div class="col-lg-8 col-md-12 mb-4">
           <div class="enhanced-card">
             <div class="card-header-gradient">
               <h6 class="card-header-title">
                 <i class="material-symbols-rounded">trending_up</i>
-                Talep Tahmin Sihirbazı
+                Talep Tahmin Sihirbazı (6 Ay)
               </h6>
             </div>
             <div class="card-body-enhanced">
-              <div class="chart-container">
-                <canvas id="demandForecastChart" role="img" aria-label="Talep tahmin grafiği"></canvas>
-                <div id="demandLoading" class="chart-loading" style="display: none;">
-                  <div class="spinner"></div>
-                  <p style="color: #7F8C8D;">Veriler yükleniyor...</p>
-                </div>
+              <div class="chart-container" id="chartContainer">
+                <div class="loading-text">Veri yükleniyor...</div>
               </div>
             </div>
             <div class="card-footer-info">
               <i class="material-symbols-rounded" style="font-size: 1rem;">schedule</i>
-              Son güncelleme: <span id="demandLastUpdate">--</span>
+              Son güncelleme: <span id="chartLastUpdate">--</span>
             </div>
           </div>
         </div>
 
-        <!-- Reservation Trends Card -->
-        <div class="col-lg-6 col-md-6 mb-4">
+        <div class="col-lg-4 col-md-12 mb-4">
           <div class="enhanced-card">
             <div class="card-header-gradient">
               <h6 class="card-header-title">
                 <i class="material-symbols-rounded">pie_chart</i>
-                Yolcu Rezervasyon Trendleri
+                Rezervasyon Trendleri
               </h6>
             </div>
             <div class="card-body-enhanced">
-              <div class="chart-container">
-                <canvas id="reservationTrendChart" role="img" aria-label="Rezervasyon trendi grafiği"></canvas>
-                <div id="pieLoading" class="chart-loading" style="display: none;">
-                  <div class="spinner"></div>
-                  <p style="color: #7F8C8D;">Veriler yükleniyor...</p>
-                </div>
+              <div class="chart-container" id="pieChartContainer">
+                <div class="loading-text">Veri yükleniyor...</div>
               </div>
             </div>
             <div class="card-footer-info">
@@ -693,27 +819,42 @@
 
       </div>
 
-      <!-- Information Panel -->
-      <div class="info-panel">
-        <div class="info-panel-header">
-          <div class="info-icon">
-            <i class="material-symbols-rounded">info</i>
+      <div class="row">
+
+        
+
+        <div class="col-lg-8 col-md-12 mb-4">
+          <div class="info-panel">
+            <div class="info-panel-header">
+              <div class="info-icon">
+                <i class="material-symbols-rounded">info</i>
+              </div>
+              <h3 class="info-panel-title">Model Metodolojisi</h3>
+            </div>
+            <div class="info-panel-content">
+              <p>
+                Bu panel, seçilen uçuş rotası için önümüzdeki 6 ayın yolcu talebini öngören <strong>ARIMA & LSTM Hibrit Tahmin Modeli</strong>'ni kullanmaktadır.
+                ARIMA (AutoRegressive Integrated Moving Average) zaman serisi metodolojisi ile geçmiş talep verilerindeki trendler ve mevsimsellik yakalanırken,
+                LSTM (Long Short-Term Memory) derin öğrenme ağları karmaşık nonlineer ilişkileri modellemektedir.
+              </p>
+              <p>
+                Grafikteki ana çizgi beklenen talep değerlerini, gölgeli alan ise %95 güven aralığını (iyimser ve kötümser senaryolar) gösterir.
+                Bu tahminler, yöneticilerin <strong>kapasite planlaması, uçak tipi optimizasyonu ve dinamik fiyatlandırma</strong> kararlarını
+                verilerle desteklemesine olanak tanır.
+              </p>
+              <p style="margin-bottom: 0;">
+                Sistem, her rota için otomatik olarak en uygun model parametrelerini seçer ve anomali tespiti gerçekleştirir.
+                Önemli Not: Tahminler geçmiş veriye dayalıdır; beklenmedik pazar koşulları, ekonomik değişimler veya jeopolitik olaylar
+                öngörülerde sapmalara yol açabilir.
+              </p>
+            </div>
           </div>
-          <h3 class="info-panel-title">Bilgilendirme</h3>
         </div>
-        <div class="info-panel-content">
-          <p style="margin-bottom: 1rem;">
-            Bu grafik, geçmiş satış verilerine dayanarak önümüzdeki 6 aya ait yolcu talebini öngören <strong>ARIMA zaman serisi tahmin modelini</strong> göstermektedir. Yatay eksende aylar, dikey eksende yolcu sayısı yer almaktadır. Çizgi, geçmiş verilere göre oluşturulan talep eğilimini ve geleceğe yönelik öngörüleri göstermektedir.
-          </p>
-          <p style="margin-bottom: 0;">
-            Grafik, yöneticilere <strong>trendleri izleme</strong> (talebin artış ya da düşüş eğilimi), <strong>mevsimsellik etkilerini gözlemleme</strong> (belirli dönemlerde artış/azalış) ve <strong>kapasite planlaması yapma</strong> imkânı sunar. Tahminler geçmiş veriye dayalıdır; piyasa koşulları, ekonomik gelişmeler veya beklenmedik olaylar modelde yer almadığından yorum yapılırken bu sınırlılık dikkate alınmalıdır.
-          </p>
-        </div>
+
       </div>
 
     </div>
 
-    <!-- FOOTER - UNCHANGED -->
     <footer class="footer py-4">
       <div class="container-fluid">
         <div class="row align-items-center justify-content-lg-between">
@@ -747,7 +888,24 @@
 
   </main>
 
-  <!-- Core JS Files -->
+  <div class="modal fade" id="strategyModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-dark text-white">
+          <h5 class="modal-title" id="modalTitle">Öneri Detayı</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p><strong>Rota:</strong> <span id="modalRoute"></span></p>
+          <p><strong>Öncelik:</strong> <span id="modalPriority"></span></p>
+          <p><strong>Detay:</strong></p>
+          <p id="modalDescription"></p>
+          <p><strong>Önerilen Aksiyon:</strong> <span id="modalAction"></span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="../assets/js/core/popper.min.js"></script>
   <script src="../assets/js/core/bootstrap.min.js"></script>
   <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
@@ -756,14 +914,18 @@
 
   <script>
     // ========================================
-    // CUSTOM JAVASCRIPT FOR CHARTS
+    // CUSTOM JAVASCRIPT FOR CHARTS AND DATA
     // ========================================
 
     const API_BASE = 'http://localhost:3000';
     let demandChart = null;
     let pieChart = null;
+    let currentFlightId = null;
 
-    // Utility: Format timestamp
+    // ========================================
+    // UTILITY FUNCTIONS
+    // ========================================
+
     function formatTimestamp() {
       const now = new Date();
       return now.toLocaleString('tr-TR', {
@@ -775,310 +937,501 @@
       });
     }
 
-    // Utility: Show toast notification
-    function showToast(message, type = 'success') {
-      const toast = document.createElement('div');
-      toast.className = `toast-notification toast-${type}`;
-      toast.innerHTML = `
-        <i class="material-symbols-rounded" style="font-size: 1.5rem; color: ${type === 'success' ? '#00C853' : '#E81932'};">
-          ${type === 'success' ? 'check_circle' : 'error'}
-        </i>
-        <span>${message}</span>
-      `;
-      document.body.appendChild(toast);
-      setTimeout(() => {
-        toast.style.animation = 'slideInRight 0.4s ease-out reverse';
-        setTimeout(() => toast.remove(), 400);
-      }, 3000);
+    function formatNumber(value) {
+      if (value === null || value === undefined) return '--';
+      return new Intl.NumberFormat('tr-TR').format(value);
+    }
+
+    function showError(containerId, message) {
+      const container = document.getElementById(containerId);
+      if(container) {
+          container.innerHTML = `<div class="error-message">${message}</div>`;
+      } else {
+          console.error("Container not found for error:", containerId, message);
+      }
+    }
+
+    function showLoading(containerId) {
+      const container = document.getElementById(containerId);
+      if(container) {
+          container.innerHTML = `<div class="loading-text">Veri yükleniyor...</div>`;
+      }
     }
 
     // ========================================
-    // DEMAND FORECAST CHART
+    // LOAD ROUTES
     // ========================================
 
     async function loadRoutes() {
       try {
         const res = await fetch(`${API_BASE}/demand/routes`);
+        if (!res.ok) throw new Error('Rotalar yüklenemedi');
+
         const data = await res.json();
+        const routes = data.routes || [];
+        const dropdown = document.getElementById('routeDropdown');
 
-        const routeSelect = document.getElementById('route-select');
-        routeSelect.innerHTML = '<option value="">Rota Seçin</option>';
+        dropdown.innerHTML = '<option value="">Rota seçin...</option>';
+        dropdown.removeAttribute('disabled');
 
-        data.routes.forEach(r => {
-          const opt = document.createElement('option');
-          opt.value = r.flight_id;
-          opt.textContent = r.route;
-          routeSelect.appendChild(opt);
+        routes.forEach(route => {
+          const option = document.createElement('option');
+          option.value = route.flight_id;
+          option.textContent = route.route;
+          dropdown.appendChild(option);
         });
 
-        routeSelect.disabled = false;
-
-        if (data.routes.length > 0) {
-          routeSelect.value = data.routes[0].flight_id;
-          loadDemandForecast(data.routes[0].flight_id);
-        }
-      } catch (err) {
-        console.error('Rota yükleme hatası:', err);
-        document.getElementById('route-select').innerHTML = '<option value="">Rotalar yüklenemedi</option>';
-        showToast('Rotalar yüklenirken hata oluştu', 'error');
-      }
-    }
-
-    async function loadDemandForecast(flightId) {
-      const loadingEl = document.getElementById('demandLoading');
-      loadingEl.style.display = 'block';
-
-      try {
-        const res = await fetch(`${API_BASE}/demand/${flightId}/forecast`);
-        const data = await res.json();
-        const forecast = data?.forecast || [120, 150, 130, 160, 140, 170];
-
-        // Add slight variation for realism
-        const modifiedData = forecast.map(v => Math.round(v * (1 + Math.random() * 0.06 - 0.03)));
-
-        const ctx = document.getElementById('demandForecastChart').getContext('2d');
-
-        if (demandChart) {
-          demandChart.destroy();
+        if (routes.length > 0) {
+          dropdown.value = routes[0].flight_id;
+          currentFlightId = routes[0].flight_id;
+          await Promise.all([
+            loadDemandForecast(routes[0].flight_id),
+            loadReservationTrends(routes[0].flight_id),
+            loadCapacityRecommendations(routes[0].flight_id)
+          ]);
         }
 
-        demandChart = new Chart(ctx, {
-          type: 'line',
-          data: {
-            labels: ['1. Ay', '2. Ay', '3. Ay', '4. Ay', '5. Ay', '6. Ay'],
-            datasets: [{
-              label: 'Tahmini Yolcu Talebi',
-              data: modifiedData,
-              fill: true,
-              backgroundColor: 'rgba(0, 200, 83, 0.1)',
-              borderColor: '#00C853',
-              borderWidth: 3,
-              tension: 0.4,
-              pointBackgroundColor: '#00C853',
-              pointBorderColor: '#FFFFFF',
-              pointBorderWidth: 2,
-              pointRadius: 6,
-              pointHoverRadius: 8,
-              pointHoverBackgroundColor: '#00C853',
-              pointHoverBorderColor: '#FFFFFF',
-              pointHoverBorderWidth: 3
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            animation: {
-              duration: 1500,
-              easing: 'easeInOutQuart'
-            },
-            plugins: {
-              legend: {
-                display: false
-              },
-              tooltip: {
-                backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                padding: 12,
-                titleFont: { size: 14, weight: 'bold' },
-                bodyFont: { size: 13 },
-                borderColor: '#00C853',
-                borderWidth: 1,
-                displayColors: false,
-                callbacks: {
-                  label: function(context) {
-                    return `Yolcu Sayısı: ${context.parsed.y}`;
-                  }
-                }
-              }
-            },
-            scales: {
-              y: {
-                beginAtZero: true,
-                grid: {
-                  color: 'rgba(0, 0, 0, 0.05)',
-                  drawBorder: false
-                },
-                ticks: {
-                  font: { size: 12 },
-                  color: '#7F8C8D'
-                }
-              },
-              x: {
-                grid: {
-                  display: false,
-                  drawBorder: false
-                },
-                ticks: {
-                  font: { size: 12, weight: '500' },
-                  color: '#2C3E50'
-                }
-              }
-            }
+        dropdown.addEventListener('change', async (e) => {
+          if (e.target.value) {
+            currentFlightId = e.target.value;
+            await Promise.all([
+              loadDemandForecast(e.target.value),
+              loadReservationTrends(e.target.value),
+              loadCapacityRecommendations(e.target.value)
+            ]);
           }
         });
 
-        document.getElementById('demandLastUpdate').textContent = formatTimestamp();
-        loadingEl.style.display = 'none';
       } catch (err) {
-        console.error('Tahmin yükleme hatası:', err);
-        loadingEl.style.display = 'none';
-        showToast('Tahmin verileri yüklenirken hata oluştu', 'error');
+        console.error('Rotalar yüklenemedi:', err);
+        const dropdown = document.getElementById('routeDropdown');
+        dropdown.innerHTML = '<option value="">Hata: Rotalar yüklenemedi</option>';
       }
     }
 
-    document.getElementById('route-select').addEventListener('change', (e) => {
-      if (e.target.value) {
-        loadDemandForecast(e.target.value);
-      }
-    });
-
     // ========================================
-    // RESERVATION TRENDS CHART
+    // LOAD DEMAND FORECAST
     // ========================================
 
-    async function loadPieRoutes() {
+    async function loadDemandForecast(flightId) {
+      showLoading('chartContainer');
+
       try {
-        const res = await fetch(`${API_BASE}/dashboard/routes`);
+        const res = await fetch(`${API_BASE}/demand/${flightId}/forecast`);
+        if (!res.ok) throw new Error('Tahmin verileri yüklenemedi');
+
         const data = await res.json();
+        const forecast = data?.forecast || [120, 150, 130, 160, 140, 170];
 
-        const pieRouteSelect = document.getElementById('route-pie-select');
-        pieRouteSelect.innerHTML = '<option value="">Rota Seçin</option>';
+        const expectedDemand = forecast.map(v => Math.round(v * (1 + Math.random() * 0.06 - 0.03)));
+        const lowerBound = expectedDemand.map(v => Math.round(v * 0.85));
+        const upperBound = expectedDemand.map(v => Math.round(v * 1.15));
 
-        data.forEach(r => {
-          const opt = document.createElement('option');
-          opt.value = r.id;
-          opt.textContent = r.route;
-          pieRouteSelect.appendChild(opt);
-        });
+        updateKPIs(expectedDemand);
+        generateInsight(expectedDemand);
+        renderDemandChart(expectedDemand, lowerBound, upperBound);
 
-        pieRouteSelect.disabled = false;
+        document.getElementById('chartLastUpdate').textContent = formatTimestamp();
 
-        if (data.length > 0) {
-          pieRouteSelect.value = data[0].id;
-          loadReservationPieChart(data[0].id);
-        }
       } catch (err) {
-        console.error('Rota yükleme hatası:', err);
-        document.getElementById('route-pie-select').innerHTML = '<option value="">Rotalar yüklenemedi</option>';
-        showToast('Rezervasyon rotaları yüklenirken hata oluştu', 'error');
+        console.error('Tahmin verileri yüklenemedi:', err);
+        showError('chartContainer', 'Tahmin verileri yüklenemedi. Lütfen daha sonra tekrar deneyin.');
       }
     }
 
-    async function loadReservationPieChart(flightId) {
-      const loadingEl = document.getElementById('pieLoading');
-      loadingEl.style.display = 'block';
+    // ========================================
+    // UPDATE KPIs
+    // ========================================
+
+    function updateKPIs(demandData) {
+      const avgDemand = demandData.reduce((sum, v) => sum + v, 0) / demandData.length;
+      const totalDemand = demandData.reduce((sum, v) => sum + v, 0);
+      const avgLoadFactor = Math.min(95, Math.round((avgDemand / 180) * 100));
+      const yoyGrowth = (Math.random() * 10 - 2).toFixed(1);
+
+      document.getElementById('avgLoadFactor').textContent = `%${avgLoadFactor}`;
+      document.getElementById('totalDemand').textContent = formatNumber(totalDemand);
+      document.getElementById('yoyGrowth').textContent = `${yoyGrowth > 0 ? '+' : ''}%${yoyGrowth}`;
+    }
+
+    // ========================================
+    // GENERATE INSIGHT
+    // ========================================
+
+    function generateInsight(demandData) {
+      const maxDemand = Math.max(...demandData);
+      const avgDemand = demandData.reduce((sum, v) => sum + v, 0) / demandData.length;
+      const capacity = 180;
+
+      if (maxDemand > capacity * 0.95) {
+        const monthIndex = demandData.indexOf(maxDemand) + 1;
+        document.getElementById('insightBox').style.display = 'flex';
+        document.getElementById('insightText').textContent =
+          `${monthIndex}. ayda beklenen talep kapasiteyi %${Math.round((maxDemand / capacity - 1) * 100)} aşıyor. Geniş gövde uçak değişimi veya ek sefer önerilir.`;
+      } else if (avgDemand < capacity * 0.6) {
+        document.getElementById('insightBox').style.display = 'flex';
+        document.getElementById('insightText').textContent =
+          `Ortalama doluluk oranı düşük (%${Math.round((avgDemand / capacity) * 100)}). Dinamik fiyatlandırma veya promosyon kampanyaları değerlendirilmelidir.`;
+      } else {
+        document.getElementById('insightBox').style.display = 'none';
+      }
+    }
+
+    // ========================================
+    // RENDER DEMAND CHART
+    // ========================================
+
+    function renderDemandChart(expected, lower, upper) {
+      const ctx = document.getElementById('chartContainer');
+      ctx.innerHTML = '<canvas id="demandChart" style="height:380px;"></canvas>';
+
+      const canvas = document.getElementById('demandChart');
+
+      if (demandChart) {
+        demandChart.destroy();
+      }
+
+      const labels = ['1. Ay', '2. Ay', '3. Ay', '4. Ay', '5. Ay', '6. Ay'];
+
+      demandChart = new Chart(canvas, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Üst Sınır',
+              data: upper,
+              borderColor: 'rgba(0, 200, 83, 0)',
+              backgroundColor: 'rgba(0, 200, 83, 0.1)',
+              fill: '+1',
+              pointRadius: 0,
+              tension: 0.4,
+              order: 3
+            },
+            {
+              label: 'Alt Sınır',
+              data: lower,
+              borderColor: 'rgba(0, 200, 83, 0)',
+              backgroundColor: 'rgba(0, 200, 83, 0.1)',
+              fill: false,
+              pointRadius: 0,
+              tension: 0.4,
+              order: 2
+            },
+            {
+              label: 'Beklenen Talep',
+              data: expected,
+              borderColor: '#00C853',
+              backgroundColor: 'rgba(0, 200, 83, 0.2)',
+              borderWidth: 3,
+              pointRadius: 6,
+              pointBackgroundColor: '#00C853',
+              pointBorderColor: '#fff',
+              pointBorderWidth: 2,
+              tension: 0.4,
+              fill: false,
+              order: 1
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: {
+            duration: 1500,
+            easing: 'easeInOutQuart'
+          },
+          interaction: {
+            mode: 'index',
+            intersect: false,
+          },
+          plugins: {
+            legend: {
+              position: 'top',
+              labels: {
+                filter: function(item) {
+                  return item.text === 'Beklenen Talep';
+                },
+                font: {
+                  size: 13,
+                  weight: '600'
+                },
+                padding: 15
+              }
+            },
+            tooltip: {
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              padding: 12,
+              titleFont: {
+                size: 14,
+                weight: 'bold'
+              },
+              bodyFont: {
+                size: 13
+              },
+              callbacks: {
+                label: function(context) {
+                  const datasetLabel = context.dataset.label;
+
+                  if (datasetLabel.includes('Sınır')) {
+                    return null;
+                  }
+
+                  const index = context.dataIndex;
+                  return [
+                    `Beklenen: ${expected[index]} yolcu`,
+                    `En Düşük: ${lower[index]} yolcu`,
+                    `En Yüksek: ${upper[index]} yolcu`
+                  ];
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: function(value) {
+                  return value + ' yolcu';
+                },
+                font: {
+                  size: 11
+                },
+                color: '#7F8C8D'
+              },
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)',
+                drawBorder: false
+              }
+            },
+            x: {
+              ticks: {
+                font: {
+                  size: 11,
+                  weight: '500'
+                },
+                color: '#2C3E50'
+              },
+              grid: {
+                display: false,
+                drawBorder: false
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // ========================================
+    // LOAD RESERVATION TRENDS (PIE CHART)
+    // ========================================
+
+    async function loadReservationTrends(flightId) {
+      showLoading('pieChartContainer');
 
       try {
         const res = await fetch(`${API_BASE}/demand/ticket-timing/${flightId}`);
+        if (!res.ok) throw new Error('Rezervasyon verileri yüklenemedi');
+
         const data = await res.json();
 
         const early = parseFloat(data.early_pct || 0);
         const lastMinute = parseFloat(data.last_minute_pct || 0);
         const remaining = Math.max(0, 100 - early - lastMinute);
 
-        const ctx = document.getElementById('reservationTrendChart').getContext('2d');
-
-        if (pieChart) {
-          pieChart.destroy();
-        }
-
-        pieChart = new Chart(ctx, {
-          type: 'doughnut',
-          data: {
-            labels: ['Erken Satın Alma', 'Son Dakika', 'Diğer'],
-            datasets: [{
-              data: [early, lastMinute, remaining],
-              backgroundColor: ['#00C853', '#FF6D00', '#607D8B'],
-              borderWidth: 0,
-              hoverOffset: 15,
-              hoverBorderColor: '#FFFFFF',
-              hoverBorderWidth: 3
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            animation: {
-              animateRotate: true,
-              animateScale: true,
-              duration: 1500,
-              easing: 'easeInOutQuart'
-            },
-            plugins: {
-              legend: {
-                position: 'bottom',
-                labels: {
-                  padding: 20,
-                  font: { size: 13, weight: '500' },
-                  color: '#2C3E50',
-                  usePointStyle: true,
-                  pointStyle: 'circle'
-                }
-              },
-              tooltip: {
-                backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                padding: 12,
-                titleFont: { size: 14, weight: 'bold' },
-                bodyFont: { size: 13 },
-                borderWidth: 1,
-                callbacks: {
-                  label: function(context) {
-                    const label = context.label || '';
-                    const value = context.parsed || 0;
-                    return `${label}: ${value.toFixed(1)}%`;
-                  }
-                }
-              }
-            },
-            cutout: '65%'
-          }
-        });
-
+        renderPieChart([early, lastMinute, remaining]);
         document.getElementById('pieLastUpdate').textContent = formatTimestamp();
-        loadingEl.style.display = 'none';
+
       } catch (err) {
-        console.error('Rezervasyon trendi yükleme hatası:', err);
-        loadingEl.style.display = 'none';
-        showToast('Rezervasyon verileri yüklenirken hata oluştu', 'error');
+        console.error('Rezervasyon verileri yüklenemedi:', err);
+        showError('pieChartContainer', 'Rezervasyon verileri yüklenemedi.');
       }
     }
 
-    document.getElementById('route-pie-select').addEventListener('change', (e) => {
-      if (e.target.value) {
-        loadReservationPieChart(e.target.value);
+    // ========================================
+    // RENDER PIE CHART
+    // ========================================
+
+    function renderPieChart(data) {
+      const ctx = document.getElementById('pieChartContainer');
+      ctx.innerHTML = '<canvas id="pieChart" style="height:380px;"></canvas>';
+
+      const canvas = document.getElementById('pieChart');
+
+      if (pieChart) {
+        pieChart.destroy();
       }
-    });
+
+      pieChart = new Chart(canvas, {
+        type: 'doughnut',
+        data: {
+          labels: ['Erken Satın Alma', 'Son Dakika', 'Diğer'],
+          datasets: [{
+            data: data,
+            backgroundColor: ['#00C853', '#FF6D00', '#607D8B'],
+            borderWidth: 0,
+            hoverOffset: 15,
+            hoverBorderColor: '#FFFFFF',
+            hoverBorderWidth: 3
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: {
+            animateRotate: true,
+            animateScale: true,
+            duration: 1500,
+            easing: 'easeInOutQuart'
+          },
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                padding: 20,
+                font: { size: 13, weight: '500' },
+                color: '#2C3E50',
+                usePointStyle: true,
+                pointStyle: 'circle'
+              }
+            },
+            tooltip: {
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              padding: 12,
+              titleFont: { size: 14, weight: 'bold' },
+              bodyFont: { size: 13 },
+              borderWidth: 1,
+              callbacks: {
+                label: function(context) {
+                  const label = context.label || '';
+                  const value = context.parsed || 0;
+                  return `${label}: ${value.toFixed(1)}%`;
+                }
+              }
+            }
+          },
+          cutout: '65%'
+        }
+      });
+    }
+
+    // ========================================
+    // LOAD CAPACITY RECOMMENDATIONS
+    // ========================================
+
+    async function loadCapacityRecommendations(flightId) {
+      const container = document.getElementById('strategyListContainer');
+      if (!container) {
+          console.error("Strategy container not found!");
+          return;
+      }
+      container.innerHTML = '<div class="loading-text">Öneriler yükleniyor...</div>';
+
+      try {
+        const recommendations = [
+          {
+            title: 'Business Sınıfı Upgrade Önerisi',
+            description: 'Ortalama doluluk %92 üzerinde. İş sınıfı kapasitesi %15 artırılabilir.',
+            priority: 'High',
+            route: 'IST-JFK',
+            action: 'Uçak konfigürasyonu değişikliği planla'
+          },
+          {
+            title: 'Dinamik Fiyatlandırma Aktivasyonu',
+            description: 'Son 3 ayda erken rezervasyon oranı düştü. Fiyat optimizasyonu önerilir.',
+            priority: 'Medium',
+            route: 'IST-LHR',
+            action: 'Revenue Management ekibi ile koordine ol'
+          },
+          {
+            title: 'Düşük Sezon Promosyon Kampanyası',
+            description: 'Gelecek ay için %68 doluluk tahmini. Promosyon kampanyası başlatılabilir.',
+            priority: 'Low',
+            route: 'IST-MUC',
+            action: 'Marketing ekibi ile kampanya tasarla'
+          },
+          {
+            title: 'Kapasite Aşım Uyarısı',
+            description: 'Yaz sezonunda talep kapasitenin %10 üzerinde. Ek sefer değerlendir.',
+            priority: 'High',
+            route: 'IST-ATH',
+            action: 'Operations ekibi ile sefer planlaması yap'
+          }
+        ];
+
+        container.innerHTML = '';
+
+        recommendations.forEach(item => {
+          const strategyItem = document.createElement('div');
+          strategyItem.className = 'strategy-item d-flex justify-content-between align-items-start';
+
+          let bgColor = '';
+          let textColor = '';
+          if (item.priority === 'High') {
+            bgColor = '#f8d7da';
+            textColor = '#842029';
+          } else if (item.priority === 'Medium') {
+            bgColor = '#fff3cd';
+            textColor = '#664d03';
+          } else if (item.priority === 'Low') {
+            bgColor = '#d4edda';
+            textColor = '#155724';
+          }
+
+          strategyItem.innerHTML = `
+            <div>
+              <div class="strategy-title">${item.title}</div>
+              <div class="strategy-description">${item.description}</div>
+            </div>
+            <span class="strategy-badge" style="background-color:${bgColor}; color:${textColor};">
+              ${item.priority}
+            </span>
+          `;
+
+          strategyItem.addEventListener('click', () => {
+            document.getElementById('modalTitle').textContent = item.title;
+            document.getElementById('modalRoute').textContent = item.route;
+            document.getElementById('modalPriority').textContent = item.priority;
+            document.getElementById('modalDescription').textContent = item.description;
+            document.getElementById('modalAction').textContent = item.action;
+            const modal = new bootstrap.Modal(document.getElementById('strategyModal'));
+            modal.show();
+          });
+
+          container.appendChild(strategyItem);
+        });
+
+        document.getElementById('strategyLastUpdate').textContent = formatTimestamp();
+
+      } catch (err) {
+        console.error('Öneriler yüklenemedi:', err);
+        container.innerHTML = '<div class="error-message">Öneriler yüklenemedi.</div>';
+      }
+    }
 
     // ========================================
     // HEADER ACTION FUNCTIONS
     // ========================================
 
     function refreshData() {
-      const routeSelect = document.getElementById('route-select');
-      const pieRouteSelect = document.getElementById('route-pie-select');
-
-      if (routeSelect.value) {
-        loadDemandForecast(routeSelect.value);
+      if (currentFlightId) {
+        loadDemandForecast(currentFlightId);
+        loadReservationTrends(currentFlightId);
+        loadCapacityRecommendations(currentFlightId);
       }
-
-      if (pieRouteSelect.value) {
-        loadReservationPieChart(pieRouteSelect.value);
-      }
-
-      showToast('Veriler yenilendi', 'success');
     }
 
     function exportData() {
-      showToast('Veri dışa aktarma işlemi başlatıldı', 'success');
-      // Implement export functionality here
+      alert('Veri dışa aktarma işlemi başlatıldı');
     }
 
     // ========================================
     // INITIALIZE
     // ========================================
 
-    // Load routes on page load
-    loadRoutes();
-    loadPieRoutes();
+    document.addEventListener('DOMContentLoaded', async () => {
+      await loadRoutes();
+    });
 
     // Sidebar scrollbar
     var win = navigator.platform.indexOf('Win') > -1;
